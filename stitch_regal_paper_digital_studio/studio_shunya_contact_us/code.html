@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact - Studio Shunya</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Tailwind Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary-container": "#9d9d9a",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#e9c176",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-container": "#785a1a",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "on-secondary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#842420",
+                        "primary": "#490003",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "inverse-primary": "#ffb4ac",
+                        "secondary-fixed": "#ffdea5",
+                        "surface-bright": "#fcf9f8",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#a43b35",
+                        "outline-variant": "#ddc0bd",
+                        "background": "#fcf9f8",
+                        "secondary": "#775a19",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "on-primary-container": "#f5786e",
+                        "tertiary": "#1f201e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#574240",
+                        "tertiary-container": "#343533",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "primary-container": "#6b1111",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "secondary-container": "#fed488",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "primary-fixed": "#ffdad6",
+                        "surface-container-high": "#eae7e7",
+                        "surface-container": "#f0eded",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303030",
+                        "on-background": "#1b1c1c",
+                        "outline": "#8a716f",
+                        "on-primary-fixed": "#410003"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                        "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["40px", {"lineHeight": "48px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar Component -->
+<header class="bg-surface dark:bg-surface-dim w-full top-0 sticky z-50 border-b border-outline/20">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-desktop py-unit">
+<!-- Brand Logo -->
+<a class="font-display-lg text-headline-md text-primary dark:text-primary-fixed-dim" href="#">
+                Studio Shunya
+            </a>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex space-x-gutter items-center">
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">
+                    Home
+                </a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">
+                    Collections
+                </a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">
+                    Categories
+                </a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">
+                    About
+                </a>
+<!-- Active State -->
+<a class="font-label-md text-label-md uppercase tracking-widest text-primary border-b-2 border-secondary pb-1 cursor-pointer active:opacity-70" href="#">
+                    Contact
+                </a>
+</nav>
+<!-- Trailing Action -->
+<div class="hidden md:block">
+<button class="bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3 border border-transparent hover:border-secondary transition-all rounded-none uppercase tracking-widest">
+                    Explore Collection
+                </button>
+</div>
+<!-- Mobile Menu Icon -->
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined text-headline-md">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col">
+<!-- Split Screen Contact Section -->
+<section class="max-w-container-max w-full mx-auto px-margin-mobile md:px-margin-desktop pt-section-gap pb-12 md:pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter md:gap-16">
+<!-- Left Side: Editorial & Contact Details -->
+<div class="md:col-span-5 flex flex-col justify-center">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-6">
+                        Let's Create Something Beautiful.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-md">
+                        Whether you are envisioning a bespoke physical invitation on handmade paper or a seamless digital experience, our studio is dedicated to crafting artifacts that reflect your unique narrative.
+                    </p>
+<div class="space-y-6 mb-12">
+<!-- Contact Items -->
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">call</span>
+<div>
+<h3 class="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Phone</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">+91 98765 43210</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">mail</span>
+<div>
+<h3 class="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Email</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">hello@studioshunya.com</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">location_on</span>
+<div>
+<h3 class="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Studio</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                    12, Heritage Art District,<br/>
+                                    Colaba, Mumbai, 400001<br/>
+                                    India
+                                </p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">schedule</span>
+<div>
+<h3 class="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Hours</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Mon-Fri: 10:00 AM - 6:00 PM (IST)</p>
+</div>
+</div>
+</div>
+<!-- Secondary Action -->
+<div>
+<a class="inline-flex items-center gap-2 border border-secondary text-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 hover:bg-secondary/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">chat</span>
+                            Chat on WhatsApp
+                        </a>
+</div>
+</div>
+<!-- Right Side: Minimalist Form -->
+<div class="md:col-span-6 md:col-start-7 mt-12 md:mt-0">
+<div class="bg-surface-container-low p-8 md:p-12 relative">
+<!-- Subtle decorative border -->
+<div class="absolute inset-0 border border-outline/10 pointer-events-none m-2"></div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-8">
+                            Enquire Now
+                        </h2>
+<form class="space-y-8 relative z-10">
+<!-- Input Group -->
+<div class="relative">
+<label class="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Full Name *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary placeholder:text-on-surface-variant/40 transition-colors" placeholder="Your glorious name" type="text"/>
+</div>
+<!-- Input Group -->
+<div class="relative">
+<label class="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Phone Number *</label>
+<input class="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary placeholder:text-on-surface-variant/40 transition-colors" placeholder="Include country code" type="tel"/>
+</div>
+<!-- Input Group (Select) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="relative">
+<label class="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Occasion</label>
+<select class="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors cursor-pointer appearance-none">
+<option class="text-on-surface-variant/40" disabled="" selected="" value="">Select Occasion</option>
+<option value="wedding">Wedding</option>
+<option value="corporate">Corporate Event</option>
+<option value="gala">Charity Gala</option>
+<option value="other">Other Celebration</option>
+</select>
+<div class="absolute right-0 top-[28px] pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<div class="relative">
+<label class="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Product Type</label>
+<select class="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors cursor-pointer appearance-none">
+<option disabled="" selected="" value="">Select Type</option>
+<option value="physical">Physical Invitation</option>
+<option value="digital">Digital Invitation</option>
+<option value="hybrid">Hybrid Package</option>
+<option value="stationery">Day-of Stationery</option>
+</select>
+<div class="absolute right-0 top-[28px] pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Input Group (Textarea) -->
+<div class="relative">
+<label class="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Message *</label>
+<textarea class="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary placeholder:text-on-surface-variant/40 transition-colors resize-none" placeholder="Tell us about your vision, themes, or any specific requirements..." rows="4"></textarea>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="w-full bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-widest py-4 border border-transparent hover:border-secondary transition-all" type="button">
+                                    Send Enquiry
+                                </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-center py-12">
+<div class="w-full h-[0.5px] bg-secondary/30"></div>
+<div class="mx-4 text-secondary">
+<span class="material-symbols-outlined text-sm">diamond</span>
+</div>
+<div class="w-full h-[0.5px] bg-secondary/30"></div>
+</div>
+<!-- Minimalist Map Section -->
+<section class="max-w-container-max w-full mx-auto px-margin-mobile md:px-margin-desktop pb-section-gap">
+<div class="w-full aspect-[21/9] bg-surface-container-low relative group overflow-hidden border border-outline/20">
+<!-- Map Placeholder -->
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-multiply" data-alt="A highly stylized, minimalist map of South Mumbai in a light-mode aesthetic. The map uses an ivory base with very subtle, thin gold and deep burgundy lines denoting major roads and coastlines. The style is editorial and luxurious, resembling an engraved illustration rather than a standard satellite map. Soft, diffused lighting creates a sense of high-end corporate elegance." data-location="Mumbai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDukt4biWKm__XyJQCv-59rH4rwp4FcFnPW__zDsa0AijoZ0uLyjbnO_JvdB3xfrFLP_zKX43_UcEaoX2YLHtEtkAZL-GI0UaFsc5J_xNYeKWA26yZF3hMHh-kjo57JBNXpZZWJ5jcSm0IyFOEVAGoSSA6SJeubhMFG53B5FR2egB-IA92U1LA-Q5W48Nc2WebksJ8-1XDW_t6bOnw3MGcFS81hg-UKS4tZJFk9AlxTP6ACQQiJe6kZ"/>
+<!-- Overlay Card -->
+<div class="absolute bottom-8 left-8 bg-surface p-6 border border-secondary/20 shadow-[0_12px_32px_rgba(45,45,45,0.08)] max-w-sm hidden md:block">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Visit the Studio</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">By appointment only to ensure personalized attention to your project.</p>
+<a class="font-label-md text-label-md text-secondary uppercase tracking-widest border-b border-secondary pb-1 hover:text-primary transition-colors" href="#">Get Directions</a>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-surface-container-low dark:bg-surface-container-lowest w-full mt-section-gap border-t border-secondary/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-desktop py-section-gap">
+<!-- Brand -->
+<div class="col-span-1 md:col-span-1">
+<h2 class="font-display-lg text-headline-lg text-primary dark:text-primary-fixed-dim mb-4">
+                    Studio Shunya
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    © 2024 Studio Shunya. All rights reserved.
+                </p>
+</div>
+<!-- Links (Simulated distribution) -->
+<div class="col-span-1 flex flex-col space-y-4">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Collections</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Categories</a>
+</div>
+<div class="col-span-1 flex flex-col space-y-4">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">About</a>
+<a class="font-body-md text-body-md text-primary font-bold hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Contact</a>
+</div>
+<div class="col-span-1 flex flex-col space-y-4">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">WhatsApp</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Instagram</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Royal Heritage - Studio Shunya</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#8a716f",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "surface-container-high": "#eae7e7",
+                        "on-secondary-container": "#785a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdad6",
+                        "on-surface-variant": "#574240",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "on-secondary-fixed": "#261900",
+                        "inverse-primary": "#ffb4ac",
+                        "surface": "#fcf9f8",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-surface": "#303030",
+                        "on-tertiary-container": "#9d9d9a",
+                        "secondary-container": "#fed488",
+                        "on-primary-fixed-variant": "#842420",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "surface-bright": "#fcf9f8",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary": "#490003",
+                        "surface-variant": "#e4e2e1",
+                        "tertiary-container": "#343533",
+                        "on-primary-container": "#f5786e",
+                        "primary-container": "#6b1111",
+                        "on-primary-fixed": "#410003",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1c1c",
+                        "surface-container": "#f0eded",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "tertiary": "#1f201e",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "surface-tint": "#a43b35",
+                        "on-background": "#1b1c1c",
+                        "error-container": "#ffdad6",
+                        "secondary": "#775a19",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#ddc0bd",
+                        "inverse-on-surface": "#f3f0f0",
+                        "background": "#fcf9f8",
+                        "secondary-fixed": "#ffdea5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+                        "headline-lg": ["40px", { "lineHeight": "48px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopNavBar Component from JSON -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-md border-b border-outline/20">
+<div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<a class="font-headline-md text-headline-md tracking-tighter text-primary dark:text-primary-fixed" href="#">
+                Studio Shunya
+            </a>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Home</a>
+<a class="font-label-md text-label-md text-primary dark:text-primary-fixed border-b-2 border-secondary pb-1" href="#">Collections</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Categories</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">About</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Contact</a>
+</div>
+<div class="hidden md:block">
+<button class="font-label-md text-label-md text-primary dark:text-primary-fixed hover:text-secondary transition-colors duration-300">
+                    Explore Collection
+                </button>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-28 md:pt-36 pb-section-gap">
+<!-- Product Details Section -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter mb-section-gap">
+<!-- Gallery (Left) -->
+<div class="md:col-span-7 flex flex-col gap-4 fade-in-up">
+<!-- Main Image -->
+<div class="w-full aspect-[4/5] bg-surface-container-low relative overflow-hidden border border-outline/20">
+<img class="w-full h-full object-cover" data-alt="A meticulously styled, high-end product photograph of a luxury Indian wedding invitation card resting on a textured, warm ivory surface. The invitation features rich, deep burgundy velvet-like texture with intricate, muted antique gold foil stamping of traditional motifs. Soft, natural, diffused lighting highlights the premium paper grain and the subtle sheen of the gold foil. The composition is editorial and minimalist, shot top-down, embodying a Modern Indian Luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeYca33OvEZRNhHPZoO-H7V-sxBXAcDLnm3leDh-UP_gSdBuay39Bo1-yPNIqa3ejJ5hJkaq5zXCbRgARWS8eVG5qA1mDVwRbnpa1gXia09IlPz5XLfW7Eu9-qsHaE5xXDcMia3cxBtu062MkbKQC_XC21n8gQAONMzP-OyT4W4yokAsHqgtL6QfAc3xNCNHscgvfKeg7vr9zF_8fOvQLhojZNPVqEUQOqKlnGFrGNFcnaeCp2pyg1"/>
+</div>
+<!-- Thumbnails -->
+<div class="grid grid-cols-4 gap-4">
+<button class="aspect-square bg-surface-container-low border border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up shot of a luxury wedding invitation showing detailed deep burgundy texture and antique gold foil stamping. Soft, warm natural light, shallow depth of field. Modern Indian luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmH4kZtLSn6vJ_20fSu7KKwOEOZJEBTtAzuV6osX2TKWZYt5tGABXM3_Ty_WtYnPf89pThj-bK3UjTHYGyG2Fc9OijE-Hrx1KhSdyf9zLDA7evt19h72Gpf8DQRYf1W2oN9ngpjIEJW2chPfVIw7DY_cV6d9j1OfwLvDl2BAdy_HDHBypvRtYM-5CCs9IBoOA995bxf7RtHCuuwXBDk9Sf38NYRTRQRSMWeAGvhdb8NWMvtlRNsHJ2"/>
+</button>
+<button class="aspect-square bg-surface-container-low border border-outline/20 hover:border-outline/50 transition-colors overflow-hidden opacity-70 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="Inside view of a premium wedding invitation card with elegant serif typography and minimalist layout. Warm ivory paper background, burgundy text. Sophisticated editorial lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2Gh3fVz1GN5tjKKCt1j41ovtUymNYyrLEEyaYYmy_f5mw-R7zestdge9RlO3owSi4otBzm3zwHifHdplNaTp74n2Hp8Eyd8Shkm5TGEL3jQxRy8m8lLJhPTuJN6qWDHDWeCnhUNYgP-YYWhlzujm38H8H9zkTuU9ypnFpMOiQedW1FzjZh9PWsAXmVxM7DXLiWLYov1_wWR2o4KAoS1b0h_gwU9cfFs2Khomt4CgcOdj4Ud1mVfi1"/>
+</button>
+<button class="aspect-square bg-surface-container-low border border-outline/20 hover:border-outline/50 transition-colors overflow-hidden opacity-70 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="A matching luxury envelope for a wedding invitation, made of thick, textured ivory paper with a subtle antique gold inner lining. Flat lay style, soft elegant lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALH5QbJFtXKnnsNuH5uCEuUbJ3QxD9gMlXUwO2HJj5i9-s1kEN212SihCxar3Gx1015zoTxPlOU5pcFmvSsh9s4NTmx6OzS1lMIjHlFfidCmvdO35UvTd-APlRzcsr5MsAc6JTgY6GljwTUeDhGDNLp4qg3U9O9CxtHRJisz64rl7dKgB8Zjjh_Q1_eL9sBZ3aSy-uQ_CxitEZaZubH7JE9_1KJDRRlTBdhDfhVhCQPaN73aGpkkeh"/>
+</button>
+<button class="aspect-square bg-surface-container-low border border-outline/20 hover:border-outline/50 transition-colors overflow-hidden opacity-70 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="Macro detail shot of thick, bespoke artisanal paper edge of a wedding invitation card, showcasing tactile texture and quality. Warm, muted lighting emphasizing the premium material." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6_N1rCbVmVL4asTXhOIHUb6XoyMX2-Lyh64ADXlXatmDTFocEw6RTV-Vp_TNwuRaUP3brpTvZs5VT3E6yf-Lj8Gy6T1hKRTrFecODYb8JGK9h6hdrHL8yUQ8HLKeUTElmWJnGmWXPzYgb6FywVBld6dBSszFMt6m5YIvq0Z1X26KMvrfFz_XGjfLPs5FQV_1eb1yPWAT1VPj9NtoxBKGLTkrwQfamGjLLHoR6IA9Z4Fiw-L1MGj_I"/>
+</button>
+</div>
+</div>
+<!-- Product Info (Right) -->
+<div class="md:col-span-4 md:col-start-9 flex flex-col pt-4 md:pt-8 fade-in-up" style="transition-delay: 0.2s;">
+<div class="mb-6">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest block mb-2">Wedding Collection</span>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-1">Royal Heritage</h1>
+<span class="font-body-md text-body-md text-on-surface-variant block">WED-024</span>
+</div>
+<div class="w-8 h-[0.5px] bg-secondary mb-6"></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 leading-relaxed">
+                    An embodiment of regal elegance, the Royal Heritage suite brings together the opulence of traditional Indian craftsmanship with a refined, contemporary sensibility. Featuring tactile ivory vellum, deep burgundy accents, and meticulously applied antique gold leafing.
+                </p>
+<div class="flex flex-col gap-6 mb-10">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase block mb-2">Typography &amp; Language</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Available in custom dual-script (Hindi/English) or single language styling.</p>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase block mb-2">Material Profile</span>
+<p class="font-body-md text-body-md text-on-surface-variant">350gsm Artisanal Cotton Rag paper with subtle textured finish.</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 mt-auto">
+<button class="w-full bg-primary-container text-on-primary py-4 font-label-md text-label-md rounded-none border border-transparent hover:border-secondary transition-all flex items-center justify-center gap-2 group">
+                        Enquire on WhatsApp
+                        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+<button class="w-full bg-transparent text-primary py-4 font-label-md text-label-md rounded-none border border-secondary hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                        Call Us to Discuss
+                    </button>
+</div>
+</div>
+</section>
+<div class="w-full h-[0.5px] bg-outline/20 max-w-container-max mx-auto mb-section-gap"></div>
+</main>
+<!-- Footer Component from JSON -->
+<footer class="w-full relative bg-surface-container-low dark:bg-tertiary-container border-t border-outline/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<a class="font-headline-md text-headline-md text-primary dark:text-primary-fixed block mb-6" href="#">
+                    Studio Shunya
+                </a>
+<p class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container mt-auto">
+                    © 2024 Studio Shunya Invitation Atelier.<br/>All Rights Reserved.
+                </p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-x-12 gap-y-4 justify-start md:justify-end">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Collections</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Bespoke Artistry</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Heritage Series</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Our Process</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Shipping &amp; Returns</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-all" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+            
+            // Smooth scroll to top for footer links
+            document.querySelectorAll('footer a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    if(this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

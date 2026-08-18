@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Studio Shunya - Bespoke Artistry</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#dcd9d9",
+                    "on-tertiary-container": "#9d9d9a",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#e3e2df",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#e9c176",
+                    "surface-variant": "#e4e2e1",
+                    "on-secondary-container": "#785a1a",
+                    "on-tertiary-fixed": "#1b1c1a",
+                    "on-secondary-fixed": "#261900",
+                    "on-primary-fixed-variant": "#842420",
+                    "primary": "#490003",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1b1c1c",
+                    "tertiary-fixed-dim": "#c7c7c3",
+                    "inverse-primary": "#ffb4ac",
+                    "secondary-fixed": "#ffdea5",
+                    "surface-bright": "#fcf9f8",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#a43b35",
+                    "outline-variant": "#ddc0bd",
+                    "background": "#fcf9f8",
+                    "secondary": "#775a19",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fcf9f8",
+                    "on-primary-container": "#f5786e",
+                    "tertiary": "#1f201e",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e4e2e1",
+                    "on-surface-variant": "#574240",
+                    "tertiary-container": "#343533",
+                    "on-tertiary-fixed-variant": "#464744",
+                    "primary-container": "#6b1111",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#ffb4ac",
+                    "secondary-container": "#fed488",
+                    "surface-container-low": "#f6f3f2",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "primary-fixed": "#ffdad6",
+                    "surface-container-high": "#eae7e7",
+                    "surface-container": "#f0eded",
+                    "inverse-on-surface": "#f3f0f0",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#303030",
+                    "on-background": "#1b1c1c",
+                    "outline": "#8a716f",
+                    "on-primary-fixed": "#410003"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "margin-mobile": "20px",
+                    "section-gap": "120px",
+                    "unit": "8px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Playfair Display"
+                    ],
+                    "headline-lg-mobile": [
+                            "Playfair Display"
+                    ],
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Playfair Display"
+                    ],
+                    "headline-lg": [
+                            "Playfair Display"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "display-lg-mobile": [
+                            "Playfair Display"
+                    ]
+            },
+            "fontSize": {
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.08em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg-mobile": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom input styles to override default tailwind forms plugin */
+        input[type="text"], input[type="email"], textarea {
+            border: none;
+            border-bottom: 1px solid rgba(27, 28, 28, 0.3); /* on-surface at 30% */
+            border-radius: 0;
+            padding: 8px 0;
+            background-color: transparent;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            box-shadow: none;
+            border-bottom-color: #775a19; /* secondary / gold */
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim w-full top-0 sticky z-50 border-b border-outline/20">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-unit">
+<!-- Brand -->
+<div class="font-display-lg text-headline-md text-primary dark:text-primary-fixed-dim">
+                Studio Shunya
+            </div>
+<!-- Navigation Links (Hidden on Mobile, flex on Desktop) -->
+<nav class="hidden md:flex gap-gutter font-label-md text-label-md uppercase tracking-widest">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">Collections</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">Categories</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">About</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70" href="#">Contact</a>
+</nav>
+<!-- Trailing Action -->
+<div class="hidden md:block">
+<button class="font-label-md text-label-md uppercase tracking-widest text-primary dark:text-primary-fixed-dim hover:text-secondary transition-colors duration-300 cursor-pointer active:opacity-70">
+                    Explore Collection
+                </button>
+</div>
+<!-- Mobile Menu Icon -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section: Bespoke Artistry -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 flex flex-col gap-unit">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary leading-tight">
+                    Bespoke Artistry
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-md">
+                    We translate your unique vision into tangible heritage. Through meticulous craftsmanship and a commitment to modern Indian luxury, every commissioned invitation becomes a timeless artifact.
+                </p>
+<div class="mt-8">
+<a class="inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 border border-secondary hover:bg-primary transition-colors duration-300 cursor-pointer" href="#commission-form">
+                        Begin Your Commission
+                    </a>
+</div>
+</div>
+<div class="md:col-span-6 md:col-start-7 mt-12 md:mt-0 relative">
+<!-- Decorative Gold Line Frame -->
+<div class="absolute inset-0 border border-secondary/30 translate-x-4 translate-y-4 -z-10"></div>
+<img class="w-full h-[600px] object-cover bg-surface-container-low shadow-sm" data-alt="A highly detailed close-up of a premium, bespoke wedding invitation laid on a subtle beige, textured surface. The invitation features deep burgundy letterpress typography and delicate antique gold foil accents reflecting soft, natural light. The composition is asymmetrical, capturing a sense of modern Indian luxury and minimalist editorial elegance, with vast pristine whitespace surrounding the exquisite paper craft." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAck0ZWhL9DVwRCMxgVAbHvl_YvPLOKk2y3yLVABI899AGk0X1raNVTeh9YR7PVleRu3X751go2QSJToPSoIdRx5YlzwJUpV4bdUI-3-to5kFwP2jFJxhjYsG12Komq29chotklrxoUjQapckt1bLGbjxoFajyEVwNdG0nddQkzYADu4PcTJEUFwTQq0kEQGyhKTotvoYIbwJcV8mj4-tlpJZImlC-8iNsCjb6RxS9sIOVvAtaNJ45T"/>
+</div>
+</section>
+<!-- Divider -->
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex justify-center">
+<div class="w-full max-w-md border-t border-secondary/30 flex justify-center">
+<span class="material-symbols-outlined text-secondary -mt-3 bg-surface px-2 text-[20px]">spa</span>
+</div>
+</div>
+<!-- Section 1: The Process -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">The Process</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm">
+                        A collaborative journey from initial concept to the final tactile masterpiece. Our studio ensures precision at every delicate stage.
+                    </p>
+</div>
+<div class="md:col-span-7 md:col-start-6 relative mt-12 md:mt-0 pl-8 md:pl-12 border-l border-secondary/30 flex flex-col gap-16">
+<!-- Step 1 -->
+<div class="relative">
+<div class="absolute -left-[41px] md:-left-[57px] top-1 w-3 h-3 rounded-full bg-secondary"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">1. Consultation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">An in-depth dialogue to understand the essence of your event, personal aesthetics, and cultural nuances. We explore our library of tactile materials together.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative">
+<div class="absolute -left-[41px] md:-left-[57px] top-1 w-3 h-3 rounded-full bg-secondary"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">2. Design Concept</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Our artisans craft preliminary visual directions, integrating bespoke monograms, structural layouts, and refined typographic hierarchies suited for high-end production.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative">
+<div class="absolute -left-[41px] md:-left-[57px] top-1 w-3 h-3 rounded-full bg-secondary"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">3. Artistry &amp; Craft</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Upon approval, the meticulous crafting begins. Employing heritage techniques such as deep impression letterpress and meticulous gold foiling on artisanal handmade papers.</p>
+</div>
+<!-- Step 4 -->
+<div class="relative">
+<div class="absolute -left-[41px] md:-left-[57px] top-1 w-3 h-3 rounded-full bg-secondary"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">4. Delivery</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Each suite is hand-assembled, inspected for flawless execution, and carefully packaged to ensure a breathtaking unboxing experience for your guests.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Customization Options -->
+<section class="bg-surface-container-low py-section-gap">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Customization Options</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+                        Curate every detail. Select from our finest archival materials and heritage printing techniques to construct an invitation suite that commands presence.
+                    </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative overflow-hidden mb-6 border border-secondary/20 p-2 bg-surface">
+<img class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro photograph showcasing stacks of thick, handmade artisanal paper stocks in varying shades of ivory and subtle beige. The texture is prominent, revealing a raw, organic deckled edge. The lighting is soft and directional, casting subtle shadows that highlight the paper's premium, tactile quality within a minimalist, modern luxury setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5w8Tx-k0TkQI1ns7wxuqi5tB3FaCWKQJZ68ythyh60r_TJDkO7X_T-yJk-v95gShK_L7K8kzavE8leNrBmzUFkTb2ApBntAOhc-Av30xivSx8klNliNQuTzTCh53dZFuNaIGsO3vzA2LY6Yjn-2uozKCyorvR3Kbc86HCPnnR6C_qCKJ6GSwGo1IzQsFbS_tBiMhBYzuBgKSM7a_SCKeWqrMEdg9jsHzWNV0ht_UUokfXq3q1H1yT"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 text-center">Paper Stocks</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-center text-sm">Archival cotton, handmade deckle edge, and dense vellum.</p>
+</div>
+<!-- Card 2 -->
+<div class="group cursor-pointer md:mt-12">
+<div class="relative overflow-hidden mb-6 border border-secondary/20 p-2 bg-surface">
+<img class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An extreme close-up of an antique gold foil stamping press applying a delicate, intricate floral pattern onto a deep burgundy cardstock. The glowing metallic gold contrasts sharply with the dark, matte background. The image evokes a sense of heritage craftsmanship mixed with modern editorial minimalism, bathed in warm, focused studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoyD3r8yd2L3YkEjJHViinlOZb3sRyRGDcqv6UbqVfiNrom0Vhq8jy4J-SDJcSkLgdEvbrJR3mFbyC2GJa1wnNKfZMVRoqU9Z0zbjf9cwY2NK66kREFghq2zqInmM5BZiUNZeK8FUuLsj4hthaAtnMi7q6cKAMCFFRiFjLyHvVbj52vLb5fOutKdqlrN2f5RgLCRqC9brPNTyiD6uLhlQfdX2oOmdT7NRI6kW7OJfGe5YD0IkFqkZ1"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 text-center">Printing Techniques</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-center text-sm">Blind deboss, hot foil stamping, and traditional letterpress.</p>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative overflow-hidden mb-6 border border-secondary/20 p-2 bg-surface">
+<img class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A beautifully crafted custom monogram featuring intertwined elegant serif letters printed in a dark charcoal ink on pristine ivory paper. The composition is minimal and centered, emphasizing the negative space. A subtle wax seal rests slightly out of focus in the foreground. The aesthetic is clean, sophisticated, and deeply rooted in modern Indian luxury design principles." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKk1FbyDjQU7_Y7TtbGn3WS0oQXfrg4g5KDFaFlMH4xBGWw_BPfnaV-mM6hcSAhnkTELT3GcB_e_E8duKUKpO4GpAxfyF4uCcb_BA-sHngx5Ant4zhMnNKp1doT2QnNKeRnUUmjWGy8Xp3jnIUlQ5bJKSgJ7RubtVP2jcoR1i9Nx6f8qsQmobf4gye9qHTrleQ5On10JjCHdmKtlmfq76rqbhq0EJHwZhcQZJ2N5-kLYavFC7kMwfJ"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 text-center">Bespoke Monograms</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-center text-sm">Custom illustrated crests and intertwining typographic identities.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Form -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap" id="commission-form">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-5 md:col-start-2 flex flex-col justify-center">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-6">Start Your Custom Commission</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">
+                        Provide us with preliminary details regarding your upcoming celebration. Our studio director will personally review your inquiry and arrange an initial consultation to discuss availability and aesthetic alignment.
+                    </p>
+<div class="hidden md:block w-16 border-t border-secondary"></div>
+</div>
+<div class="md:col-span-5 md:col-start-8">
+<form class="flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm uppercase text-on-surface-variant" for="name">Full Name</label>
+<input class="w-full font-body-md text-on-surface outline-none transition-colors duration-300" id="name" name="name" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm uppercase text-on-surface-variant" for="email">Email Address</label>
+<input class="w-full font-body-md text-on-surface outline-none transition-colors duration-300" id="email" name="email" type="email"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm uppercase text-on-surface-variant" for="event_date">Event Date &amp; Location</label>
+<input class="w-full font-body-md text-on-surface outline-none transition-colors duration-300" id="event_date" name="event_date" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm uppercase text-on-surface-variant" for="details">Vision &amp; Requirements</label>
+<textarea class="w-full font-body-md text-on-surface outline-none transition-colors duration-300 resize-none" id="details" name="details" rows="4"></textarea>
+</div>
+<button class="mt-4 bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-widest py-4 border border-secondary hover:bg-primary transition-colors duration-300 cursor-pointer w-full md:w-auto md:px-12 self-start" type="button">
+                            Submit Inquiry
+                        </button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-lowest w-full mt-section-gap border-t border-secondary/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+<!-- Brand / Logo -->
+<div class="col-span-1 md:col-span-1">
+<div class="font-display-lg text-headline-lg text-primary dark:text-primary-fixed-dim mb-4">
+                    Studio Shunya
+                </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    © 2024 Studio Shunya. All rights reserved.
+                </p>
+</div>
+<!-- Links (Simulating distribution across remaining columns) -->
+<div class="flex flex-col gap-4 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Collections</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Categories</a>
+</div>
+<div class="flex flex-col gap-4 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">About</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Contact</a>
+</div>
+<div class="flex flex-col gap-4 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">WhatsApp</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Instagram</a>
+</div>
+</div>
+</footer>
+</body></html>

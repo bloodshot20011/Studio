@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Invitations | Studio Shunya</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fcf9f8",
+                        "on-surface-variant": "#574240",
+                        "tertiary": "#1f201e",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "surface-variant": "#e4e2e1",
+                        "primary-fixed": "#ffdad6",
+                        "on-primary-fixed-variant": "#842420",
+                        "secondary-fixed-dim": "#e9c176",
+                        "background": "#fcf9f8",
+                        "inverse-surface": "#303030",
+                        "outline": "#8a716f",
+                        "surface": "#fcf9f8",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "on-primary-fixed": "#410003",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1b1c1c",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "primary-container": "#6b1111",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#fed488",
+                        "surface-tint": "#a43b35",
+                        "tertiary-container": "#343533",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dcd9d9",
+                        "secondary": "#775a19",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary-fixed": "#261900",
+                        "secondary-fixed": "#ffdea5",
+                        "on-surface": "#1b1c1c",
+                        "primary": "#490003",
+                        "on-primary-container": "#f5786e",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#ffb4ac",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-secondary-container": "#785a1a",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#9d9d9a",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container": "#f0eded",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#ddc0bd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "section-gap": "120px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                        "headline-lg": ["40px", {"lineHeight": "48px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.3s; }
+        .stagger-3 { transition-delay: 0.5s; }
+        
+        /* Thin borders for components */
+        .gold-border { border: 1px solid rgba(197, 160, 89, 0.3); }
+        .burgundy-border { border: 1px solid rgba(107, 17, 17, 0.2); }
+        
+        .hero-pattern {
+            background-color: #fcf9f8;
+            background-image: radial-gradient(#e9c176 0.5px, transparent 0.5px), radial-gradient(#e9c176 0.5px, #fcf9f8 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="w-full top-0 sticky z-50 bg-surface border-b border-outline/20">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-unit">
+<a class="font-display-lg text-headline-md md:text-headline-md text-primary hover:text-secondary transition-colors duration-300" href="#">Studio Shunya</a>
+<div class="hidden md:flex space-x-gutter">
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Home</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-primary border-b-2 border-secondary pb-1 cursor-pointer" href="#">Collections</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Categories</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">About</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Contact</a>
+</div>
+<button class="hidden md:block bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3 rounded-none border border-secondary hover:bg-secondary transition-colors duration-300 cursor-pointer">
+                Explore Collection
+            </button>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center pt-20 pb-section-gap overflow-hidden">
+<div class="absolute inset-0 hero-pattern pointer-events-none"></div>
+<!-- Shader backdrop suggestion -->
+<div class="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
+<div class="w-full h-full bg-gradient-to-br from-secondary/20 via-surface to-primary/10"></div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10 w-full">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-6 lg:col-span-5 fade-in-up order-2 md:order-1 pt-12 md:pt-0">
+<span class="inline-block font-label-sm text-label-sm uppercase tracking-widest text-secondary border border-secondary/50 px-3 py-1 mb-6">Digital Collection</span>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6 leading-tight">
+                        Your Invitation,<br/>Reimagined
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-md">
+                        Beautiful digital invitations designed to be shared instantly and remembered forever. Blending Indian heritage with modern elegance.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary-container text-on-primary font-label-md text-label-md px-8 py-4 rounded-none border border-secondary hover:bg-secondary transition-colors duration-300 cursor-pointer text-center">
+                            View Designs
+                        </button>
+</div>
+</div>
+<div class="md:col-span-6 lg:col-span-6 lg:col-start-7 fade-in-up stagger-2 order-1 md:order-2 relative">
+<div class="relative w-full max-w-[320px] mx-auto md:ml-auto floating">
+<!-- Premium phone mockup visual -->
+<div class="aspect-[9/19] bg-surface-container-low rounded-[2rem] p-3 gold-border shadow-[0_12px_32px_rgba(45,45,45,0.08)] relative z-10">
+<div class="w-full h-full bg-surface-container-lowest rounded-[1.5rem] overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A highly detailed close-up of a modern, premium smartphone screen displaying an elegant Indian wedding invitation. The digital invitation features a sophisticated deep burgundy and antique gold color palette with intricate mandala motifs. The smartphone is sleek and black, resting slightly angled. The background is a clean, bright minimalist ivory surface with very soft, diffused high-key studio lighting, conveying luxury and contemporary editorial design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCkQB9mc477-WsExMH8NmtMvmd5OJmBDZf-IjkMg-1nz_HlnOI4qIY4r2ALjLmSo_BcNv5D3eE2urQe-rhQ5MO2yIGA0RgGiOQEJRc4J5DdKOCuj1xj3su3f7p6cszcYGl7mY8X4nk4292hfV-_6nxYbmZ4-Il4CpLu2_8qe3J6sgkjSRNibibQdZXSZ-2H6V1H7o8XgGuF7mekfybTd5CEodrOOJJsrRwfvHj0H_PYgEfpLeE812o"/>
+</div>
+</div>
+<!-- Decorative element behind phone -->
+<div class="absolute -inset-4 bg-secondary-container/20 rounded-[2.5rem] -z-10 blur-xl"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Service Showcase -->
+<section class="py-section-gap bg-surface-container-low relative">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16 fade-in-up">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Digital Formats</h2>
+<div class="h-[1px] w-24 bg-secondary mx-auto opacity-50"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="group fade-in-up stagger-1">
+<div class="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A minimalist editorial layout showing a multi-page PDF document spread of an Indian wedding invitation. The design uses elegant serif typography in burgundy against a pristine ivory background. The composition is asymmetrical, highlighting the negative space and modern typography. Soft, bright lighting emphasizes the clean lines and digital format of the PDF." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA16dvvY_lWMWmlEOBuD5HHdgqwGYvOk_VCBOy-mHh_78GAsCZs5KTiNBmBauABsfR9RJpFKFuwDOwhKO290Lo1wZZ_mUNp4ubX8qqQLzGsfGQiGr8NZJQ9o4HlJ_hWcoaJTRGSJs6MulikvtcwaXnEL3fpdGdhILanpXohWGtNqCwTy400NJsgrHb_QpRm_kK79hcZGx5T975EJ4Ak-6bJQBNa5jeZ_TvVsSEceF7ZCgsSIMg_-Jqi"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">PDF Invitations</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">Multi-page interactive documents perfect for detailing complex itineraries and multiple events with clickable links.</p>
+<a class="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors" href="#">
+                            Explore PDFs <span class="material-symbols-outlined ml-2 text-sm" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group fade-in-up stagger-2">
+<div class="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A still frame from an elegant digital video wedding invitation displayed on a sleek tablet screen. The scene captures a subtle motion graphic of gold dust particles revealing the couple's names in a classic serif font over a deep burgundy background. The setting is modern and minimal, brightly lit to focus on the high-end digital visual aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsxbEaQUHvfmR9Z2u5mQus2IljseBKOCkEPhXFk4OTMlHjRAme0ssYGuUZ1oe7BCp1gXHZiTN2zDqlvvFMAhXmfSberTHCy8DsIatA4RK5gs56Yh5Eos0sW8ljcC3Fwm_rMyfdIUe834Ka7k_ed-STZjjfkPmd000dAGuVTyCc4kgVKDuAk9d692AV4aoFTnSKbjPOLIXyNEbAbM3O2roYR1TUsTb78_w4b7AeZ-eLLquanUSRS5sl"/>
+<!-- Play icon overlay -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-12 h-12 rounded-full bg-surface/80 flex items-center justify-center text-primary backdrop-blur-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Video Invitations</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">Cinematic motion graphics featuring elegant transitions, custom music, and beautifully animated typography.</p>
+<a class="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors" href="#">
+                            Watch Samples <span class="material-symbols-outlined ml-2 text-sm" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group fade-in-up stagger-3">
+<div class="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A beautiful single-page digital wedding card displayed on a mobile phone screen. The design is a modern take on Indian heritage, featuring an abstract, minimal lotus motif in gold foil texture against a soft ivory background. The composition is clean, high-contrast, and luxurious, shot in bright, indirect light to highlight the premium digital design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqjwQYKV8X-xDRxWx9g-tsmlH63U3NARu8J2AIAG58cjdH-9YOX_KG2IgbJwrO93gL1yFFp27Jl5n86teZI6Y_FFkKT0X-ZpM6btRbV8ZR5BJ7oZsZohgP-ipAmD3eHV5Nkug_flXNxmn4GpV2-MD8ouBU6OmjhnWb2LD6a8fvek2J2Fro5dCHR-Qu6gfskMBXIqyeEf7K3WRxxL-cM3NCBr0LwFWiakCy3jcymxaEDLNuJ_z0F2xu"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Digital Cards</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">Single, striking digital images optimized for instant messaging. Perfect for save-the-dates and minimal announcements.</p>
+<a class="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors" href="#">
+                            View Cards <span class="material-symbols-outlined ml-2 text-sm" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Digital Section -->
+<section class="py-section-gap bg-surface relative">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<div class="lg:col-span-4 fade-in-up mb-12 lg:mb-0">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-6">Designed for<br/>Modern Sharing</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
+                        Our digital suites maintain the gravitas of printed luxury while offering the convenience required by modern celebrations.
+                    </p>
+<div class="h-[1px] w-full bg-outline/20"></div>
+</div>
+<div class="lg:col-span-7 lg:col-start-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<!-- Feature 1 -->
+<div class="fade-in-up stagger-1 flex items-start space-x-4">
+<div class="text-secondary mt-1">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 0; font-weight: 300;">chat</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest mb-2">WhatsApp Ready</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Perfectly compressed and proportioned for direct messaging without losing visual fidelity.</p>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="fade-in-up stagger-2 flex items-start space-x-4">
+<div class="text-secondary mt-1">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 0; font-weight: 300;">groups</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest mb-2">Family Groups</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Easily distributable across vast family networks instantly across the globe.</p>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="fade-in-up stagger-3 flex items-start space-x-4">
+<div class="text-secondary mt-1">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 0; font-weight: 300;">share</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest mb-2">Social Media</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Formats available for Instagram stories and other platforms for broader announcements.</p>
+</div>
+</div>
+<!-- Feature 4 -->
+<div class="fade-in-up stagger-4 flex items-start space-x-4">
+<div class="text-secondary mt-1">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 0; font-weight: 300;">bolt</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-widest mb-2">Instant Updates</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Correct typos or update venue details instantly without the cost of reprinting.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Gallery (Bento Grid) -->
+<section class="py-section-gap bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16 fade-in-up">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Curated Gallery</h2>
+<div class="h-[1px] w-24 bg-secondary mx-auto opacity-50"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[800px] md:h-[600px]">
+<!-- Large Item -->
+<div class="md:col-span-2 md:row-span-2 relative group overflow-hidden fade-in-up">
+<img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A lifestyle editorial shot of a digital wedding invitation PDF open on an iPad Pro. The iPad is resting on a luxurious ivory linen surface alongside a single deep burgundy rose and a gold pen. The design on screen is minimal and modern, featuring clean typography and generous whitespace. The lighting is bright, natural, and soft, evoking a sense of refined modern luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA_wPVXcK0XWQKZ6SvvvTMjMUXpDEDz_WHktntxmlaaMSKQbP1OOCRGV2LHrKFJDS2rGEJEePMroijDG2H4ewcA4d4bpPlpydtPfVRTpFz05Z_t0y8w3KIqKMvEkL-jzhFxfEESVSCHwGL823yzTkP8C6OgMskTWE-fBh4LQaNsSFclaTj5IJd48SL9kT6yzZpEf0YQ8M8mFg61gGKUq9QFFsuMwu2itn0sNkhISSl1_wYIFscpdaP"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+<span class="font-label-md text-label-md text-surface uppercase tracking-widest">The Noor Collection PDF</span>
+</div>
+</div>
+<!-- Small Item 1 -->
+<div class="md:col-span-1 md:row-span-1 relative group overflow-hidden fade-in-up stagger-1">
+<img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A close-up of a mobile phone displaying a vertical video wedding invitation. The screen shows a still of elegant gold typography fading in over a dark burgundy background. The phone is held by a hand with subtle gold jewelry, against a blurred, bright white minimalist background. High-key lighting emphasizes the digital glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAimABQ0teElNQgoF5h3rhvdYIg8U_tFT_jEgwKIMvcbPcMaCPTfgEJknyLSxaS-Y7CmaOXw_Uq7Cw2TBh0953UUQbOXDU5Y-rZDymUDHx_ccm5HcpDx18ruQMgyW-bwI0CX50_NvMFf8Fkz4iE3ANpbcjppjknUWFc7tCjq5hGOY8UCE6SxlL_oI_rJioEM4aNWsFxUItYCxzdXJUUbKqwp1P_c8asg9gDxQWbBjCu8E6iyX7zzK7J"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+<span class="font-label-sm text-label-sm text-surface uppercase tracking-widest">Aura Video Reveal</span>
+</div>
+</div>
+<!-- Small Item 2 -->
+<div class="md:col-span-1 md:row-span-1 relative group overflow-hidden fade-in-up stagger-2">
+<img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A sleek minimalist presentation of three digital card variations laid out side-by-side on a digital canvas. The cards feature a contemporary Indian aesthetic with thin gold line art of arches on an ivory background. The composition is highly structured and architectural, shot in a bright, shadowless light-mode environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqA2yH8wnq_oD5G-jxdQs353Gtmq6XNGcXGlTwmYF4EF_gqJdiUuGOcMMpK0DJ0yLGW5Mwd2IzHR1XJZHHusl2bhW3DBofZjVKZ6m009VoJm9G2iMV0BLZL_ZctauqgEQSJjcbYqrRGeCVPB1tFBPS_-HlmaP3_BdQgzcSNyyKnTrZAlLFSNEHlvXoxK7TiN4c1E_z_gMubxKalPZqaPF7LlLqYPFxguUYU0fw850GWG_jAQaY1-D6"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+<span class="font-label-sm text-label-sm text-surface uppercase tracking-widest">Arch Digital Cards</span>
+</div>
+</div>
+<!-- Wide Item -->
+<div class="md:col-span-2 md:row-span-1 relative group overflow-hidden fade-in-up stagger-3">
+<img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A wide, cinematic shot of a laptop screen displaying a bespoke interactive wedding website/invitation. The design on screen is very minimal, showing a large serif monogram in dark red on an off-white background. The laptop sits on a clean, modern desk setup with bright, airy, and soft natural light illuminating the space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCHb5SHz4KuG-40yWgma3ajaoINsoqyeVQ1EXCJECUgnZ0E43ZLOWxmekxImKCoac4YjJiQs-milST0n30ywdIgIALa7umkyHgCgcIit3x4e6SNEh3xmIa3_L_zSKGb01PwIkNwgr1i9nl3Riq3FDBWJNxq2W7jy7NxRg07bBXo0EsJVSzWDSFswZpRller6_r9r3L30jd_dnH3JXNWytueIpv95_KN3U6qIyDGPGMoxs6UU8Al0B8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+<span class="font-label-md text-label-md text-surface uppercase tracking-widest">Bespoke Digital Suite</span>
+</div>
+</div>
+</div>
+<div class="text-center mt-12 fade-in-up">
+<a class="font-label-md text-label-md text-primary uppercase tracking-widest border-b border-primary pb-1 hover:text-secondary hover:border-secondary transition-colors" href="#">View Full Gallery</a>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-section-gap bg-surface relative overflow-hidden">
+<!-- Subtle decorative lines -->
+<div class="absolute inset-0 pointer-events-none flex justify-center opacity-10">
+<div class="w-px h-full bg-primary mx-12"></div>
+<div class="w-px h-full bg-primary mx-12"></div>
+<div class="w-px h-full bg-primary mx-12"></div>
+</div>
+<div class="max-w-3xl mx-auto px-margin-mobile text-center relative z-10 fade-in-up">
+<span class="material-symbols-outlined text-secondary text-4xl mb-6" style="font-variation-settings: 'FILL' 0; font-weight: 200;">auto_awesome</span>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6">Ready to send something beautiful?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto">
+                Begin the process of crafting a digital invitation that perfectly captures the essence of your celebration.
+            </p>
+<button class="bg-primary-container text-on-primary font-label-md text-label-md px-10 py-4 rounded-none border border-secondary hover:bg-secondary transition-colors duration-300 cursor-pointer">
+                Create Your Digital Invitation
+            </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-low w-full mt-section-gap border-t border-secondary/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+<div class="col-span-1">
+<div class="font-display-lg text-headline-lg text-primary mb-6">Studio Shunya</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 max-w-xs">Heritage editorial design for the modern celebration.</p>
+<div class="font-body-md text-body-md text-on-surface-variant opacity-70">
+                    © 2024 Studio Shunya. All rights reserved.
+                </div>
+</div>
+<div class="col-span-1 md:col-start-3">
+<h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Explore</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Collections</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Categories</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">About</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Connect</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Contact</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">WhatsApp</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Instagram</a></li>
+</ul>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Intersection Observer for scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.fade-in-up').forEach((element) => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body></html>

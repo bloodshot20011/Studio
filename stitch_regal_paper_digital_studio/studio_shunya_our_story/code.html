@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us - Studio Shunya</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#464744",
+                      "on-surface": "#1b1c1c",
+                      "primary": "#490003",
+                      "on-secondary-fixed": "#261900",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#f0eded",
+                      "outline-variant": "#ddc0bd",
+                      "outline": "#8a716f",
+                      "surface-container-high": "#eae7e7",
+                      "primary-fixed-dim": "#ffb4ac",
+                      "surface-container-low": "#f6f3f2",
+                      "secondary": "#775a19",
+                      "on-primary-container": "#f5786e",
+                      "tertiary-container": "#343533",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-bright": "#fcf9f8",
+                      "inverse-surface": "#303030",
+                      "on-primary-fixed": "#410003",
+                      "surface-dim": "#dcd9d9",
+                      "on-surface-variant": "#574240",
+                      "surface-tint": "#a43b35",
+                      "on-background": "#1b1c1c",
+                      "on-secondary-fixed-variant": "#5d4201",
+                      "surface": "#fcf9f8",
+                      "tertiary": "#1f201e",
+                      "tertiary-fixed-dim": "#c7c7c3",
+                      "on-tertiary-fixed": "#1b1c1a",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "primary-container": "#6b1111",
+                      "background": "#fcf9f8",
+                      "surface-container-highest": "#e4e2e1",
+                      "tertiary-fixed": "#e3e2df",
+                      "on-secondary-container": "#785a1a",
+                      "secondary-fixed": "#ffdea5",
+                      "surface-variant": "#e4e2e1",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#842420",
+                      "secondary-fixed-dim": "#e9c176",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#fed488",
+                      "on-tertiary-container": "#9d9d9a",
+                      "primary-fixed": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "inverse-on-surface": "#f3f0f0",
+                      "inverse-primary": "#ffb4ac"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "section-gap": "120px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Playfair Display"],
+                      "display-lg": ["Playfair Display"],
+                      "label-md": ["Inter"],
+                      "headline-lg-mobile": ["Playfair Display"],
+                      "display-lg-mobile": ["Playfair Display"],
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Playfair Display"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["40px", {"lineHeight": "48px", "fontWeight": "600"}],
+                      "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap');
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased selection:bg-secondary/30 selection:text-primary">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-md border-b border-outline/20">
+<div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand -->
+<a class="font-headline-md text-headline-md tracking-tighter text-primary dark:text-primary-fixed" href="#">
+                Studio Shunya
+            </a>
+<!-- Navigation Links -->
+<div class="hidden md:flex gap-gutter font-label-md text-label-md">
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Categories</a>
+<!-- Active Navigation Item -->
+<a class="text-primary dark:text-primary-fixed border-b-2 border-secondary pb-1 opacity-80 transition-opacity duration-200 hover:text-secondary" href="#">About</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary transition-colors duration-300" href="#">Contact</a>
+</div>
+<!-- Trailing Action -->
+<div class="hidden md:block">
+<a class="inline-flex items-center justify-center px-6 py-3 bg-primary-container text-on-primary font-label-md text-label-md rounded border border-transparent hover:border-secondary hover:bg-primary transition-all duration-300" href="#">
+                    Explore Collection
+                </a>
+</div>
+<!-- Mobile Menu Icon -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0 opacity-20" data-alt="A highly detailed close-up macro photograph of artisanal handmade cotton rag paper featuring delicate deckled edges. Woven through the texture are subtle, organic flecks of antique gold leafing. The lighting is soft, warm, and studio-quality, casting gentle micro-shadows that emphasize the tactile nature of the paper. The overall aesthetic is modern Indian luxury, utilizing a warm ivory and muted gold color palette. The mood is elegant, editorial, and sophisticated." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAtZ8ml0N1UB_xumHDCUglUFKxdTJqpDzOdQfMRPXSFVKpMOmH_dBswtf14RZqoUL-dwiU1ZyTAwWleFgwQCkHQTyPuHPNbZCpOcpXsvENrKadvlsu10S3M5QxDD9EYTcdcILIFj08b03lyOJoxU1ApRy_WlTgFBrOpcM7Vc7RYPe0Um3ANfRW6taiLH7_FN2dM9Oe8ZJe-NBvghRM5BqzT0SzmHU8DJvGX6U0dnSd5izC_4mJtclZl')">
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center mt-section-gap">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary-container mb-6 max-w-4xl mx-auto">
+                    Made for Moments That Matter
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    For years, we've helped families and businesses turn important occasions into beautiful memories, crafting bespoke invitations that set the tone for life's most cherished celebrations.
+                </p>
+</div>
+<!-- Minimal decorative element -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-secondary/60">
+<span class="w-[1px] h-16 bg-secondary/30 block mb-2"></span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase">Scroll</span>
+</div>
+</section>
+<!-- Our Story (Asymmetric Layout) -->
+<section class="py-section-gap max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 md:col-start-2 relative">
+<div class="aspect-[3/4] w-full relative">
+<!-- Tipped-in photo effect -->
+<div class="absolute inset-0 border border-secondary/20 m-2 z-10 pointer-events-none"></div>
+<img class="w-full h-full object-cover bg-surface-container-low" data-alt="A sophisticated editorial photograph of a master artisan delicately applying antique gold leaf to a deep burgundy invitation card. The artisan's hands are focused, utilizing traditional Indian crafting tools. The workspace is a pristine, minimalist atelier with warm ivory surfaces and natural soft light streaming in from a side window. The mood is focused, serene, and deeply respectful of heritage craftsmanship, perfectly aligning with a modern luxury brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi-wn0YX-L5AEhX_eWu6B9rVbEWwAxOrNvLz-1rzT6XjfPWAEs9IPbKYE-V6B-7pOcUD6h5llL5w6lfMtIDoZa6hwEiHBumQR1JlfBiqKSr0dry77jWpLI50ikTOWswcIM4w-0vckcrosFEhBlj7868tR5NdnzXoh0XdCJyAlie-cgph56b3PWcGXqeHesvYHiTyY2flBpE-VuFsSPn8EfJQ9ypHFbfGOkyYaJL68Zjwnghnwbg9Nm"/>
+</div>
+</div>
+<div class="md:col-span-5 md:col-start-8 mt-12 md:mt-0">
+<span class="font-label-md text-label-md text-secondary block mb-4">Our Heritage</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary-container mb-6">
+                        An Atelier, Not Just a Printer
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                        Studio Shunya was born from a desire to elevate the art of the invitation. We believe that the first glimpse your guests have of your celebration should be a tactile, unforgettable experience.
+                    </p>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        We blend the timeless elegance of Indian traditional craftsmanship with a restrained, modern editorial minimalism. Every suite we design is a testament to quality, utilizing the finest materials and artisanal techniques to create modern heirlooms.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-center py-12">
+<div class="w-full h-[0.5px] bg-secondary/30 relative">
+<span class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-surface px-4 text-secondary">
+<span class="material-symbols-outlined text-[16px]">flare</span>
+</span>
+</div>
+</div>
+<!-- Craft, Collections, Commitment (Bento Style) -->
+<section class="py-section-gap max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Our Craft -->
+<div class="bg-surface-container-low p-10 border border-secondary/10 flex flex-col items-start group hover:border-secondary/30 transition-colors duration-500">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6">architecture</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Our Craft</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                        Where traditional techniques meet modern precision. We utilize letterpress, blind embossing, and hand-applied foil to ensure every detail is crisp, intentional, and flawless.
+                    </p>
+</div>
+<!-- Our Commitment -->
+<div class="bg-surface-container-low p-10 border border-secondary/10 flex flex-col items-start group hover:border-secondary/30 transition-colors duration-500 md:translate-y-8">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6">diamond</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Commitment to Quality</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                        We source only the finest materials globally. From 350gsm pure cotton rag paper that feels substantial in hand, to authentic antique gold leafing that catches the light beautifully.
+                    </p>
+</div>
+<!-- Our Collections -->
+<div class="bg-surface-container-low p-10 border border-secondary/10 flex flex-col items-start group hover:border-secondary/30 transition-colors duration-500">
+<span class="material-symbols-outlined text-secondary text-3xl mb-6">collections_bookmark</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Our Collections</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                        From grand weddings to intimate bespoke gatherings, our diverse collections serve a breadth of celebrations, each customizable to reflect your unique narrative.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Visual Timeline -->
+<section class="py-section-gap bg-surface-container-low border-y border-outline/10">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary-container">Our Evolution</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4 max-w-xl mx-auto">A journey of continuous refinement in the pursuit of perfection.</p>
+</div>
+<div class="relative max-w-4xl mx-auto">
+<!-- Central Line -->
+<div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-secondary/30 md:-translate-x-1/2"></div>
+<!-- Timeline Item 1 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between mb-16">
+<div class="hidden md:block md:w-5/12 text-right pr-12">
+<h4 class="font-headline-md text-headline-md text-primary">The Inception</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Founded as a small bespoke design studio focusing on highly personalized family events.</p>
+</div>
+<div class="absolute left-4 md:left-1/2 w-3 h-3 bg-secondary rounded-full -translate-x-[5px] md:-translate-x-1/2 border-4 border-surface-container-low shadow-sm"></div>
+<div class="ml-12 md:ml-0 md:w-5/12 pl-0 md:pl-12">
+<span class="font-label-lg text-label-lg text-secondary">2008</span>
+<div class="md:hidden mt-2">
+<h4 class="font-headline-md text-headline-md text-primary">The Inception</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Founded as a small bespoke design studio focusing on highly personalized family events.</p>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between mb-16">
+<div class="ml-12 md:ml-0 md:w-5/12 text-left md:text-right pr-0 md:pr-12 md:order-1 order-2">
+<span class="font-label-lg text-label-lg text-secondary hidden md:block">2015</span>
+<div class="md:hidden mt-2">
+<h4 class="font-headline-md text-headline-md text-primary">Heritage Integration</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Partnered with generational master craftsmen to introduce authentic block printing and gold leafing into our repertoire.</p>
+</div>
+</div>
+<div class="absolute left-4 md:left-1/2 w-3 h-3 bg-secondary rounded-full -translate-x-[5px] md:-translate-x-1/2 border-4 border-surface-container-low shadow-sm z-10"></div>
+<div class="ml-12 md:ml-0 md:w-5/12 pl-0 md:pl-12 md:order-2 order-1">
+<span class="font-label-lg text-label-lg text-secondary md:hidden block">2015</span>
+<div class="hidden md:block">
+<h4 class="font-headline-md text-headline-md text-primary">Heritage Integration</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Partnered with generational master craftsmen to introduce authentic block printing and gold leafing into our repertoire.</p>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between">
+<div class="hidden md:block md:w-5/12 text-right pr-12">
+<h4 class="font-headline-md text-headline-md text-primary">Luxury Redefined</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Established as a premier luxury atelier, blending modern editorial minimalism with rich Indian cultural aesthetics.</p>
+</div>
+<div class="absolute left-4 md:left-1/2 w-3 h-3 bg-secondary rounded-full -translate-x-[5px] md:-translate-x-1/2 border-4 border-surface-container-low shadow-sm"></div>
+<div class="ml-12 md:ml-0 md:w-5/12 pl-0 md:pl-12">
+<span class="font-label-lg text-label-lg text-secondary">Present</span>
+<div class="md:hidden mt-2">
+<h4 class="font-headline-md text-headline-md text-primary">Luxury Redefined</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Established as a premier luxury atelier, blending modern editorial minimalism with rich Indian cultural aesthetics.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Statistics Section -->
+<section class="py-section-gap max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+<div>
+<div class="font-display-lg text-display-lg text-primary-container mb-2">15+</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Years of Experience</div>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-primary-container mb-2">5k+</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Unique Designs Created</div>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-primary-container mb-2">10k+</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Happy Customers</div>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-primary-container mb-2">∞</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Occasions Celebrated</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-section-gap bg-surface relative overflow-hidden">
+<!-- Background Image Texture -->
+<div class="absolute inset-0 z-0 opacity-10" data-alt="A subtle, abstract background image consisting of smooth, sweeping curves in warm ivory and pale gold tones. The texture resembles fine silk or gently folded premium paper. The lighting is ethereal and minimal, creating a serene and luxurious canvas that perfectly supports high-contrast deep burgundy typography without causing visual clutter." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNwP5hrf5Zg9GcI5ugFthrIEQiNHJ8t9q5hEs5BpjyablsiSCvU_SBBDHqBH0q1tk4lP3Km2P-GOATf60wXVyGU7ox1gXabyiyt43wZy5BtvKL4Z4LhcdfS0br-OFk0kuUNofZWCfa-e6WWKO-HrRDCopse8tOUh2hm1Tn2eU_BISGzAV6lt6DSWi8jDYZYK3_mpdqaJSnrEsf1UOB7rBVyf2ujglxaeCozVSp4r8GN6HhZ3atJnX5')">
+</div>
+<div class="relative z-10 max-w-3xl mx-auto px-margin-mobile text-center">
+<span class="material-symbols-outlined text-secondary text-4xl mb-6">auto_awesome</span>
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary-container mb-8">
+                    Every celebration deserves a beautiful beginning.
+                </h2>
+<a class="inline-flex items-center justify-center px-8 py-4 bg-primary-container text-on-primary font-label-md text-label-md rounded border border-transparent hover:border-secondary hover:bg-primary transition-all duration-300 shadow-[0_12px_32px_rgba(45,45,45,0.08)]" href="#">
+                    Explore Our Collection
+                </a>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full relative bg-surface-container-low dark:bg-tertiary-container border-t border-outline/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="flex flex-col gap-4">
+<span class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">
+                    Studio Shunya
+                </span>
+<p class="font-body-md text-body-md text-on-surface dark:text-on-tertiary-container mt-4 max-w-xs">
+                    Crafting bespoke artistry and modern Indian luxury invitations for discerning clientele worldwide.
+                </p>
+</div>
+<!-- Links Column 1 -->
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm text-on-surface dark:text-on-tertiary-container uppercase tracking-widest mb-2">Explore</h4>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Collections</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Bespoke Artistry</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Heritage Series</a>
+</div>
+<!-- Links Column 2 -->
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm text-on-surface dark:text-on-tertiary-container uppercase tracking-widest mb-2">Information</h4>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Our Process</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Shipping &amp; Returns</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 underline transition-all" href="#">Privacy Policy</a>
+</div>
+<!-- Contact / Newsletter Column -->
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm text-on-surface dark:text-on-tertiary-container uppercase tracking-widest mb-2">Connect</h4>
+<div class="relative mt-2">
+<input class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-secondary focus:ring-0 px-0 py-2 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors" placeholder="Join our mailing list" type="email"/>
+<button class="absolute right-0 top-1/2 -translate-y-1/2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Copyright Bottom Bar -->
+<div class="w-full border-t border-outline/10 py-6 text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-tertiary-container">
+                © 2024 Studio Shunya Invitation Atelier. All Rights Reserved.
+            </p>
+</div>
+</footer>
+<script>
+        // Smooth scroll to top on link click (as per footer JSON style_interactions)
+        document.querySelectorAll('footer a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Only prevent default and scroll up if it's an empty hash link or specific top link
+                if(this.getAttribute('href') === '#' || this.getAttribute('href') === '') {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body></html>

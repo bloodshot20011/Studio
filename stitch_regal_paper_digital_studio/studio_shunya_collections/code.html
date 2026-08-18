@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Collections - Studio Shunya</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Google Fonts: Playfair Display & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#1b1c1c",
+                    "on-primary-fixed-variant": "#842420",
+                    "on-secondary-fixed": "#261900",
+                    "surface-container-high": "#eae7e7",
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-surface-variant": "#574240",
+                    "primary": "#490003",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#ddc0bd",
+                    "surface-bright": "#fcf9f8",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffdea5",
+                    "surface-container": "#f0eded",
+                    "secondary": "#775a19",
+                    "on-background": "#1b1c1c",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#303030",
+                    "surface-variant": "#e4e2e1",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#f5786e",
+                    "surface": "#fcf9f8",
+                    "background": "#fcf9f8",
+                    "inverse-primary": "#ffb4ac",
+                    "on-tertiary-container": "#9d9d9a",
+                    "tertiary-fixed": "#e3e2df",
+                    "surface-container-highest": "#e4e2e1",
+                    "surface-tint": "#a43b35",
+                    "on-primary-fixed": "#410003",
+                    "tertiary": "#1f201e",
+                    "on-secondary-container": "#785a1a",
+                    "secondary-container": "#fed488",
+                    "on-tertiary-fixed-variant": "#464744",
+                    "on-tertiary-fixed": "#1b1c1a",
+                    "primary-fixed": "#ffdad6",
+                    "primary-container": "#6b1111",
+                    "inverse-on-surface": "#f3f0f0",
+                    "outline": "#8a716f",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#343533",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-fixed-dim": "#c7c7c3",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#ffb4ac",
+                    "surface-dim": "#dcd9d9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "container-max": "1280px",
+                    "section-gap": "120px",
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Playfair Display"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Playfair Display"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["40px", {"lineHeight": "48px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Hide scrollbar for category nav */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed min-h-screen flex flex-col relative">
+<!-- JSON Component: TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline/20">
+<div class="flex justify-between items-center h-20 px-margin-desktop max-w-container-max mx-auto md:px-margin-desktop px-margin-mobile">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md tracking-tighter text-primary dark:text-primary-fixed" href="#">
+                Studio Shunya
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-primary hover:text-secondary transition-colors duration-300" href="#">Home</a>
+<!-- Active Link -->
+<a class="font-label-md text-label-md text-primary dark:text-primary-fixed border-b-2 border-secondary pb-1 opacity-80 transition-opacity duration-200" href="#">Collections</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-primary hover:text-secondary transition-colors duration-300" href="#">Categories</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-primary hover:text-secondary transition-colors duration-300" href="#">About</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-container hover:text-primary hover:text-secondary transition-colors duration-300" href="#">Contact</a>
+</div>
+<!-- Trailing Action (Desktop) -->
+<div class="hidden md:flex items-center gap-4">
+<button class="font-label-md text-label-md bg-primary-container text-on-primary px-6 py-2.5 hover:bg-surface hover:text-primary border border-primary-container hover:border-secondary transition-colors duration-300">
+                    Explore Collection
+                </button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[100px]"> <!-- Padding top accounts for fixed nav -->
+<!-- Hero Section -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
+<span class="block font-label-md text-label-md text-secondary uppercase tracking-[0.15em] mb-4">OUR COLLECTION</span>
+<h1 class="hidden md:block font-display-lg text-display-lg text-primary mb-6">Designed for Every Occasion</h1>
+<h1 class="md:hidden font-display-lg-mobile text-display-lg-mobile text-primary mb-6">Designed for Every Occasion</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Discover our meticulously curated selection of bespoke stationery and fine invitations. Each piece represents a harmonious blend of heritage craftsmanship and modern editorial elegance, thoughtfully designed to commemorate life's most significant milestones.
+            </p>
+</section>
+<!-- Navigation & Filters Bar -->
+<section class="sticky top-[80px] z-40 bg-surface/95 backdrop-blur-sm border-y border-outline/10 py-4 mb-section-gap">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-4">
+<!-- Horizontal Category Scroll -->
+<div class="w-full md:w-auto overflow-x-auto no-scrollbar flex items-center gap-3 pb-2 md:pb-0">
+<!-- Active State -->
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-secondary text-primary bg-surface-container-low">All</button>
+<!-- Inactive States -->
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Wedding</button>
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Birthday</button>
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Mundan</button>
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Griha Pravesh</button>
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Shop Opening</button>
+<button class="flex-shrink-0 font-label-sm text-label-sm uppercase tracking-widest px-5 py-2.5 rounded-full border border-outline/20 text-on-surface-variant hover:border-secondary hover:text-primary transition-colors">Retirement</button>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-4 flex-shrink-0">
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="w-4 h-4 border border-outline group-hover:border-secondary flex items-center justify-center transition-colors">
+<div class="w-2 h-2 bg-transparent"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest group-hover:text-primary">New Arrivals</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="w-4 h-4 border border-secondary flex items-center justify-center transition-colors">
+<div class="w-2 h-2 bg-secondary"></div>
+</div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Featured</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Editorial Masonry Grid -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
+<div class="columns-1 md:columns-2 lg:columns-3 gap-gutter space-y-gutter">
+<!-- Product Card 1 (Portrait) -->
+<article class="break-inside-avoid group cursor-pointer">
+<div class="relative overflow-hidden bg-surface-container-low mb-4">
+<img class="w-full h-auto object-cover aspect-[3/4] transition-transform duration-700 ease-out group-hover:scale-105" data-alt="A meticulously crafted Indian wedding invitation card resting on a pristine ivory marble surface. The card features deep burgundy handmade paper adorned with intricate, embossed gold-leaf floral motifs reminiscent of royal heritage. Soft, diffused daylight casts gentle, natural shadows, highlighting the tactile texture of the paper and the reflective brilliance of the antique gold. The composition is minimalistic, high-end, and editorial, capturing a sense of opulent modern luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50-rNQMCArtltX8P_NPLRIqqWINRk4XeDDQMxFFanjfy_9fdgddXdhtwqYNzGeja-5CalIvZQtNK5irwO9Pilm0nUiX_nSL9aFLVbP-vEKjQHN6SRu355KDFhCW4Mv-iDsSnl-S9MG5cJx1Y9bs_tibzIm8mMlv97Td-fxyZNarKX50nQNL7HMEYoTJe_9V9vwYJHodOtL5OXvtNTcQJij56d6lXvvTEJYLsyMyIjEaS2WNNKutCG"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+<button class="bg-primary-container text-on-primary px-8 py-3 font-label-md text-label-md border border-secondary uppercase tracking-widest hover:bg-surface hover:text-primary transition-colors">View Design</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Wedding</span>
+<span class="font-label-sm text-label-sm text-outline">#W-804</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Royal Heritage Suite</h2>
+</div>
+</article>
+<!-- Product Card 2 (Square-ish) -->
+<article class="break-inside-avoid group cursor-pointer">
+<div class="relative overflow-hidden bg-surface-container-low mb-4">
+<img class="w-full h-auto object-cover aspect-[4/5] transition-transform duration-700 ease-out group-hover:scale-105" data-alt="A luxurious, minimalist housewarming (Griha Pravesh) invitation elegantly styled on a subtle beige backdrop. The invitation utilizes a stark, refined structural design with a minimalist layout, showcasing elegant deep charcoal serif typography against warm ivory cardstock. A delicate, singular antique gold geometric accent anchors the design. The lighting is studio-quality, creating a soft tonal layering effect that emphasizes the crisp, flat elegance of the contemporary Indian aesthetic without heavy shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM3rwAWKKbF83U-9McEijqPv3dplo0gXz63IFcpMCnWFhZIm5ZCVwv7BvVBjEzj64x8frSs2hjUIi_paCn5dGqLqo6TryCzCFDEWJXp05PuNylB2ADhWJtrGMKgQ63wuZIPeJSEo_SjbaZ7Bn4FFyJTMr3oXyETKR9jjnVoGUZFlnlfVMhFP-600fHufyoVWOlseFmrhrGkppCQtc9j9UBmgqvl2bqk2gek8N6dvtOMbc_hGmsj6_L"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+<button class="bg-primary-container text-on-primary px-8 py-3 font-label-md text-label-md border border-secondary uppercase tracking-widest hover:bg-surface hover:text-primary transition-colors">View Design</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Griha Pravesh</span>
+<span class="font-label-sm text-label-sm text-outline">#G-112</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Minimalist Vastu</h2>
+</div>
+</article>
+<!-- Product Card 3 (Long Portrait) -->
+<article class="break-inside-avoid group cursor-pointer">
+<div class="relative overflow-hidden bg-surface-container-low mb-4">
+<img class="w-full h-auto object-cover aspect-[2/3] transition-transform duration-700 ease-out group-hover:scale-105" data-alt="An exquisite set of bespoke digital invitations presented on a sleek tablet screen, resting beside a physical envelope in deep burgundy. The screen displays a glowing, sophisticated interface with fluid, golden-hour inspired gradients that reflect a modern corporate yet festive identity. The surrounding environment is sparse and elegant, utilizing generous whitespace and muted tones to allow the vibrant, high-contrast digital artwork to stand out. The mood conveys exclusivity and technological refinement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe6Jd2potxnkI_kTe0JA37j0r6rK0CYgJuga58UK3E5jrw9AVL0LTwNVPJlo-MC2rQG5hp1twxqH3YFIkjDh7MSpNkmaWSy-fLbgFU0j5mt3e04fvGPpEsmDqc1xLVfDUz4fLriipipNzUjmplX1RMi19AAHai_5ImaqfxPxZcrtsliT3Bx4JT2hR1rRolzXWNp5afHMe9gnrJXDxr6XSjJMJT9MSIEzsqYWk7zrr-eb2dww-wCrqD"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+<button class="bg-primary-container text-on-primary px-8 py-3 font-label-md text-label-md border border-secondary uppercase tracking-widest hover:bg-surface hover:text-primary transition-colors">View Design</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Digital Invitations</span>
+<span class="font-label-sm text-label-sm text-outline">#D-005</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Golden E-Vows</h2>
+</div>
+</article>
+<!-- Product Card 4 (Landscape-ish in masonry) -->
+<article class="break-inside-avoid group cursor-pointer">
+<div class="relative overflow-hidden bg-surface-container-low mb-4">
+<img class="w-full h-auto object-cover aspect-[4/3] transition-transform duration-700 ease-out group-hover:scale-105" data-alt="A collection of premium gift envelopes fanned out elegantly on a dark, textured charcoal surface. The envelopes are crafted from vibrant, primary-colored silks and textured papers, each sealed with a subtle, 1px fine antique gold metallic rim. The composition is lit with dramatic, directional lighting that creates stark contrast and accentuates the tactile materials. The overall aesthetic is one of quiet confidence, structural elegance, and high-net-worth gifting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgEcOdtfjahF6otu4wcYR2SitL4TSqhSOJuNWZGwrHDRKxBLt1vIokJPpYkFFcCrxlvTh5dURtlhI0x8ZTaG3aasWdoV1pLSwimgvz2YxzVyG5ZqOuX4hq9Q1cgee8NGeXitZ54MATVMwN7BLpa7Py6Sn1AeZuTWQbqp6_GiLqsdmYwZw9QWv3XdprJVQ5QlsjUooMhIkI7ZgZ8MTMGzIIXEshhaPvSX3WGlWnwj8j9jL17UDbQLYb"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+<button class="bg-primary-container text-on-primary px-8 py-3 font-label-md text-label-md border border-secondary uppercase tracking-widest hover:bg-surface hover:text-primary transition-colors">View Design</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Gift Envelopes</span>
+<span class="font-label-sm text-label-sm text-outline">#E-441</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Silk Shagun Series</h2>
+</div>
+</article>
+<!-- Product Card 5 -->
+<article class="break-inside-avoid group cursor-pointer">
+<div class="relative overflow-hidden bg-surface-container-low mb-4">
+<img class="w-full h-auto object-cover aspect-[3/4] transition-transform duration-700 ease-out group-hover:scale-105" data-alt="A refined Mundan ceremony invitation displayed against a warm ivory background. The design features a playful yet highly sophisticated illustration style, utilizing thin, precise outlines in deep burgundy. The typography is a delicate mix of classic serif and clean sans-serif. The paper appears thick and luxurious, casting a very soft, highly diffused ambient shadow that suggests premium weight. The aesthetic avoids traditional clutter, favoring a clean, editorial presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmwi-fHKE_hTR0FuoHIXlbyPh7mKhA2_GsOy68NyLY_bNXXTAo0gFtnl9EaVxu_iSSxBB-tvDjVJhgOixoUobaZ3J1fypIQLz5JTYk5UWxMHel-Y3LkZCeAXzo4GhKHJ2YGq0GQtBqIqYoIGs6MXKLuKkIkXRpf9NR7_gFlCsCe8fAKvWEu8NBC-zMgwoM55q4YUP6dUyN96s_JvhLSJ4VyXYCrrcp44unqvIfO_G-IrPVtk0PMGVl"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+<button class="bg-primary-container text-on-primary px-8 py-3 font-label-md text-label-md border border-secondary uppercase tracking-widest hover:bg-surface hover:text-primary transition-colors">View Design</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Mundan</span>
+<span class="font-label-sm text-label-sm text-outline">#M-022</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Innocence Edges</h2>
+</div>
+</article>
+</div>
+</section>
+<!-- Load More Section -->
+<section class="flex justify-center pb-section-gap">
+<button class="font-label-md text-label-md uppercase tracking-widest text-primary border-b border-secondary pb-1 hover:text-secondary transition-colors duration-300 flex items-center gap-2">
+                Discover More
+                <span class="material-symbols-outlined text-[18px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</section>
+</main>
+<!-- JSON Component: Footer -->
+<footer class="bg-surface-container-low dark:bg-tertiary-container w-full relative border-t border-outline/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-section-gap px-margin-desktop max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 flex flex-col gap-6">
+<a class="font-headline-md text-headline-md text-primary dark:text-primary-fixed" href="#">Studio Shunya</a>
+<p class="font-body-md text-body-md text-on-surface dark:text-on-tertiary-container">
+                    © 2024 Studio Shunya Invitation Atelier. All Rights Reserved.
+                </p>
+</div>
+<!-- Links Column -->
+<div class="col-span-1 md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-8">
+<!-- Navigation -->
+<div class="flex flex-col gap-4">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Explore</span>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed underline-offset-4 underline hover:text-secondary dark:hover:text-secondary-fixed-dim transition-colors" href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Collections</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-colors" href="#">Bespoke Artistry</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-colors" href="#">Heritage Series</a>
+</div>
+<!-- Information -->
+<div class="flex flex-col gap-4">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Atelier</span>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-colors" href="#">Our Process</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-fixed-dim underline-offset-4 hover:underline transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
