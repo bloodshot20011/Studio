@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Studio Shunya - Digital Cards</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#003761",
+                        "background": "#fcf9f8",
+                        "secondary": "#775a19",
+                        "on-secondary-container": "#785a1a",
+                        "on-secondary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#842420",
+                        "on-primary-container": "#f5786e",
+                        "surface-variant": "#e5e2e1",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001d36",
+                        "on-surface": "#1b1c1c",
+                        "status-warning": "#634522",
+                        "outline-variant": "#ddc0bd",
+                        "surface-tint": "#a43b35",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface-variant": "#574240",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "primary-container": "#6b1111",
+                        "status-success": "#727559",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#410003",
+                        "secondary-container": "#fed488",
+                        "secondary-fixed": "#ffdea5",
+                        "surface-container-high": "#eae7e7",
+                        "on-background": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#1d4974",
+                        "secondary-fixed-dim": "#e9c176",
+                        "inverse-surface": "#303030",
+                        "on-primary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "outline": "#8a716f",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container": "#f0eded",
+                        "tertiary": "#00213e",
+                        "surface-subtle": "#F3F1F0",
+                        "status-info": "#373B4D",
+                        "border-muted": "#D9D2CE",
+                        "primary-fixed": "#ffdad6",
+                        "tertiary-fixed": "#d2e4ff",
+                        "on-tertiary-container": "#7aa1d1",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#ffb4ac",
+                        "tertiary-fixed-dim": "#a2c9fc",
+                        "surface-bright": "#fcf9f8",
+                        "primary": "#490003"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "unit-md": "16px",
+                        "unit-xl": "48px",
+                        "sidebar-width": "280px",
+                        "gutter": "24px",
+                        "unit-sm": "8px",
+                        "margin-mobile": "16px",
+                        "unit-lg": "24px",
+                        "container-max": "1440px",
+                        "unit-xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Playfair Display"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "title-md": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-xs": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full py-unit-lg px-unit-md border-r border-border-muted bg-surface-subtle fixed left-0 top-0 h-screen w-sidebar-width z-50">
+<!-- Brand -->
+<div class="mb-unit-xl px-unit-sm">
+<h1 class="font-headline-lg text-headline-lg font-semibold text-primary">Studio Shunya</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 uppercase tracking-widest">Admin Panel</p>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-label-sm text-label-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">category</span>
+<span class="font-label-sm text-label-sm">Categories</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-primary font-bold border-l-4 border-primary bg-surface-container-high transition-transform duration-150 scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">style</span>
+<span class="font-label-sm text-label-sm">Digital Cards</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">contact_support</span>
+<span class="font-label-sm text-label-sm">Enquiries</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<!-- Footer Actions -->
+<div class="mt-auto pt-unit-md border-t border-border-muted space-y-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="font-label-sm text-label-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-sidebar-width h-full flex flex-col relative overflow-y-auto overflow-x-hidden bg-background">
+<!-- Top App Bar (Mobile / Utility) -->
+<header class="flex md:hidden justify-between items-center w-full h-16 px-margin-mobile sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-border-muted">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Studio Shunya</h1>
+<div class="flex gap-2">
+<button class="p-2 text-primary hover:bg-surface-container-low rounded-full transition-all"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-primary hover:bg-surface-container-low rounded-full transition-all"><span class="material-symbols-outlined">menu</span></button>
+</div>
+</header>
+<div class="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-unit-lg md:py-unit-xl">
+<!-- Page Header -->
+<div class="mb-unit-xl flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Digital Cards</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage PDF and video invitations for clients.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-DEFAULT font-label-sm text-label-sm hover:bg-primary-container transition-colors flex items-center gap-2 w-fit">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    New Card
+                </button>
+</div>
+<!-- Stats Overview (Minimalist Corporate) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-unit-xl">
+<!-- Stat 1 -->
+<div class="border border-border-muted bg-surface-container-lowest p-unit-lg rounded-DEFAULT flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Digital Cards</span>
+<span class="material-symbols-outlined text-secondary opacity-50">style</span>
+</div>
+<div class="font-display-lg text-display-lg text-primary z-10 group-hover:scale-105 transition-transform duration-300 origin-left">248</div>
+<div class="absolute bottom-0 right-0 w-32 h-32 bg-surface-subtle rounded-full -mr-16 -mb-16 opacity-50"></div>
+</div>
+<!-- Stat 2 -->
+<div class="border border-border-muted bg-surface-container-lowest p-unit-lg rounded-DEFAULT flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">PDF Invitations</span>
+<span class="material-symbols-outlined text-secondary opacity-50">picture_as_pdf</span>
+</div>
+<div class="font-display-lg text-display-lg text-primary z-10 group-hover:scale-105 transition-transform duration-300 origin-left">182</div>
+<div class="absolute bottom-0 right-0 w-32 h-32 bg-surface-subtle rounded-full -mr-16 -mb-16 opacity-50"></div>
+</div>
+<!-- Stat 3 -->
+<div class="border border-border-muted bg-surface-container-lowest p-unit-lg rounded-DEFAULT flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Video Invitations</span>
+<span class="material-symbols-outlined text-secondary opacity-50">movie</span>
+</div>
+<div class="font-display-lg text-display-lg text-primary z-10 group-hover:scale-105 transition-transform duration-300 origin-left">66</div>
+<div class="absolute bottom-0 right-0 w-32 h-32 bg-surface-subtle rounded-full -mr-16 -mb-16 opacity-50"></div>
+</div>
+</div>
+<!-- Content Controls (Tabs & Filter) -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-unit-md border-b border-border-muted pb-4">
+<div class="flex space-x-6">
+<button class="font-label-sm text-label-sm text-primary border-b-2 border-primary pb-2 uppercase tracking-widest relative top-[17px]">All Digital</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors pb-2 uppercase tracking-widest relative top-[17px]">PDF</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors pb-2 uppercase tracking-widest relative top-[17px]">Video</button>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-subtle border border-border-muted rounded-DEFAULT font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Search cards..." type="text"/>
+</div>
+<button class="p-2 border border-border-muted rounded-DEFAULT text-on-surface-variant hover:bg-surface-subtle transition-colors flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Digital Cards Grid (Bento/Premium Card layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Card Item 1 (PDF) -->
+<div class="group border border-border-muted bg-surface-container-lowest rounded-DEFAULT overflow-hidden hover:border-outline-variant transition-all duration-300 flex flex-col">
+<div class="aspect-[4/3] relative overflow-hidden bg-surface-subtle border-b border-border-muted">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="A minimalist, premium wedding invitation design template shown on a neutral textured background. The design features elegant serif typography in deep burgundy, with subtle gold foil accents framing the text. The lighting is soft and natural, creating a high-end, bespoke editorial aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9Akmnl_IZLfatqCPtw7d3HHgiuU7dveB8P2vWI7lmbssQIkpFuZidJGLC9qHjT8xaOaPeXv4hHNsR_OMWmGacbgxl61pXWpdXG4hvp3gceZULKxGtU-idpzMqoPgDUnajn20yBpylTctg970Kbt-xk0qW1u2rv-bADL5-SUwY5NirxQ1tJWjh1PV9WDDqj4brCjrkSjqIm2p4fSja-J5SgUTBcknivCEfo8j1FoWiyDDhRPkNQwAu')"></div>
+<div class="absolute top-3 left-3 bg-primary text-on-primary px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs tracking-wider flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">picture_as_pdf</span> PDF
+                        </div>
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur text-status-success px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs border border-status-success/20">
+                            Active
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface mb-1 truncate">The Royal Heritage</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Wedding Collection</p>
+<div class="mt-auto flex justify-between items-center pt-4 border-t border-border-muted">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Last updated: 2d ago</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Item 2 (Video) -->
+<div class="group border border-border-muted bg-surface-container-lowest rounded-DEFAULT overflow-hidden hover:border-outline-variant transition-all duration-300 flex flex-col">
+<div class="aspect-[4/3] relative overflow-hidden bg-surface-subtle border-b border-border-muted">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="A sophisticated digital video invitation thumbnail. The visual displays a slow-motion capture of a silk fabric dropping against a dark charcoal background. The typography is modern sans-serif overlaid in bright white. The overall mood is contemporary, luxurious, and dynamic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDRSKZc8fG2kmg9q9glBHoMURy1fGeouUtO_6_7GcSCZSTe-xZlaVwnZyfCXTWkEt1vSfdbyE9bRmT1KuHtS-X3AF4IbJ5bVzSsnwpyhZnQkuPTNpca0jHtEXso05tm5rb8uJPAPFJriuC7EJAautrwDYhi6I4JmUiwNNj8-gxjQgFPo1XFzIA4j6Wa62C46JyD26G6aJx-QI_6__eVw1bFHU7d7O2hHnWHbL3wqDWz1WWDWJwYEWuK')"></div>
+<!-- Play button overlay for video -->
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest/80 backdrop-blur flex items-center justify-center text-primary shadow-lg">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute top-3 left-3 bg-secondary text-on-secondary px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs tracking-wider flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">movie</span> VIDEO
+                        </div>
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur text-status-warning px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs border border-status-warning/20">
+                            Draft
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface mb-1 truncate">Modern Velvet</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Corporate Events</p>
+<div class="mt-auto flex justify-between items-center pt-4 border-t border-border-muted">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Last updated: 5h ago</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Item 3 (PDF) -->
+<div class="group border border-border-muted bg-surface-container-lowest rounded-DEFAULT overflow-hidden hover:border-outline-variant transition-all duration-300 flex flex-col">
+<div class="aspect-[4/3] relative overflow-hidden bg-surface-subtle border-b border-border-muted">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="A clean, minimalist business event invitation card layout. The design features a vast amount of whitespace, utilizing a strict grid system. A single, bold, abstract geometric shape in antique gold provides the only color against a pristine white background. The text is crisp and authoritative." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4lakzxdTzUwQtiX_DuW7oNGYh2E3ukEP3M6H1GG57F7m9Jtb9UolUBU1hEarGWQzhh5peWWNCM-DHM9UQ7pwEGN_XRVJlrSY0RuOUnRNX_-DaRH3xWl30E6Tq388j856LeHc89xg4AlZ9nlY5pwB29b7Hcf_odyXfbNpnECVFZl9PXpaJz_E_Tp2UKXrSWtOwwP-9fXOkBLM0ok1BTlyaNryE5EmjICBGDuta6WjT21NhZlr71nvE')"></div>
+<div class="absolute top-3 left-3 bg-primary text-on-primary px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs tracking-wider flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">picture_as_pdf</span> PDF
+                        </div>
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur text-status-success px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs border border-status-success/20">
+                            Active
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface mb-1 truncate">Executive Gala</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Gala &amp; Dinners</p>
+<div class="mt-auto flex justify-between items-center pt-4 border-t border-border-muted">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Last updated: 1w ago</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Item 4 (PDF) -->
+<div class="group border border-border-muted bg-surface-container-lowest rounded-DEFAULT overflow-hidden hover:border-outline-variant transition-all duration-300 flex flex-col opacity-75 grayscale-[20%]">
+<div class="aspect-[4/3] relative overflow-hidden bg-surface-subtle border-b border-border-muted">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="A rustic, bohemian style e-invite preview. Features soft watercolor floral motifs in muted warm grays and subtle burgundy hints around the borders. The typography uses a flowing, elegant script font for the primary names, creating an organic, intimate feel suitable for private gatherings." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZWKvuxeYQElEkTYnJWgFecqHcVldYrQF5-3ke2KlCHNKq6D34p0TuIr_-u1RLSpG8Nr_ih3D4fA3QzX5JzzzWVDNzKzpEBUyskt76PqQQFsYevvWOrYTThhlv6ZuNY2PjczFniC1BPbdnMWZ6YwdwexSAkd8EYMcOwxCZBXhbEv6M8aqPXtnNkj_Fqq4c0EZD_MeuobliiNc8ZR_PXTwCxg6JPRhHajB_Y3ZwIUnbIY_EgcEbZBOl')"></div>
+<div class="absolute top-3 left-3 bg-primary text-on-primary px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs tracking-wider flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">picture_as_pdf</span> PDF
+                        </div>
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur text-on-surface-variant px-2 py-1 rounded-DEFAULT font-label-xs text-label-xs border border-border-muted">
+                            Archived
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface mb-1 truncate">Bohemian Summer</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Private Parties</p>
+<div class="mt-auto flex justify-between items-center pt-4 border-t border-border-muted">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Last updated: 1m ago</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">restore</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination (Subtle) -->
+<div class="mt-unit-xl flex justify-center pb-unit-xl">
+<div class="flex items-center gap-2">
+<button class="p-2 border border-border-muted rounded-DEFAULT text-on-surface-variant hover:bg-surface-subtle transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center font-label-sm text-label-sm bg-primary text-on-primary rounded-DEFAULT">1</button>
+<button class="w-8 h-8 flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-subtle rounded-DEFAULT transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-subtle rounded-DEFAULT transition-colors">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="p-2 border border-border-muted rounded-DEFAULT text-on-surface-variant hover:bg-surface-subtle transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

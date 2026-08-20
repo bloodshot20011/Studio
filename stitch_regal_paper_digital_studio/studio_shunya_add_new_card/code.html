@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Studio Shunya Admin - Add New Card</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#003761",
+                        "background": "#fcf9f8",
+                        "secondary": "#775a19",
+                        "on-secondary-container": "#785a1a",
+                        "on-secondary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#842420",
+                        "on-primary-container": "#f5786e",
+                        "surface-variant": "#e5e2e1",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001d36",
+                        "on-surface": "#1b1c1c",
+                        "status-warning": "#634522",
+                        "outline-variant": "#ddc0bd",
+                        "surface-tint": "#a43b35",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface-variant": "#574240",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "primary-container": "#6b1111",
+                        "status-success": "#727559",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-fixed": "#410003",
+                        "secondary-container": "#fed488",
+                        "secondary-fixed": "#ffdea5",
+                        "surface-container-high": "#eae7e7",
+                        "on-background": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#1d4974",
+                        "secondary-fixed-dim": "#e9c176",
+                        "inverse-surface": "#303030",
+                        "on-primary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "outline": "#8a716f",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container": "#f0eded",
+                        "tertiary": "#00213e",
+                        "surface-subtle": "#F3F1F0",
+                        "status-info": "#373B4D",
+                        "border-muted": "#D9D2CE",
+                        "primary-fixed": "#ffdad6",
+                        "tertiary-fixed": "#d2e4ff",
+                        "on-tertiary-container": "#7aa1d1",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "primary-fixed-dim": "#ffb4ac",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#ffb4ac",
+                        "tertiary-fixed-dim": "#a2c9fc",
+                        "surface-bright": "#fcf9f8",
+                        "primary": "#490003"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "unit-md": "16px",
+                        "unit-xl": "48px",
+                        "sidebar-width": "280px",
+                        "gutter": "24px",
+                        "unit-sm": "8px",
+                        "margin-mobile": "16px",
+                        "unit-lg": "24px",
+                        "container-max": "1440px",
+                        "unit-xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Playfair Display"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "title-md": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-xs": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Scrollbar for better editorial feel */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e2e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8a716f; }
+        
+        /* Form Inputs Focus State */
+        input:focus, textarea:focus, select:focus {
+            outline: none !important;
+            border-color: #1b1c1c !important;
+            box-shadow: none !important;
+        }
+        
+        input:checked {
+            background-color: #490003 !important;
+            border-color: #490003 !important;
+        }
+        
+        /* Progressive Disclosure Animation */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-subtle border-r border-border-muted flex flex-col py-unit-lg px-unit-md z-50 hidden md:flex">
+<!-- Brand Header -->
+<div class="mb-unit-xl px-unit-sm">
+<h1 class="font-headline-lg text-headline-lg font-semibold text-primary">Studio Shunya</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-1">Admin Panel</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md text-body-md">Products</span>
+</a>
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-body-md text-body-md">Categories</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-primary font-bold border-l-4 border-primary bg-surface-container-high transition-transform duration-150 scale-[0.99]" href="#">
+<span class="material-symbols-outlined fill">style</span>
+<span class="font-body-md text-body-md">Digital Cards</span>
+</a>
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-body-md text-body-md">Enquiries</span>
+</a>
+<a class="flex items-center gap-3 px-unit-md py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="mt-auto pt-unit-md border-t border-border-muted space-y-1">
+<a class="flex items-center gap-3 px-unit-md py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-unit-md py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width flex flex-col min-h-screen relative">
+<!-- TopNavBar (Mobile Only) -->
+<header class="flex justify-between items-center w-full h-16 px-margin-mobile sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-border-muted md:hidden">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Studio Shunya</h1>
+<div class="flex items-center gap-2 text-primary">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Page Header -->
+<div class="px-margin-mobile md:px-margin-desktop py-unit-lg flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 border-b border-border-muted bg-surface z-10 sticky md:top-0 top-16">
+<div>
+<nav class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant mb-2">
+<a class="hover:text-primary transition-colors" href="#">Digital Cards</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-background">Add New Card</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Add New Card</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 border border-outline text-on-background font-label-sm text-label-sm rounded uppercase tracking-wider hover:bg-surface-container-low transition-colors">Save Draft</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-label-sm text-label-sm rounded uppercase tracking-wider hover:bg-primary-container transition-colors">Publish Card</button>
+</div>
+</div>
+<!-- Form Canvas -->
+<div class="p-margin-mobile md:p-margin-desktop flex-1 overflow-y-auto">
+<form class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Main Column (Left) -->
+<div class="lg:col-span-8 space-y-gutter">
+<!-- 1. Basic Info Section -->
+<section class="bg-surface border border-border-muted rounded p-unit-lg">
+<div class="border-b border-border-muted pb-4 mb-6">
+<h3 class="font-title-md text-title-md text-on-background">Basic Information</h3>
+</div>
+<div class="space-y-6">
+<!-- Input Group -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-widest" for="cardName">Card Name <span class="text-error">*</span></label>
+<input class="w-full bg-transparent border border-outline rounded p-3 font-body-md text-on-background placeholder:text-outline-variant focus:border-on-surface focus:ring-0 transition-colors" id="cardName" placeholder="e.g. The Heritage Collection Invitation" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-widest" for="cardCode">SKU / Code</label>
+<input class="w-full bg-transparent border border-outline rounded p-3 font-body-md text-on-background placeholder:text-outline-variant focus:border-on-surface focus:ring-0 transition-colors" id="cardCode" placeholder="e.g. HC-INV-001" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-widest" for="cardCategory">Category</label>
+<select class="w-full bg-transparent border border-outline rounded p-3 font-body-md text-on-background focus:border-on-surface focus:ring-0 appearance-none transition-colors" id="cardCategory">
+<option value="">Select a category</option>
+<option value="wedding">Wedding Invitations</option>
+<option value="corporate">Corporate Events</option>
+<option value="greetings">Greeting Cards</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-widest" for="cardDescription">Description</label>
+<textarea class="w-full bg-transparent border border-outline rounded p-3 font-body-md text-on-background placeholder:text-outline-variant focus:border-on-surface focus:ring-0 resize-y transition-colors" id="cardDescription" placeholder="Describe the design, inspiration, and intended use..." rows="5"></textarea>
+</div>
+</div>
+</section>
+<!-- 3. Image Upload Section -->
+<section class="bg-surface border border-border-muted rounded p-unit-lg">
+<div class="border-b border-border-muted pb-4 mb-6 flex justify-between items-center">
+<h3 class="font-title-md text-title-md text-on-background">Media Gallery</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Max 10 images</span>
+</div>
+<!-- Drag & Drop Area -->
+<div class="border-2 border-dashed border-secondary rounded p-unit-xl text-center hover:bg-primary/5 transition-colors cursor-pointer group mb-6 flex flex-col items-center justify-center min-h-[200px]">
+<span class="material-symbols-outlined text-4xl text-secondary mb-4 group-hover:scale-110 transition-transform">cloud_upload</span>
+<p class="font-title-md text-title-md text-on-background mb-2">Drag and drop images here</p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">or click to browse from your computer</p>
+<button class="px-4 py-2 border border-outline text-on-background font-label-sm text-label-sm rounded uppercase tracking-wider hover:bg-surface-container-low transition-colors" type="button">Browse Files</button>
+</div>
+<!-- Thumbnails Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<!-- Primary Image -->
+<div class="relative group aspect-[3/4] border border-primary rounded overflow-hidden">
+<div class="absolute top-2 left-2 bg-primary text-on-primary font-label-xs text-[10px] px-2 py-1 rounded uppercase tracking-widest z-10">Primary</div>
+<img class="w-full h-full object-cover" data-alt="A sophisticated digital wedding invitation card design featuring deep burgundy and gold accents, laid flat on a pristine ivory surface with subtle natural lighting creating soft shadows, maintaining a premium editorial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1jeieyepvctE96IyYltJE6Fvwy46Zgw4tEEJv8nOA3F99QVJEzCedHyfoQgK_q1w1Xr7abaAy8YucJ0lRonH8RLgieA44pO9ItXN7cx59miEmfiXLFfkSCXlhB9xSLdnVP2giPo-eTWHrOWQnJ5oKhjapYXF95aMlXw48Tya-CokGCtyTY44RQMX2qWYVMQnv51J-V6YpDuwyO2N3BxL2FVAYQ_Cy0Y0FTWEAfPkrt8eccWFo9oaE"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="p-2 bg-surface rounded-full text-on-surface hover:text-primary transition-colors" title="Crop" type="button"><span class="material-symbols-outlined text-[18px]">crop</span></button>
+<button class="p-2 bg-error rounded-full text-on-error hover:bg-on-error-container transition-colors" title="Delete" type="button"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<!-- Thumbnail 2 -->
+<div class="relative group aspect-[3/4] border border-border-muted rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up detail shot of digital card typography showing elegant Playfair Display serif font in dark charcoal against an off-white background, lit with soft diffused studio lighting to highlight the premium minimal design style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXvLPTd7NtPRHQJV3iw5lE3mtVqIYSHOSCykgpR39KCKq6KC52JO5oBFJOx3t1Xpj-7qvJdGV1us_meMrFdQJo4ZSQgRhHqVmnyv4YD6Ao4zwmVg3FJ9AhxH7hVQf_HnKbmrh5h0Wy314zECfAtHafEjM6Sl18UD0DxfwT90wc6p_2gdcxqTxTFm4E-FfYgB0Ub2jJPwE16u6P4N_GJt_GhssuSUUXJxJwF2iBS1nXoOe4xkngxIvC"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="p-2 bg-surface rounded-full text-on-surface hover:text-primary transition-colors" title="Make Primary" type="button"><span class="material-symbols-outlined text-[18px]">star</span></button>
+<button class="p-2 bg-error rounded-full text-on-error hover:bg-on-error-container transition-colors" title="Delete" type="button"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<!-- Thumbnail 3 -->
+<div class="relative group aspect-[3/4] border border-border-muted rounded overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Lifestyle mockup of a digital invitation being viewed on a sleek modern smartphone held by a hand, natural window light illuminating the screen, conveying a seamless digital experience in a sophisticated setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJEcCFMC9XbAvK66LeqJ8qJQrKIxEHiiINvThEyGCTGwsNWA1jXkJTEGHEgEOQkMp-nVo-cHO64NxXkD5rjvzk4lKnAWz5heSZbybbxA1LTEBdHFPaGXupyngKDJPV2KHcIPWxswkco8iQQpGcSKNbneC-CAbzpoXBSN2lLWBi1fVBj2-Ui5Fbu4SU__9qMK1R4wBbvPLu643B9OZecUS60jJ7OKmpkD61L-FGUVY8mUkpz601DYik"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="p-2 bg-surface rounded-full text-on-surface hover:text-primary transition-colors" title="Make Primary" type="button"><span class="material-symbols-outlined text-[18px]">star</span></button>
+<button class="p-2 bg-error rounded-full text-on-error hover:bg-on-error-container transition-colors" title="Delete" type="button"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<!-- Add Placeholder -->
+<div class="aspect-[3/4] border border-dashed border-border-muted rounded flex items-center justify-center hover:bg-surface-container-low transition-colors cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar Column (Right) -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- 2. Formats & 4. Digital Details (Progressive Disclosure) -->
+<section class="bg-surface border border-border-muted rounded p-unit-lg">
+<div class="border-b border-border-muted pb-4 mb-6">
+<h3 class="font-title-md text-title-md text-on-background">Available Formats</h3>
+</div>
+<div class="space-y-4">
+<!-- Printed Toggle -->
+<label class="flex items-start gap-3 p-3 border border-outline-variant rounded hover:border-outline cursor-pointer transition-colors">
+<div class="flex items-center h-5">
+<input class="w-4 h-4 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-background uppercase tracking-widest">Printed Card</span>
+<span class="block font-body-md text-body-md text-on-surface-variant mt-1">Physical card orderable by customers</span>
+</div>
+</label>
+<!-- PDF Toggle & Disclosure -->
+<div class="border border-outline-variant rounded transition-colors group">
+<label class="flex items-start gap-3 p-3 cursor-pointer" onclick="document.getElementById('pdf-details').classList.toggle('expanded')">
+<div class="flex items-center h-5">
+<input checked="" class="w-4 h-4 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="block font-label-sm text-label-sm text-on-background uppercase tracking-widest">Digital PDF</span>
+<span class="block font-body-md text-body-md text-on-surface-variant mt-1">Downloadable static file</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</label>
+<div class="collapsible-content expanded px-3 pb-4" id="pdf-details">
+<div class="pt-3 border-t border-border-muted mt-1">
+<label class="block font-label-xs text-label-xs text-on-surface-variant mb-2 uppercase tracking-widest">Upload Template File</label>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 border border-outline text-on-background font-label-xs text-label-xs rounded uppercase hover:bg-surface-container-low transition-colors whitespace-nowrap" type="button">Choose File</button>
+<span class="font-body-md text-body-md text-on-surface-variant truncate">heritage_invite_v2.pdf</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Video Toggle & Disclosure -->
+<div class="border border-outline-variant rounded transition-colors group">
+<label class="flex items-start gap-3 p-3 cursor-pointer" onclick="document.getElementById('video-details').classList.toggle('expanded')">
+<div class="flex items-center h-5">
+<input class="w-4 h-4 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="block font-label-sm text-label-sm text-on-background uppercase tracking-widest">Video Animation</span>
+<span class="block font-body-md text-body-md text-on-surface-variant mt-1">Animated MP4 or URL link</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</label>
+<div class="collapsible-content px-3" id="video-details">
+<div class="pt-3 pb-4 border-t border-border-muted mt-1 space-y-4">
+<div>
+<label class="block font-label-xs text-label-xs text-on-surface-variant mb-2 uppercase tracking-widest">Video URL (Vimeo/YouTube)</label>
+<input class="w-full bg-transparent border border-outline rounded p-2 text-sm text-on-background placeholder:text-outline-variant focus:border-on-surface focus:ring-0 transition-colors" placeholder="https://..." type="url"/>
+</div>
+<div class="text-center font-label-xs text-on-surface-variant uppercase tracking-widest">- OR -</div>
+<div>
+<label class="block font-label-xs text-label-xs text-on-surface-variant mb-2 uppercase tracking-widest">Upload MP4 File</label>
+<button class="w-full px-3 py-2 border border-outline text-on-background font-label-xs text-label-xs rounded uppercase hover:bg-surface-container-low transition-colors" type="button">Select Video File</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Discovery Section -->
+<section class="bg-surface border border-border-muted rounded p-unit-lg">
+<div class="border-b border-border-muted pb-4 mb-6">
+<h3 class="font-title-md text-title-md text-on-background">Discovery &amp; Tags</h3>
+</div>
+<div class="space-y-6">
+<!-- Toggles -->
+<div class="space-y-4">
+<label class="flex items-center justify-between cursor-pointer">
+<span class="font-label-sm text-label-sm text-on-background uppercase tracking-widest">Featured Card</span>
+<div class="relative">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full peer peer-checked:bg-primary peer-focus:ring-2 peer-focus:ring-primary/20 transition-colors"></div>
+<div class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-full shadow-sm"></div>
+</div>
+</label>
+<label class="flex items-center justify-between cursor-pointer">
+<span class="font-label-sm text-label-sm text-on-background uppercase tracking-widest">Mark as New Arrival</span>
+<div class="relative">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full peer peer-checked:bg-primary peer-focus:ring-2 peer-focus:ring-primary/20 transition-colors"></div>
+<div class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-full shadow-sm"></div>
+</div>
+</label>
+</div>
+<!-- Tags Input -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-widest">Tags</label>
+<div class="border border-outline rounded p-2 bg-transparent focus-within:border-on-surface transition-colors flex flex-wrap gap-2">
+<span class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded text-sm text-on-background">
+                                        Floral <button class="hover:text-error" type="button"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded text-sm text-on-background">
+                                        Minimalist <button class="hover:text-error" type="button"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<input class="flex-1 min-w-[100px] border-none bg-transparent p-1 focus:ring-0 text-sm" placeholder="Add tag..." type="text"/>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant mt-2">Press enter or comma to add a tag</p>
+</div>
+</div>
+</section>
+</div>
+</form>
+</div>
+</main>
+</body></html>

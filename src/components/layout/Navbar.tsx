@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "@/data/categories";
+import { siteConfig } from "@/data/site";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -40,7 +41,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Collections", href: "/collections" },
-    { name: "About", href: "/about" },
+    { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -73,7 +74,7 @@ export default function Navbar() {
             href="/"
             className="font-headline-md text-headline-md tracking-tighter text-primary flex-shrink-0"
           >
-            Studio Shunya
+            {siteConfig.brand}
           </Link>
 
           <div className="hidden md:flex space-x-8 items-center">

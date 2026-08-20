@@ -11,11 +11,14 @@ export const products: Product[] = [
     code: "WED-001",
     description: "An embodiment of regal elegance — the Royal Heritage suite brings together the opulence of traditional Indian craftsmanship with a refined, contemporary sensibility. Featuring tactile ivory vellum, deep burgundy accents, and meticulously applied antique gold leafing.",
     image: "/images/catalog-1.jpeg",
-    gallery: [
-      "/images/catalog-1.jpeg",
-    ],
+    gallery: ["/images/catalog-1.jpeg"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-royal-heritage",
+    },
     featured: true,
     newArrival: false,
+    tags: ["Royal", "Traditional", "Gold Leaf"],
   },
   {
     id: "2",
@@ -24,13 +27,18 @@ export const products: Product[] = [
     category: "Wedding",
     categorySlug: "wedding",
     code: "WED-002",
-    description: "Elegant mandala design with intricate laser-cut details set in antique gold foil, perfect for a traditional yet modern Indian wedding. Printed on 300gsm premium ivory stock.",
+    description: "Elegant mandala design with intricate laser-cut details set in antique gold foil, perfect for a traditional yet modern Indian wedding. Printed on 300gsm premium ivory stock with animated video and digital PDF options.",
     image: "/images/catalog-2.jpeg",
-    gallery: [
-      "/images/catalog-2.jpeg",
-    ],
+    gallery: ["/images/catalog-2.jpeg"],
+    formats: ["printed", "pdf", "video"],
+    digitalAssets: {
+      pdf: "#pdf-preview-golden-mandala",
+      video: "#video-preview-golden-mandala",
+      videoThumbnail: "/images/catalog-2.jpeg",
+    },
     featured: true,
     newArrival: true,
+    tags: ["Mandala", "Laser Cut", "Gold Foil"],
   },
   {
     id: "3",
@@ -41,11 +49,14 @@ export const products: Product[] = [
     code: "WED-003",
     description: "Inspired by the nine gems of Mughal royalty, this suite features a jewel-toned palette with deep lapis blue and gold filigree detailing on a cream duplex board.",
     image: "/images/catalog-3.jpeg",
-    gallery: [
-      "/images/catalog-3.jpeg",
-    ],
+    gallery: ["/images/catalog-3.jpeg"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-navratan",
+    },
     featured: false,
     newArrival: true,
+    tags: ["Mughal", "Jewel Tones", "Filigree"],
   },
   {
     id: "4",
@@ -56,12 +67,50 @@ export const products: Product[] = [
     code: "WED-004",
     description: "A minimalist wedding invitation centred around a single hand-drawn lotus motif in champagne gold foil. Clean white cotton paper with a subtle deckled edge.",
     image: "/images/catalog-4.jpeg",
-    gallery: [
-      "/images/catalog-4.jpeg",
-    ],
+    gallery: ["/images/catalog-4.jpeg"],
+    formats: ["printed"],
     featured: false,
     newArrival: false,
+    tags: ["Minimalist", "Lotus", "Champagne Gold"],
   },
+  {
+    id: "18",
+    slug: "noor-digital",
+    name: "The Noor Suite",
+    category: "Wedding",
+    categorySlug: "wedding",
+    code: "WED-005",
+    description: "A stunning multi-page PDF digital wedding invitation with animated gold-dust reveals and cinematic typography. Optimised for WhatsApp, email, and Instagram.",
+    image: "https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80",
+    gallery: ["https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80"],
+    formats: ["pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-noor",
+    },
+    featured: false,
+    newArrival: true,
+    tags: ["Digital", "PDF", "WhatsApp Ready"],
+  },
+  {
+    id: "19",
+    slug: "cinematic-wedding-video",
+    name: "Cinematic Wedding Video",
+    category: "Wedding",
+    categorySlug: "wedding",
+    code: "WED-006",
+    description: "A motion-rich video invitation with elegant typography animations, custom music, and a warm Indian aesthetic. Delivered in formats optimised for WhatsApp and social sharing.",
+    image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
+    gallery: ["https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80"],
+    formats: ["video"],
+    digitalAssets: {
+      video: "#video-preview-cinematic-wedding",
+      videoThumbnail: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
+    },
+    featured: true,
+    newArrival: false,
+    tags: ["Video", "Cinematic", "Animated"],
+  },
+
   // BIRTHDAY
   {
     id: "5",
@@ -72,11 +121,14 @@ export const products: Product[] = [
     code: "BTH-001",
     description: "A bright and cheerful floral invitation card ideal for milestone birthday celebrations. Vibrant botanicals in watercolour tones on a crisp white card.",
     image: "/images/catalog-5.jpeg",
-    gallery: [
-      "/images/catalog-5.jpeg",
-    ],
+    gallery: ["/images/catalog-5.jpeg"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-floral-bliss",
+    },
     featured: false,
     newArrival: true,
+    tags: ["Floral", "Watercolour", "Vibrant"],
   },
   {
     id: "6",
@@ -87,12 +139,17 @@ export const products: Product[] = [
     code: "BTH-002",
     description: "An opulent birthday card for milestone ages — featuring a bold numeral in gold foil surrounded by an intricate border of hand-drawn flowers on premium ivory stock.",
     image: "/images/catalog-6.jpeg",
-    gallery: [
-      "/images/catalog-6.jpeg",
-    ],
+    gallery: ["/images/catalog-6.jpeg"],
+    formats: ["printed", "video"],
+    digitalAssets: {
+      video: "#video-preview-grand-celebration",
+      videoThumbnail: "/images/catalog-6.jpeg",
+    },
     featured: true,
     newArrival: false,
+    tags: ["Milestone", "Gold Foil", "Opulent"],
   },
+
   // MUNDAN
   {
     id: "7",
@@ -103,11 +160,14 @@ export const products: Product[] = [
     code: "MUN-001",
     description: "Traditional Mundan ceremony card featuring auspicious Om symbols, marigold motifs, and warm saffron tones with gentle gold foil accents on ivory paper.",
     image: "/images/catalog-7.jpeg",
-    gallery: [
-      "/images/catalog-7.jpeg",
-    ],
+    gallery: ["/images/catalog-7.jpeg"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-sacred-thread",
+    },
     featured: false,
     newArrival: false,
+    tags: ["Traditional", "Saffron", "Auspicious"],
   },
   {
     id: "8",
@@ -116,14 +176,20 @@ export const products: Product[] = [
     category: "Mundan",
     categorySlug: "mundan",
     code: "MUN-002",
-    description: "Soft pastel design for a Mundan ceremony card. Features a sweet baby motif with temple bells in gentle gold. Printed on a matte textured duplex board.",
+    description: "Soft pastel design for a Mundan ceremony card. Features a sweet baby motif with temple bells in gentle gold. Available as a motion video invitation.",
     image: "/images/catalog-8.jpeg",
-    gallery: [
-      "/images/catalog-8.jpeg",
-    ],
+    gallery: ["/images/catalog-8.jpeg"],
+    formats: ["pdf", "video"],
+    digitalAssets: {
+      pdf: "#pdf-preview-first-blessing",
+      video: "#video-preview-first-blessing",
+      videoThumbnail: "/images/catalog-8.jpeg",
+    },
     featured: false,
     newArrival: true,
+    tags: ["Pastel", "Temple Bells", "Baby"],
   },
+
   // GRIHA PRAVESH
   {
     id: "9",
@@ -134,11 +200,14 @@ export const products: Product[] = [
     code: "GRP-001",
     description: "Warm and inviting Griha Pravesh card welcoming loved ones to your new home. Features a hand-drawn architectural linework motif in rich burgundy on cream board.",
     image: "https://images.unsplash.com/photo-1510076857177-7470076d4098?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1510076857177-7470076d4098?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1510076857177-7470076d4098?w=800&q=80"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-new-beginnings",
+    },
     featured: true,
     newArrival: false,
+    tags: ["Housewarming", "Burgundy", "Linework"],
   },
   {
     id: "10",
@@ -147,14 +216,18 @@ export const products: Product[] = [
     category: "Griha Pravesh",
     categorySlug: "griha-pravesh",
     code: "GRP-002",
-    description: "A mandala-based Griha Pravesh card with a sacred geometric pattern in gold foil on deep burgundy. A unique housewarming invitation that doubles as a keepsake.",
+    description: "A mandala-based Griha Pravesh card with a sacred geometric pattern in gold foil on deep burgundy. A unique housewarming invitation.",
     image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80"],
+    formats: ["pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-vastu",
+    },
     featured: false,
     newArrival: true,
+    tags: ["Mandala", "Sacred Geometry", "Vastu"],
   },
+
   // SHOP OPENING
   {
     id: "11",
@@ -163,14 +236,19 @@ export const products: Product[] = [
     category: "Shop Opening",
     categorySlug: "shop-opening",
     code: "SHO-001",
-    description: "A bold, premium shop opening invitation with an editorial layout. Deep burgundy band at the top with a white panel below. Ideal for boutiques and premium retail launches.",
+    description: "A bold, premium shop opening invitation with an editorial layout. Deep burgundy band at the top with a white panel below. Ideal for boutiques and launches.",
     image: "https://images.unsplash.com/photo-1582216656736-23ab99a5e4b2?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1582216656736-23ab99a5e4b2?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1582216656736-23ab99a5e4b2?w=800&q=80"],
+    formats: ["printed", "video"],
+    digitalAssets: {
+      video: "#video-preview-grand-inauguration",
+      videoThumbnail: "https://images.unsplash.com/photo-1582216656736-23ab99a5e4b2?w=800&q=80",
+    },
     featured: false,
     newArrival: true,
+    tags: ["Corporate", "Inauguration", "Editorial"],
   },
+
   // RETIREMENT
   {
     id: "12",
@@ -179,14 +257,18 @@ export const products: Product[] = [
     category: "Retirement",
     categorySlug: "retirement",
     code: "RET-001",
-    description: "A dignified and warm retirement card in muted gold and deep green tones. Features a classic serif layout with subtle floral motifs, ideal for senior professionals.",
+    description: "A dignified and warm retirement card in muted gold and deep green tones. Features a classic serif layout with subtle floral motifs.",
     image: "https://images.unsplash.com/photo-1529679971620-a68c9e28b79c?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1529679971620-a68c9e28b79c?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1529679971620-a68c9e28b79c?w=800&q=80"],
+    formats: ["printed", "pdf"],
+    digitalAssets: {
+      pdf: "#pdf-preview-golden-farewell",
+    },
     featured: false,
     newArrival: false,
+    tags: ["Dignified", "Muted Gold", "Serif"],
   },
+
   // VISITING CARDS
   {
     id: "13",
@@ -195,13 +277,13 @@ export const products: Product[] = [
     category: "Visiting Cards",
     categorySlug: "visiting-cards",
     code: "VIS-001",
-    description: "Premium thick-stock visiting card with subtle letterpress printing for an executive feel. 600gsm duplexed board with a soft-touch laminate finish on the reverse.",
+    description: "Premium thick-stock visiting card with subtle letterpress printing for an executive feel. 600gsm duplexed board with a soft-touch laminate finish.",
     image: "https://images.unsplash.com/photo-1558025211-7ebf97022e37?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1558025211-7ebf97022e37?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1558025211-7ebf97022e37?w=800&q=80"],
+    formats: ["printed"],
     featured: false,
     newArrival: true,
+    tags: ["Executive", "Letterpress", "600gsm"],
   },
   {
     id: "14",
@@ -212,12 +294,13 @@ export const products: Product[] = [
     code: "VIS-002",
     description: "Jet black visiting card with white foil typesetting. Strikingly minimal and bold. Made from 400gsm recycled card stock with a matte finish.",
     image: "https://images.unsplash.com/photo-1544208035-779831ce810a?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1544208035-779831ce810a?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1544208035-779831ce810a?w=800&q=80"],
+    formats: ["printed"],
     featured: true,
     newArrival: false,
+    tags: ["Jet Black", "White Foil", "Minimal"],
   },
+
   // GIFT ENVELOPES
   {
     id: "15",
@@ -228,12 +311,13 @@ export const products: Product[] = [
     code: "GFT-001",
     description: "Luxurious hand-crafted gift envelopes in a rich jewel-toned palette. Each envelope is lined with a decorative pattern and sealed with a wax-inspired gold sticker.",
     image: "https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?w=800&q=80"],
+    formats: ["printed"],
     featured: true,
     newArrival: false,
+    tags: ["Handcrafted", "Jewel Tones", "Envelopes"],
   },
+
   // LETTER PADS
   {
     id: "16",
@@ -244,11 +328,11 @@ export const products: Product[] = [
     code: "LTR-001",
     description: "Elegant personalised letter pads with a refined monogram header and subtle watermark motif. Printed on 100gsm premium bond paper with matching envelopes available.",
     image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&q=80"],
+    formats: ["printed"],
     featured: false,
     newArrival: true,
+    tags: ["Monogram", "Letterhead", "Stationery"],
   },
   {
     id: "17",
@@ -259,41 +343,10 @@ export const products: Product[] = [
     code: "LTR-002",
     description: "Professional letter pad suite with clean typographic hierarchy and a deep burgundy accent band. Ideal for businesses seeking premium branded correspondence.",
     image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80",
-    ],
+    gallery: ["https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"],
+    formats: ["printed"],
     featured: true,
     newArrival: false,
-  },
-  // DIGITAL
-  {
-    id: "18",
-    slug: "noor-digital",
-    name: "The Noor Suite",
-    category: "Digital Invitations",
-    categorySlug: "digital-invitations",
-    code: "DIG-001",
-    description: "A stunning multi-page PDF digital wedding invitation with animated gold-dust reveals and cinematic typography. Optimised for WhatsApp, email, and Instagram.",
-    image: "https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80",
-    ],
-    featured: false,
-    newArrival: true,
-  },
-  {
-    id: "19",
-    slug: "cinematic-wedding-video",
-    name: "Cinematic Wedding Video",
-    category: "Digital Invitations",
-    categorySlug: "digital-invitations",
-    code: "DIG-002",
-    description: "A motion-rich video invitation with elegant typography animations, custom music, and a warm Indian aesthetic. Delivered in formats optimised for WhatsApp and social sharing.",
-    image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80",
-    ],
-    featured: true,
-    newArrival: false,
+    tags: ["Corporate", "Branded", "Clean"],
   },
 ];

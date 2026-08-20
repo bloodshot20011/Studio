@@ -1,28 +1,29 @@
 export const siteConfig = {
-  brand: "Studio Shunya",
+  brand: "Kashvi Cards",
   tagline: "Cards That Make Every Occasion Memorable",
   description:
-    "Premium Indian invitation studio crafting bespoke artistry for life's most meaningful moments — since 2008.",
+    "Bespoke wedding and occasion invitation cards atelier — Rampura, Kota, Rajasthan.",
 
   contact: {
-    phone: "+91 98765 43210",
-    phoneHref: "tel:+919876543210",
-    whatsapp: "+91 98765 43210",
-    whatsappNumber: "919876543210",
-    email: "hello@studioshunya.com",
-    emailHref: "mailto:hello@studioshunya.com",
+    phone: "+91 81075 11164 / +91 99284 85110",
+    phoneHref: "tel:+918107511164",
+    whatsapp: "+91 81075 11164",
+    whatsappNumber: "918107511164",
+    email: "jainmukku@gmail.com",
+    emailHref: "mailto:jainmukku@gmail.com",
     address: {
-      line1: "12, Heritage Art District,",
-      line2: "Colaba, Mumbai, 400001",
+      line1: "Opp Rampura Kotwali,",
+      line2: "Rampura, Kota, Rajasthan - 324006",
       country: "India",
     },
-    hours: "Mon–Fri: 10:00 AM – 6:00 PM (IST)",
+    googleMapUrl: "https://maps.app.goo.gl/1bbjhBTke4ZG187B9?g_st=aw",
+    hours: "Mon–Sat: 10:00 AM – 8:00 PM (IST)",
   },
 
   social: {
-    whatsapp: "https://wa.me/919876543210",
-    instagram: "https://instagram.com/studioshunya",
-    facebook: "https://facebook.com/studioshunya",
+    whatsapp: "https://wa.me/918107511164",
+    instagram: "https://instagram.com/kashvicards",
+    facebook: "https://facebook.com/kashvicards",
   },
 } as const;
 
@@ -33,5 +34,5 @@ export function getWhatsAppUrl(message?: string): string {
 }
 
 export function getProductWhatsAppMessage(productName: string, code: string): string {
-  return `Hello Studio Shunya, I am interested in the "${productName}" design (${code}). Could you share more details?`;
+  return `Hello Kashvi Cards, I am interested in the "${productName}" design (${code}). Could you share more details?`;
 }

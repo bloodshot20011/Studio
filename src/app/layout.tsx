@@ -15,8 +15,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Studio Shunya | Cards That Make Every Occasion Memorable",
-  description: "Beautifully crafted invitations and stationery for life's most meaningful moments. We blend traditional Indian artistry with modern minimalist elegance.",
+  title: "Kashvi Cards | Cards That Make Every Occasion Memorable",
+  description: "Beautifully crafted invitations and stationery for life's most meaningful moments. Located in Rampura, Kota, Rajasthan.",
 };
 
 export default function RootLayout({

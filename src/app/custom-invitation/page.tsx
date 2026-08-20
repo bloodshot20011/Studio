@@ -92,7 +92,7 @@ export default function CustomInvitationPage() {
                 <div className="bg-surface border border-secondary p-8 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
                   <span className="material-symbols-outlined text-secondary text-5xl mb-4">check_circle</span>
                   <h3 className="font-headline-md text-primary mb-2">Inquiry Received</h3>
-                  <p className="font-body-md text-on-surface-variant">Thank you for considering Studio Shunya. Our director will be in touch with you shortly to discuss your custom commission.</p>
+                  <p className="font-body-md text-on-surface-variant">Thank you for considering Kashvi Cards. Our team will be in touch with you shortly to discuss your custom invitation.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-surface p-8 border border-outline/10 shadow-sm">

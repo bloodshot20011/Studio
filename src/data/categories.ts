@@ -42,11 +42,6 @@ export const categories: Category[] = [
     description: "Beautifully designed personalised letter pads for professionals and businesses. Crisp, premium stationery that elevates every piece of correspondence.",
   },
   {
-    slug: "digital-invitations",
-    name: "Digital Invitations",
-    description: "Modern digital suites that maintain the gravitas of printed luxury. PDF, video, and WhatsApp-ready formats for instant, beautiful sharing.",
-  },
-  {
     slug: "gift-envelopes",
     name: "Gift Envelopes",
     description: "Hand-crafted gift envelopes in luxurious materials and finishes. The perfect complement to any occasion, making every gift feel truly special.",

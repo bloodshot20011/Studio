@@ -1,21 +1,93 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useParams, useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductGrid from "@/components/ui/ProductGrid";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import CategoryNavigation from "@/components/ui/CategoryNavigation";
+import FormatFilter, { FormatFilterValue, DigitalTypeFilterValue } from "@/components/ui/FormatFilter";
 import { categories } from "@/data/categories";
-import { getProductsByCategory } from "@/lib/products";
+import { filterProducts } from "@/lib/products";
 
-export default function CategoryPage() {
+function CategoryContent() {
   const params = useParams();
-  const categorySlug = params.slug as string;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
+  const categorySlug = params.slug as string;
   const category = categories.find((c) => c.slug === categorySlug);
-  const categoryProducts = getProductsByCategory(categorySlug);
+
+  const formatParam = (searchParams.get("format") as FormatFilterValue) || "all";
+  const typeParam = (searchParams.get("type") as DigitalTypeFilterValue) || "all";
+
+  const [activeFormat, setActiveFormat] = useState<FormatFilterValue>(formatParam);
+  const [activeDigitalType, setActiveDigitalType] = useState<DigitalTypeFilterValue>(typeParam);
+
+  useEffect(() => {
+    setActiveFormat((searchParams.get("format") as FormatFilterValue) || "all");
+    setActiveDigitalType((searchParams.get("type") as DigitalTypeFilterValue) || "all");
+  }, [searchParams]);
+
+  const updateQueryParams = (newParams: {
+    format?: FormatFilterValue;
+    type?: DigitalTypeFilterValue;
+  }) => {
+    const qParams = new URLSearchParams(searchParams.toString());
+
+    if (newParams.format !== undefined) {
+      if (newParams.format === "all") {
+        qParams.delete("format");
+        qParams.delete("type");
+      } else {
+        qParams.set("format", newParams.format);
+        if (newParams.format !== "digital") {
+          qParams.delete("type");
+        }
+      }
+    }
+
+    if (newParams.type !== undefined) {
+      if (newParams.type === "all") qParams.delete("type");
+      else qParams.set("type", newParams.type);
+    }
+
+    const queryString = qParams.toString();
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+    router.push(newUrl, { scroll: false });
+  };
+
+  const handleFormatChange = (format: FormatFilterValue) => {
+    setActiveFormat(format);
+    if (format !== "digital") {
+      setActiveDigitalType("all");
+      updateQueryParams({ format, type: "all" });
+    } else {
+      updateQueryParams({ format });
+    }
+  };
+
+  const handleDigitalTypeChange = (type: DigitalTypeFilterValue) => {
+    setActiveDigitalType(type);
+    updateQueryParams({ type });
+  };
+
+  const handleClearFilters = () => {
+    setActiveFormat("all");
+    setActiveDigitalType("all");
+    router.push(pathname, { scroll: false });
+  };
+
+  const isFiltered = activeFormat !== "all" || activeDigitalType !== "all";
+
+  const categoryProducts = filterProducts({
+    categorySlug,
+    format: activeFormat,
+    digitalType: activeDigitalType,
+  });
 
   if (!category) {
     return (
@@ -46,6 +118,7 @@ export default function CategoryPage() {
           />
         </div>
 
+        {/* Hero Category Info */}
         <section className="py-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center border-b border-outline/10 mb-12">
           <h1 className="font-display-lg-mobile md:font-display-lg text-primary mb-6">
             {category.name} Collection
@@ -56,31 +129,60 @@ export default function CategoryPage() {
           </p>
         </section>
 
-        <section className="sticky top-[80px] z-30 bg-surface/95 backdrop-blur-sm border-b border-outline/10 py-4 mb-12">
-          <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        {/* Sticky Filters Section */}
+        <section className="sticky top-[80px] z-30 bg-surface/95 backdrop-blur-sm border-b border-outline/10 py-4 mb-12 shadow-sm">
+          <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-6">
             <CategoryNavigation activeSlug={categorySlug} mode="link" />
+
+            {/* Format System Filter (Printed / Digital / PDF / Video) */}
+            <FormatFilter
+              activeFormat={activeFormat}
+              activeDigitalType={activeDigitalType}
+              onFormatChange={handleFormatChange}
+              onDigitalTypeChange={handleDigitalTypeChange}
+              totalResultsCount={categoryProducts.length}
+              onClearFilters={handleClearFilters}
+              isFiltered={isFiltered}
+            />
           </div>
         </section>
 
+        {/* Product Grid & Empty State */}
         <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
           {categoryProducts.length > 0 ? (
             <ProductGrid products={categoryProducts} />
           ) : (
-            <div className="text-center py-20 bg-surface-container-low border border-outline/10">
+            <div className="text-center py-20 px-6 bg-surface-container-low border border-outline/10 max-w-xl mx-auto">
               <span className="material-symbols-outlined text-4xl text-outline mb-4">inventory_2</span>
-              <p className="font-headline-md text-primary mb-2">No designs yet</p>
-              <p className="font-body-md text-on-surface-variant max-w-md mx-auto mb-8">
-                We are currently crafting new designs for our {category.name} collection. Please check
-                back later or explore our other collections.
+              <h3 className="font-headline-md text-headline-md text-primary mb-2">No designs found</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-8">
+                No matching designs found in the {category.name} collection for the selected format filter.
               </p>
-              <Link href="/collections" className="btn-secondary">
-                View All Designs
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  type="button"
+                  onClick={handleClearFilters}
+                  className="btn-primary"
+                >
+                  View All {category.name} Designs
+                </button>
+                <Link href="/collections" className="btn-secondary">
+                  Explore Other Collections
+                </Link>
+              </div>
             </div>
           )}
         </section>
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function CategoryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-surface" />}>
+      <CategoryContent />
+    </Suspense>
   );
 }

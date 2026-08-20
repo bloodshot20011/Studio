@@ -12,7 +12,7 @@ export default function DigitalInvitationsPage() {
       <Navbar />
       <main className="flex-grow pt-[80px]">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex items-center pt-20 pb-section-gap overflow-hidden bg-surface">
+        <section className="relative min-h-[85vh] flex items-center pt-20 pb-section-gap overflow-hidden bg-surface">
           <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(#e9c176 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10 w-full">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
@@ -27,11 +27,11 @@ export default function DigitalInvitationsPage() {
                   Your Invitation,<br/>Reimagined
                 </h1>
                 <p className="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-md">
-                  Beautiful digital invitations designed to be shared instantly and remembered forever. Blending Indian heritage with modern elegance.
+                  Beautiful digital invitations designed to be shared instantly and remembered forever. Blending Indian heritage with modern luxury across PDF and video formats.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/collections" className="btn-primary text-center">
-                    View Designs
+                  <Link href="/collections?format=digital" className="btn-primary text-center">
+                    Explore All Digital Invitations
                   </Link>
                 </div>
               </motion.div>
@@ -61,68 +61,84 @@ export default function DigitalInvitationsPage() {
           </div>
         </section>
 
-        {/* Service Showcase */}
+        {/* Format Choices Showcase */}
         <section className="py-section-gap bg-surface-container-low relative">
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
             <motion.div 
               initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={fadeUp}
               className="text-center mb-16"
             >
-              <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Digital Formats</h2>
+              <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Choose Your Digital Format</h2>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto mb-4">
+                Select between interactive PDF documents or motion-rich video invitations crafted for WhatsApp and social sharing.
+              </p>
               <div className="h-[1px] w-24 bg-secondary mx-auto opacity-50"></div>
             </motion.div>
             
             <motion.div 
               initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer}
-              className="grid grid-cols-1 md:grid-cols-3 gap-gutter"
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
             >
-              {/* PDF */}
-              <motion.div variants={fadeUp} className="group cursor-pointer">
-                <div className="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
-                  <div className="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
+              {/* PDF Choice */}
+              <motion.div variants={fadeUp} className="group">
+                <div className="bg-surface p-8 h-full border border-outline/10 hover:border-secondary transition-all duration-500 flex flex-col items-center text-center">
+                  <div className="aspect-[4/5] w-full bg-surface-container-lowest mb-6 overflow-hidden relative border border-outline/10">
                     <img src="https://images.unsplash.com/photo-1582216656736-23ab99a5e4b2?w=600&q=80" alt="PDF Invitations" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-label-sm uppercase tracking-widest px-2.5 py-1">
+                      PDF Document
+                    </div>
                   </div>
                   <h3 className="font-headline-md text-headline-md text-primary mb-3">PDF Invitations</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant flex-grow">Multi-page interactive documents perfect for detailing complex itineraries and multiple events with clickable links.</p>
-                  <Link href="/collections" className="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors">
-                    Explore PDFs <span className="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
+                  <p className="font-body-md text-body-md text-on-surface-variant flex-grow mb-6">
+                    Multi-page interactive documents perfect for detailing complex itineraries, RSVP links, and venue directions.
+                  </p>
+                  <Link
+                    href="/collections?format=digital&type=pdf"
+                    className="w-full btn-primary text-center"
+                  >
+                    EXPLORE PDF INVITATIONS
                   </Link>
                 </div>
               </motion.div>
               
-              {/* Video */}
-              <motion.div variants={fadeUp} className="group cursor-pointer">
-                <div className="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
-                  <div className="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
+              {/* Video Choice */}
+              <motion.div variants={fadeUp} className="group">
+                <div className="bg-surface p-8 h-full border border-outline/10 hover:border-secondary transition-all duration-500 flex flex-col items-center text-center">
+                  <div className="aspect-[4/5] w-full bg-surface-container-lowest mb-6 overflow-hidden relative border border-outline/10">
                     <img src="https://images.unsplash.com/photo-1606821211756-302a249c40af?w=600&q=80" alt="Video Invitations" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-surface/80 flex items-center justify-center text-primary backdrop-blur-sm">
-                        <span className="material-symbols-outlined">play_arrow</span>
+                      <div className="w-14 h-14 rounded-full bg-surface/85 backdrop-blur-md text-primary flex items-center justify-center border border-secondary/40 shadow-lg group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all">
+                        <span className="material-symbols-outlined text-[28px] ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>
+                          play_arrow
+                        </span>
                       </div>
+                    </div>
+                    <div className="absolute top-3 left-3 bg-secondary text-white text-[10px] font-label-sm uppercase tracking-widest px-2.5 py-1">
+                      Video Motion
                     </div>
                   </div>
                   <h3 className="font-headline-md text-headline-md text-primary mb-3">Video Invitations</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant flex-grow">Cinematic motion graphics featuring elegant transitions, custom music, and beautifully animated typography.</p>
-                  <Link href="/custom-invitation" className="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors">
-                    Watch Samples <span className="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
-                  </Link>
-                </div>
-              </motion.div>
-              
-              {/* Cards */}
-              <motion.div variants={fadeUp} className="group cursor-pointer">
-                <div className="bg-surface p-6 h-full border border-transparent hover:border-secondary/30 transition-all duration-500 flex flex-col">
-                  <div className="aspect-[4/5] bg-surface-container-lowest mb-6 overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1534489389279-d5873919bd5f?w=600&q=80" alt="Digital Cards" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <h3 className="font-headline-md text-headline-md text-primary mb-3">Digital Cards</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant flex-grow">Single, striking digital images optimized for instant messaging. Perfect for save-the-dates and minimal announcements.</p>
-                  <Link href="/collections" className="mt-6 font-label-sm text-label-sm text-secondary uppercase tracking-widest inline-flex items-center group-hover:text-primary transition-colors">
-                    View Cards <span className="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
+                  <p className="font-body-md text-body-md text-on-surface-variant flex-grow mb-6">
+                    Cinematic motion graphics featuring elegant transitions, custom music, and animated typography.
+                  </p>
+                  <Link
+                    href="/collections?format=digital&type=video"
+                    className="w-full btn-primary text-center"
+                  >
+                    EXPLORE VIDEO INVITATIONS
                   </Link>
                 </div>
               </motion.div>
             </motion.div>
+
+            <div className="mt-12 text-center">
+              <Link
+                href="/collections?format=digital"
+                className="font-label-md text-label-md text-secondary uppercase tracking-widest border-b border-secondary/50 hover:text-primary transition-colors pb-1 inline-flex items-center gap-2"
+              >
+                Explore All Digital Invitations <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </Link>
+            </div>
           </div>
         </section>
 

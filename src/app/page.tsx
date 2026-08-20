@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
+import { siteConfig } from "@/data/site";
 import ProductCard from "@/components/ui/ProductCard";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -14,17 +15,17 @@ const WHY_US = [
   {
     icon: "auto_awesome",
     title: "Bespoke Craftsmanship",
-    desc: "Every design is hand-curated for your unique occasion by our in-house atelier team."
+    desc: "Every design is hand-curated for your unique occasion by our atelier team."
   },
   {
     icon: "diamond",
     title: "Premium Materials",
-    desc: "We use only the finest 300–600gsm cotton rag papers, authentic gold leafing, and archival inks."
+    desc: "We use only the finest 300–600gsm papers, authentic gold leafing, and archival inks."
   },
   {
     icon: "groups",
     title: "Personalised Service",
-    desc: "From first consultation to final delivery, your dedicated studio advisor guides every step."
+    desc: "From first consultation to final delivery, our team guides every step of your invitation design."
   },
   {
     icon: "bolt",
@@ -48,7 +49,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════
             HERO SECTION
         ═══════════════════════════════════════════ */}
-        <section className="relative min-h-screen flex items-center justify-center px-margin-mobile md:px-margin-desktop overflow-hidden bg-surface">
+        <section className="relative min-h-[85vh] flex items-center justify-center px-margin-mobile md:px-margin-desktop overflow-hidden bg-surface">
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <div
@@ -66,7 +67,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="relative z-10 max-w-3xl mx-auto text-center mt-16"
+            className="relative z-10 max-w-3xl mx-auto text-center py-16"
           >
             <motion.div variants={itemVariants} className="inline-block px-4 py-1 mb-6 border border-[#C5A059] text-secondary font-label-sm text-label-sm uppercase tracking-widest">
               Bespoke Invitation Atelier
@@ -87,20 +88,6 @@ export default function Home() {
               <Link href="/contact" className="btn-secondary w-full sm:w-auto">
                 Contact Us
               </Link>
-            </motion.div>
-
-            {/* Stats Row */}
-            <motion.div variants={itemVariants} className="mt-16 flex justify-center gap-12 border-t border-outline/10 pt-10">
-              {[
-                { n: "15+", l: "Years" },
-                { n: "5k+", l: "Designs" },
-                { n: "10k+", l: "Customers" },
-              ].map(({ n, l }) => (
-                <div key={l} className="text-center">
-                  <div className="font-headline-lg text-headline-lg text-primary">{n}</div>
-                  <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-1">{l}</div>
-                </div>
-              ))}
             </motion.div>
           </motion.div>
         </section>
@@ -206,16 +193,13 @@ export default function Home() {
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={itemVariants}
                 className="lg:col-span-4 mb-8 lg:mb-0"
               >
-                <span className="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4">Why Studio Shunya</span>
+                <span className="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4">Why {siteConfig.brand}</span>
                 <h2 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-6">
                   Crafted with Care, Delivered with Pride
                 </h2>
-                <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">
-                  Our studio is built on a single belief: every moment of celebration deserves a truly extraordinary beginning.
+                <p className="font-body-lg text-body-lg text-on-surface-variant">
+                  Our shop is built on a single belief: every moment of celebration deserves a truly extraordinary beginning.
                 </p>
-                <Link href="/about" className="font-label-md text-label-md uppercase tracking-widest text-primary border-b border-secondary pb-1 hover:text-secondary transition-colors duration-300 flex items-center gap-2 w-fit">
-                  Our Story <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                </Link>
               </motion.div>
 
               {/* Right: 4 Features */}
@@ -317,35 +301,6 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-            CUSTOM DESIGN CTA
-        ═══════════════════════════════════════════ */}
-        <section className="py-section-gap px-margin-mobile md:px-margin-desktop relative overflow-hidden">
-          {/* Subtle grid background */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#490003 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}
-            className="max-w-3xl mx-auto text-center relative z-10"
-          >
-            <motion.span variants={itemVariants} className="material-symbols-outlined text-secondary text-4xl mb-6 block">auto_awesome</motion.span>
-            <motion.h2 variants={itemVariants} className="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-6">
-              Have a Unique Vision?
-            </motion.h2>
-            <motion.p variants={itemVariants} className="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto">
-              Our bespoke atelier service brings your imagination to life. Share your concept and our studio director will personally craft a design that is entirely yours.
-            </motion.p>
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/custom-invitation" className="btn-primary">
-                Begin Your Commission
-              </Link>
-              <Link href="/contact" className="btn-secondary">
-                Talk to an Expert
-              </Link>
-            </motion.div>
-          </motion.div>
         </section>
 
       </main>

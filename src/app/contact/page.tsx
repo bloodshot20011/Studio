@@ -32,14 +32,14 @@ export default function ContactPage() {
                 Let's Create Something Beautiful.
               </h1>
               <p className="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-md">
-                Whether you are envisioning a bespoke physical invitation on handmade paper or a seamless digital experience, our studio is dedicated to crafting artifacts that reflect your unique narrative.
+                Whether you are envisioning a bespoke physical invitation or a seamless digital experience, {siteConfig.brand} is dedicated to crafting cards that reflect your unique narrative.
               </p>
               
               <div className="space-y-6 mb-12">
                 <div className="flex items-start gap-4">
                   <span className="material-symbols-outlined text-secondary mt-1">call</span>
                   <div>
-                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Phone</h3>
+                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Phone / Mobile</h3>
                     <p className="font-body-md text-body-md text-on-surface-variant">{contact.phone}</p>
                   </div>
                 </div>
@@ -55,18 +55,26 @@ export default function ContactPage() {
                 <div className="flex items-start gap-4">
                   <span className="material-symbols-outlined text-secondary mt-1">location_on</span>
                   <div>
-                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Studio</h3>
-                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Shop Address</h3>
+                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-2">
                       {contact.address.line1}<br/>
                       {contact.address.line2}<br/>
                       {contact.address.country}
                     </p>
+                    <a
+                      href={contact.googleMapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-label-sm text-label-sm text-secondary uppercase tracking-widest border-b border-secondary hover:text-primary transition-colors inline-flex items-center gap-1"
+                    >
+                      Open in Google Maps <span className="material-symbols-outlined text-sm">open_in_new</span>
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <span className="material-symbols-outlined text-secondary mt-1">schedule</span>
                   <div>
-                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Hours</h3>
+                    <h3 className="font-label-md text-label-md uppercase text-primary tracking-widest mb-1">Store Hours</h3>
                     <p className="font-body-md text-body-md text-on-surface-variant">{contact.hours}</p>
                   </div>
                 </div>
@@ -108,18 +116,18 @@ export default function ContactPage() {
                         <label className="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Occasion</label>
                         <select className="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors cursor-pointer outline-none">
                           <option value="wedding">Wedding</option>
-                          <option value="corporate">Corporate Event</option>
-                          <option value="gala">Charity Gala</option>
+                          <option value="birthday">Birthday</option>
+                          <option value="mundan">Mundan</option>
+                          <option value="griha-pravesh">Griha Pravesh</option>
                           <option value="other">Other Celebration</option>
                         </select>
                       </div>
                       <div className="relative">
-                        <label className="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Product Type</label>
+                        <label className="font-label-sm text-label-sm uppercase text-primary tracking-widest block mb-2">Product Format</label>
                         <select className="w-full bg-transparent border-0 border-b border-outline/30 px-0 py-2 font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors cursor-pointer outline-none">
-                          <option value="physical">Physical Invitation</option>
-                          <option value="digital">Digital Invitation</option>
-                          <option value="hybrid">Hybrid Package</option>
-                          <option value="stationery">Day-of Stationery</option>
+                          <option value="printed">Printed Card Suite</option>
+                          <option value="pdf">Digital PDF Invitation</option>
+                          <option value="video">Video Invitation</option>
                         </select>
                       </div>
                     </div>
@@ -150,7 +158,7 @@ export default function ContactPage() {
           <div className="w-full h-[0.5px] bg-secondary/30"></div>
         </div>
 
-        {/* Minimalist Map Section */}
+        {/* Map Location Section */}
         <section className="max-w-container-max w-full mx-auto px-margin-mobile md:px-margin-desktop pb-section-gap">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="w-full aspect-[21/9] bg-surface-container-low relative group overflow-hidden border border-outline/20">
             <img 
@@ -159,9 +167,16 @@ export default function ContactPage() {
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-multiply grayscale" 
             />
             <div className="absolute bottom-8 left-8 bg-surface p-6 border border-secondary/20 shadow-md max-w-sm hidden md:block">
-              <h3 className="font-headline-md text-headline-md text-primary mb-2">Visit the Studio</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">By appointment only to ensure personalized attention to your project.</p>
-              <a href="#" className="font-label-md text-label-md text-secondary uppercase tracking-widest border-b border-secondary pb-1 hover:text-primary transition-colors">Get Directions</a>
+              <h3 className="font-headline-md text-headline-md text-primary mb-2">Visit Kashvi Cards</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-4">Opp Rampura Kotwali, Rampura, Kota, Rajasthan - 324006</p>
+              <a
+                href={contact.googleMapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-label-md text-label-md text-secondary uppercase tracking-widest border-b border-secondary pb-1 hover:text-primary transition-colors inline-flex items-center gap-1"
+              >
+                Get Directions <span className="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
             </div>
           </motion.div>
         </section>

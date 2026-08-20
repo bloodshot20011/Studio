@@ -5,6 +5,14 @@ export interface Category {
   image?: string;
 }
 
+export type FormatType = "printed" | "pdf" | "video";
+
+export interface DigitalAssets {
+  pdf?: string | null;
+  video?: string | null;
+  videoThumbnail?: string | null;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -15,6 +23,10 @@ export interface Product {
   description: string;
   image: string;
   gallery: string[];
+  formats: FormatType[];
+  digitalAssets?: DigitalAssets;
   featured: boolean;
   newArrival: boolean;
+  tags?: string[];
 }
+
