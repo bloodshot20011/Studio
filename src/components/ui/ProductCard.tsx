@@ -17,8 +17,8 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/product/${product.slug}`} className="group block">
       <article className="flex flex-col">
-        {/* Image wrapper */}
-        <div className="relative overflow-hidden bg-surface-container-low mb-4 aspect-[4/5] rounded-none">
+        {/* Image wrapper with smooth rounded corners */}
+        <div className="relative overflow-hidden bg-surface-container-low mb-4 aspect-[4/5] rounded-2xl shadow-sm border border-outline/10 group-hover:border-secondary/30 transition-all duration-300">
           <img
             src={product.image}
             alt={product.name}
@@ -40,7 +40,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           {/* View / Preview action badge */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-            <span className="bg-surface/95 text-primary px-5 py-2 font-label-md text-label-md border border-secondary uppercase tracking-widest text-xs shadow-lg">
+            <span className="bg-surface/95 text-primary px-5 py-2 font-label-md text-label-md border border-secondary uppercase tracking-widest text-xs shadow-lg rounded-xl backdrop-blur-md">
               {hoverActionText}
             </span>
           </div>
@@ -48,7 +48,7 @@ export default function ProductCard({ product }: { product: Product }) {
           {/* Top Badges (New & Formats) */}
           <div className="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
             {product.newArrival ? (
-              <span className="bg-secondary text-white px-2.5 py-0.5 font-label-sm text-label-sm uppercase tracking-widest text-[10px] shadow-sm">
+              <span className="bg-secondary text-white px-2.5 py-0.5 font-label-sm text-label-sm uppercase tracking-widest text-[10px] shadow-sm rounded-md">
                 New
               </span>
             ) : (
@@ -57,7 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
             {/* Format badge on top right */}
             {badgeText && (
-              <span className="bg-surface/90 text-primary border border-outline/30 backdrop-blur-sm px-2.5 py-0.5 font-label-sm text-label-sm uppercase tracking-wider text-[10px] shadow-sm">
+              <span className="bg-surface/90 text-primary border border-outline/30 backdrop-blur-sm px-2.5 py-0.5 font-label-sm text-label-sm uppercase tracking-wider text-[10px] shadow-sm rounded-md">
                 {badgeText}
               </span>
             )}
