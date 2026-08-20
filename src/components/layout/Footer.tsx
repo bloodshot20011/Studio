@@ -41,7 +41,7 @@ export default function Footer() {
               {[
                 { label: "Home", href: "/" },
                 { label: "Collections", href: "/collections" },
-                { label: "About", href: "/about" },
+                { label: "About Us", href: "/about" },
                 { label: "Contact", href: "/contact" },
               ].map((item) => (
                 <li key={item.label}>
@@ -128,7 +128,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
-                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"
+                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors rounded-lg"
               >
                 <span className="material-symbols-outlined text-[18px]">chat</span>
               </a>
@@ -137,7 +137,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"
+                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors rounded-lg"
               >
                 <span className="material-symbols-outlined text-[18px]">photo_camera</span>
               </a>
@@ -146,7 +146,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"
+                className="w-9 h-9 border border-outline/30 hover:border-secondary flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors rounded-lg"
               >
                 <span className="material-symbols-outlined text-[18px]">thumb_up</span>
               </a>
@@ -178,7 +178,7 @@ export default function Footer() {
               </div>
               <button
                 type="submit"
-                className="btn-secondary whitespace-nowrap"
+                className="btn-secondary whitespace-nowrap rounded-xl"
                 aria-label="Subscribe"
               >
                 Subscribe
@@ -187,16 +187,28 @@ export default function Footer() {
           )}
         </div>
 
+        {/* Copyright & Admin Link */}
         <div className="border-t border-outline/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-label-sm text-label-sm text-on-surface-variant">
             © {new Date().getFullYear()} {siteConfig.brand} Invitation Atelier. All Rights Reserved.
           </p>
-          <div className="flex items-center gap-2">
-            <span className="w-4 h-[1px] bg-secondary/40" />
-            <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest">
-              Crafted with care
-            </span>
-            <span className="w-4 h-[1px] bg-secondary/40" />
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-[1px] bg-secondary/40" />
+              <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest">
+                Kota, Rajasthan
+              </span>
+              <span className="w-4 h-[1px] bg-secondary/40" />
+            </div>
+
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant/70 hover:text-primary transition-colors border border-outline/20 px-3 py-1 rounded-lg"
+              title="Shop Owner Portal"
+            >
+              <span className="material-symbols-outlined text-xs">lock</span> Owner Admin
+            </Link>
           </div>
         </div>
       </div>

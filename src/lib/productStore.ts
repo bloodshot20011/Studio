@@ -4,6 +4,18 @@ import { createClient } from "@/lib/supabase/client";
 
 const LOCAL_STORAGE_KEY = "kashvi_cards_products_v2";
 
+const CATEGORY_PREFIX_MAP: Record<string, string> = {
+  wedding: "WED",
+  birthday: "BIR",
+  mundan: "MUN",
+  "griha-pravesh": "GRI",
+  "shop-opening": "SHO",
+  retirement: "RET",
+  "visiting-cards": "VIS",
+  "letter-pads": "LET",
+  "gift-envelopes": "GIF",
+};
+
 /**
  * Reads all products.
  * Priority: LocalStorage (persists client changes instantly) -> Fallback initialProducts.
@@ -34,6 +46,69 @@ export function saveProductsToStorage(productsList: Product[]) {
   } catch (e) {
     console.error("Error saving products:", e);
   }
+}
+
+/**
+ * Suggests the next available design code based on occasion category (e.g. WED-007).
+ */
+export function suggestDesignCodeByCategory(
+  categorySlug: string,
+  existingList?: Product[]
+): string {
+  const products = existingList || getStoredProducts();
+  const prefix = CATEGORY_PREFIX_MAP[categorySlug] || "CARD";
+
+  // Find all existing codes matching this prefix
+  const numbers: number[] = [];
+  products.forEach((p) => {
+    const cleanCode = p.code.trim().toUpperCase();
+    if (cleanCode.startsWith(`${prefix}-`)) {
+      const numStr = cleanCode.replace(`${prefix}-`, "");
+      const num = parseInt(numStr, 10);
+      if (!isNaN(num)) {
+        numbers.push(num);
+      }
+    }
+  });
+
+  let nextNum = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+  let candidate = `${prefix}-${String(nextNum).padStart(3, "0")}`;
+
+  // Ensure candidate code does not collide with any existing code
+  while (products.some((p) => p.code.trim().toUpperCase() === candidate.toUpperCase())) {
+    nextNum++;
+    candidate = `${prefix}-${String(nextNum).padStart(3, "0")}`;
+  }
+
+  return candidate;
+}
+
+/**
+ * Checks if a design code already exists.
+ * Returns duplicate flag and a suggested alternative code.
+ */
+export function checkDuplicateDesignCode(
+  code: string,
+  currentId?: string,
+  categorySlug = "wedding"
+): { isDuplicate: boolean; suggestedCode: string } {
+  const products = getStoredProducts();
+  const cleanCode = code.trim().toUpperCase();
+
+  if (!cleanCode) {
+    return { isDuplicate: false, suggestedCode: suggestDesignCodeByCategory(categorySlug, products) };
+  }
+
+  const isDuplicate = products.some(
+    (p) => p.code.trim().toUpperCase() === cleanCode && p.id !== currentId
+  );
+
+  const suggestedCode = suggestDesignCodeByCategory(categorySlug, products);
+
+  return {
+    isDuplicate,
+    suggestedCode,
+  };
 }
 
 /**

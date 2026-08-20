@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { categories } from "@/data/categories";
 import { FormatType, Product } from "@/types";
-import { getStoredProducts, updateProductStore } from "@/lib/productStore";
+import {
+  getStoredProducts,
+  updateProductStore,
+  checkDuplicateDesignCode,
+  suggestDesignCodeByCategory,
+} from "@/lib/productStore";
 import { compressImage } from "@/lib/compressImage";
 import { createClient } from "@/lib/supabase/client";
 
@@ -23,6 +28,11 @@ export default function EditDesignPage() {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [categorySlug, setCategorySlug] = useState("wedding");
+  const [duplicateWarning, setDuplicateWarning] = useState<{
+    isDuplicate: boolean;
+    suggestedCode: string;
+  }>({ isDuplicate: false, suggestedCode: "" });
+
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [formats, setFormats] = useState<FormatType[]>(["printed"]);
@@ -46,6 +56,14 @@ export default function EditDesignPage() {
       setTags(found.tags?.join(", ") || "");
     }
   }, [id]);
+
+  // Check duplicate design code whenever code or category changes
+  useEffect(() => {
+    if (existingProduct) {
+      const check = checkDuplicateDesignCode(code, existingProduct.id, categorySlug);
+      setDuplicateWarning(check);
+    }
+  }, [code, categorySlug, existingProduct]);
 
   if (!existingProduct) {
     return (
@@ -108,6 +126,10 @@ export default function EditDesignPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (duplicateWarning.isDuplicate) {
+      alert(`Design code "${code}" already exists! Try ${duplicateWarning.suggestedCode}.`);
+      return;
+    }
     if (formats.length === 0) {
       alert("Please select at least one format (Printed, PDF, or Video).");
       return;
@@ -189,18 +211,51 @@ export default function EditDesignPage() {
               />
             </div>
 
-            {/* Design Code */}
+            {/* Design Code with Duplicate Check */}
             <div>
-              <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary block mb-2">
-                Design Code *
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary block">
+                  Design Code / ID *
+                </label>
+                {duplicateWarning.suggestedCode && (
+                  <button
+                    type="button"
+                    onClick={() => setCode(duplicateWarning.suggestedCode)}
+                    className="text-xs text-secondary hover:underline font-label-sm uppercase tracking-wider"
+                  >
+                    Suggested: {duplicateWarning.suggestedCode}
+                  </button>
+                )}
+              </div>
               <input
                 type="text"
                 required
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                className={`w-full bg-surface border px-4 py-2.5 font-body-md text-on-surface outline-none rounded-xl uppercase ${
+                  duplicateWarning.isDuplicate
+                    ? "border-error focus:border-error text-error font-semibold"
+                    : "border-outline/20 focus:border-secondary"
+                }`}
               />
+
+              {duplicateWarning.isDuplicate && (
+                <div className="mt-2.5 p-3 bg-error-container/60 border border-error/30 text-on-error-container rounded-xl flex items-center justify-between text-xs gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-error text-sm">warning</span>
+                    <span>
+                      Design Code <strong>"{code}"</strong> already exists!
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCode(duplicateWarning.suggestedCode)}
+                    className="px-3 py-1 bg-error text-white font-label-sm uppercase text-[10px] tracking-wider rounded-lg hover:bg-error/90 transition-colors flex-shrink-0"
+                  >
+                    Try {duplicateWarning.suggestedCode}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -354,7 +409,13 @@ export default function EditDesignPage() {
 
           {/* Submit */}
           <div className="pt-4 flex gap-4">
-            <button type="submit" disabled={saving} className="btn-primary flex-1">
+            <button
+              type="submit"
+              disabled={saving || duplicateWarning.isDuplicate}
+              className={`btn-primary flex-1 ${
+                duplicateWarning.isDuplicate ? "opacity-50 cursor-not-allowed bg-outline" : ""
+              }`}
+            >
               {saving ? "Updating..." : "Update Design"}
             </button>
             <Link href="/admin/designs" className="btn-secondary">

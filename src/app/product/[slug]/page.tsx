@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,24 +14,51 @@ import CallButton from "@/components/ui/CallButton";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { getProductBySlug, getSimilarProducts } from "@/lib/products";
 import { getProductWhatsAppMessage } from "@/data/site";
-import { FormatType } from "@/types";
+import { FormatType, Product } from "@/types";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productSlug = params.slug as string;
-  const product = getProductBySlug(productSlug);
 
-  const [selectedFormat, setSelectedFormat] = useState<FormatType>(
-    product?.formats[0] || "printed"
-  );
+  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [isMounted, setIsMounted] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState<FormatType>("printed");
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const foundProduct = getProductBySlug(productSlug);
+    setProduct(foundProduct);
+    if (foundProduct?.formats?.length) {
+      setSelectedFormat(foundProduct.formats[0]);
+    }
+  }, [productSlug]);
+
+  if (!isMounted) {
+    return (
+      <>
+        <Navbar />
+        <main className="flex-grow pt-28 md:pt-36 pb-section-gap min-h-screen">
+          <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 text-center">
+            <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="font-body-md text-on-surface-variant">Loading design details...</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   if (!product) {
     return (
       <>
         <Navbar />
-        <main className="flex-grow pt-36 pb-section-gap flex flex-col items-center justify-center min-h-screen">
-          <h1 className="font-headline-lg text-primary mb-4">Product Not Found</h1>
+        <main className="flex-grow pt-36 pb-section-gap flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+          <span className="material-symbols-outlined text-5xl text-outline mb-4">inventory_2</span>
+          <h1 className="font-headline-lg text-primary mb-2">Product Not Found</h1>
+          <p className="font-body-md text-on-surface-variant max-w-md mb-6">
+            The card design you are looking for does not exist or has been removed.
+          </p>
           <Link href="/collections" className="btn-primary">
             Back to Collections
           </Link>
@@ -98,16 +125,16 @@ export default function ProductDetailPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px]"
+                  className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                 >
-                  <div className="w-full max-w-md bg-surface p-4 border border-secondary/30 shadow-md mb-6 relative">
-                    <div className="aspect-[4/5] bg-surface-container-lowest overflow-hidden mb-4 relative">
+                  <div className="w-full max-w-md bg-surface p-4 border border-secondary/30 shadow-md mb-6 relative rounded-xl">
+                    <div className="aspect-[4/5] bg-surface-container-lowest overflow-hidden mb-4 relative rounded-lg">
                       <img
                         src={product.image}
                         alt={`${product.name} PDF Preview`}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-3 right-3 bg-primary text-white text-[11px] font-label-sm uppercase tracking-widest px-2.5 py-1">
+                      <div className="absolute top-3 right-3 bg-primary text-white text-[11px] font-label-sm uppercase tracking-widest px-2.5 py-1 rounded-md">
                         Interactive PDF
                       </div>
                     </div>
@@ -129,9 +156,9 @@ export default function ProductDetailPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px]"
+                  className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                 >
-                  <div className="w-full max-w-md aspect-[9/16] bg-black rounded-lg overflow-hidden relative shadow-2xl border border-secondary/40">
+                  <div className="w-full max-w-md aspect-[9/16] bg-black rounded-2xl overflow-hidden relative shadow-2xl border border-secondary/40">
                     {!isPlayingVideo ? (
                       <div className="w-full h-full relative">
                         <img
@@ -151,7 +178,7 @@ export default function ProductDetailPage() {
                             </span>
                           </button>
                         </div>
-                        <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-md p-3 text-left border border-outline/20">
+                        <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-md p-3 text-left border border-outline/20 rounded-xl">
                           <span className="font-label-sm text-[10px] text-secondary uppercase tracking-widest block">
                             Video Motion Suite
                           </span>
@@ -172,7 +199,7 @@ export default function ProductDetailPage() {
                         <button
                           type="button"
                           onClick={() => setIsPlayingVideo(false)}
-                          className="px-4 py-2 border border-white/40 text-xs uppercase tracking-widest hover:border-secondary hover:text-secondary transition-colors"
+                          className="px-4 py-2 border border-white/40 text-xs uppercase tracking-widest hover:border-secondary hover:text-secondary transition-colors rounded-xl"
                         >
                           Close Preview
                         </button>
@@ -202,7 +229,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Available Formats Selector */}
-            <div className="mb-8 bg-surface-container-low p-4 border border-outline/10">
+            <div className="mb-8 bg-surface-container-low p-4 border border-outline/10 rounded-2xl">
               <span className="font-label-sm text-label-sm text-primary uppercase tracking-widest block mb-3">
                 Available Formats
               </span>
@@ -216,7 +243,7 @@ export default function ProductDetailPage() {
                       setSelectedFormat(format);
                       setIsPlayingVideo(false);
                     }}
-                    className={`px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest transition-all duration-300 border ${
+                    className={`px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest transition-all duration-300 border rounded-xl ${
                       selectedFormat === format
                         ? "bg-primary text-white border-primary shadow-sm"
                         : "bg-surface text-on-surface-variant border-outline/30 hover:border-secondary hover:text-primary"
