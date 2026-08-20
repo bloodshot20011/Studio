@@ -15,6 +15,7 @@ export default function AdminLayout({
     { name: "Dashboard", href: "/admin", icon: "dashboard" },
     { name: "All Products", href: "/admin/designs", icon: "inventory_2" },
     { name: "Add New Design", href: "/admin/designs/new", icon: "add_circle" },
+    { name: "Customer Enquiries", href: "/admin/enquiries", icon: "contact_support" },
     { name: "View Website", href: "/", icon: "open_in_new" },
   ];
 

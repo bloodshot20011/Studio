@@ -1,21 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { siteConfig } from "@/data/site";
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-    }
-  };
-
   const { contact, social } = siteConfig;
 
   return (
@@ -152,39 +140,6 @@ export default function Footer() {
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Newsletter */}
-        <div className="border-t border-outline/10 pt-8 mb-8">
-          {subscribed ? (
-            <div className="flex items-center gap-2 text-secondary font-label-sm text-label-sm uppercase tracking-widest">
-              <span className="material-symbols-outlined text-[18px]">check_circle</span>
-              Thank you for subscribing!
-            </div>
-          ) : (
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row sm:items-end gap-4 max-w-md">
-              <div className="flex-1">
-                <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-1">
-                  Stay Updated
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="w-full bg-transparent border-b border-outline/30 py-2 font-body-md text-body-md text-on-surface focus:border-secondary outline-none transition-colors placeholder:text-outline/50"
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn-secondary whitespace-nowrap rounded-xl"
-                aria-label="Subscribe"
-              >
-                Subscribe
-              </button>
-            </form>
-          )}
         </div>
 
         {/* Copyright & Admin Link */}

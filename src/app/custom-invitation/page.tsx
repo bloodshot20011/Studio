@@ -5,15 +5,43 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { fadeUp } from "@/lib/animations";
+import { addEnquiryStore } from "@/lib/enquiryStore";
 
 export default function CustomInvitationPage() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [occasion, setOccasion] = useState("");
+  const [productType, setProductType] = useState("wedding");
+  const [quantity, setQuantity] = useState("");
+  const [format, setFormat] = useState("printed");
+  const [style, setStyle] = useState("heritage");
+  const [message, setMessage] = useState("");
+
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name || !phone || !message) return;
+
+    // 1. Save lead to local store and Supabase table
+    await addEnquiryStore({
+      name,
+      phone,
+      subject: `Bespoke Custom Commission (${productType.toUpperCase()})`,
+      format,
+      message: `Occasion: ${occasion || productType} | Quantity: ${quantity || "N/A"} | Style: ${style} | Details: ${message}`,
+    });
+
     setIsSubmitted(true);
-    // Reset form after 5 seconds
-    setTimeout(() => setIsSubmitted(false), 5000);
+
+    // 2. Open owner's WhatsApp with pre-filled enquiry message
+    const formattedPhone = "918107511164";
+    const whatsappMsg = `Hello Kashvi Cards,\n\nI want to request a Bespoke Custom Commission!\nName: ${name}\nPhone: ${phone}\nOccasion: ${occasion || productType}\nQuantity: ${quantity || "N/A"}\nFormat: ${format}\nStyle: ${style}\nDetails: ${message}`;
+    const targetUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(whatsappMsg)}`;
+
+    setTimeout(() => {
+      window.open(targetUrl, "_blank");
+    }, 800);
   };
 
   return (
@@ -30,14 +58,14 @@ export default function CustomInvitationPage() {
               We translate your unique vision into tangible heritage. Through meticulous craftsmanship and a commitment to modern Indian luxury, every commissioned invitation becomes a timeless artifact.
             </p>
             <div className="mt-8">
-              <a href="#commission-form" className="inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 border border-secondary hover:bg-primary transition-colors duration-300">
+              <a href="#commission-form" className="inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 border border-secondary hover:bg-primary transition-colors duration-300 rounded-xl">
                 Begin Your Commission
               </a>
             </div>
           </motion.div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.2 }} className="md:col-span-6 md:col-start-7 mt-12 md:mt-0 relative">
-            <div className="absolute inset-0 border border-secondary/30 translate-x-4 translate-y-4 -z-10"></div>
-            <div className="w-full h-[600px] bg-surface-container-low shadow-sm relative overflow-hidden">
+            <div className="absolute inset-0 border border-secondary/30 translate-x-4 translate-y-4 -z-10 rounded-2xl"></div>
+            <div className="w-full h-[600px] bg-surface-container-low shadow-sm relative overflow-hidden rounded-2xl">
               <img src="https://images.unsplash.com/photo-1544208035-779831ce810a?w=800&q=80" alt="Bespoke Invitation" className="w-full h-full object-cover" />
             </div>
           </motion.div>
@@ -89,32 +117,58 @@ export default function CustomInvitationPage() {
             
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} transition={{ delay: 0.2 }} className="md:col-span-5 md:col-start-8">
               {isSubmitted ? (
-                <div className="bg-surface border border-secondary p-8 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
+                <div className="bg-surface border border-secondary p-8 text-center h-full flex flex-col items-center justify-center min-h-[400px] rounded-2xl">
                   <span className="material-symbols-outlined text-secondary text-5xl mb-4">check_circle</span>
-                  <h3 className="font-headline-md text-primary mb-2">Inquiry Received</h3>
-                  <p className="font-body-md text-on-surface-variant">Thank you for considering Kashvi Cards. Our team will be in touch with you shortly to discuss your custom invitation.</p>
+                  <h3 className="font-headline-md text-primary mb-2">Commission Registered & Opening WhatsApp...</h3>
+                  <p className="font-body-md text-on-surface-variant max-w-xs">
+                    Your custom request has been saved to our leads database and forwarded to the shop owner on WhatsApp!
+                  </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-surface p-8 border border-outline/10 shadow-sm">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-surface p-8 border border-outline/10 shadow-sm rounded-2xl">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
-                      <label className="font-label-sm uppercase text-on-surface-variant">Name</label>
-                      <input required className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors" type="text" />
+                      <label className="font-label-sm uppercase text-on-surface-variant">Name *</label>
+                      <input
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Your Full Name"
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors"
+                        type="text"
+                      />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <label className="font-label-sm uppercase text-on-surface-variant">Phone</label>
-                      <input required className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors" type="tel" />
+                      <label className="font-label-sm uppercase text-on-surface-variant">Phone *</label>
+                      <input
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="10-digit Mobile Number"
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors"
+                        type="tel"
+                      />
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
                       <label className="font-label-sm uppercase text-on-surface-variant">Occasion</label>
-                      <input required className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors" type="text" placeholder="e.g. Wedding, Birthday" />
+                      <input
+                        value={occasion}
+                        onChange={(e) => setOccasion(e.target.value)}
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors"
+                        type="text"
+                        placeholder="e.g. Royal Wedding, 50th Birthday"
+                      />
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="font-label-sm uppercase text-on-surface-variant">Product Type</label>
-                      <select className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface">
+                      <select
+                        value={productType}
+                        onChange={(e) => setProductType(e.target.value)}
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface cursor-pointer"
+                      >
                         <option value="wedding">Wedding Invitation</option>
                         <option value="birthday">Birthday Card</option>
                         <option value="mundan">Mundan Card</option>
@@ -128,11 +182,21 @@ export default function CustomInvitationPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
                       <label className="font-label-sm uppercase text-on-surface-variant">Quantity / Scale</label>
-                      <input className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors" type="text" placeholder="e.g. 150 invites" />
+                      <input
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors"
+                        type="text"
+                        placeholder="e.g. 150 invites"
+                      />
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="font-label-sm uppercase text-on-surface-variant">Printed / Digital</label>
-                      <select className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface">
+                      <select
+                        value={format}
+                        onChange={(e) => setFormat(e.target.value)}
+                        className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface cursor-pointer"
+                      >
                         <option value="printed">Printed Suite</option>
                         <option value="digital">Digital Only</option>
                         <option value="both">Printed & Digital</option>
@@ -142,7 +206,11 @@ export default function CustomInvitationPage() {
 
                   <div className="flex flex-col gap-2">
                     <label className="font-label-sm uppercase text-on-surface-variant">Preferred Style</label>
-                    <select className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface">
+                    <select
+                      value={style}
+                      onChange={(e) => setStyle(e.target.value)}
+                      className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors text-on-surface cursor-pointer"
+                    >
                       <option value="heritage">Traditional / Heritage</option>
                       <option value="modern">Modern Minimalist</option>
                       <option value="floral">Floral & Botanical</option>
@@ -151,17 +219,19 @@ export default function CustomInvitationPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="font-label-sm uppercase text-on-surface-variant">Message</label>
-                    <textarea required className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors resize-none" rows={3} placeholder="Tell us about your vision..."></textarea>
+                    <label className="font-label-sm uppercase text-on-surface-variant">Message Details *</label>
+                    <textarea
+                      required
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="border-b border-outline/30 bg-transparent py-2 outline-none focus:border-secondary transition-colors resize-none"
+                      rows={3}
+                      placeholder="Tell us about your vision, paper choices, gold foil preferences..."
+                    />
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <label className="font-label-sm uppercase text-on-surface-variant">Reference Image (Optional)</label>
-                    <input type="file" className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-surface-container-low file:text-primary hover:file:bg-surface-container-highest transition-colors cursor-pointer" />
-                  </div>
-
-                  <button type="submit" className="mt-4 bg-primary-container text-on-primary font-label-md uppercase tracking-widest py-4 border border-secondary hover:bg-primary transition-colors duration-300 w-full">
-                    Submit Inquiry
+                  <button type="submit" className="mt-4 bg-primary-container text-on-primary font-label-md uppercase tracking-widest py-4 border border-secondary hover:bg-primary transition-colors duration-300 w-full rounded-xl">
+                    Submit Commission (WhatsApp & Admin)
                   </button>
                 </form>
               )}
