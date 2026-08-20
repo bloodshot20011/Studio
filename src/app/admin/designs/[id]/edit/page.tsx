@@ -3,42 +3,49 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { products } from "@/data/products";
 import { categories } from "@/data/categories";
 import { FormatType, Product } from "@/types";
+import { getStoredProducts, updateProductStore } from "@/lib/productStore";
+import { compressImage } from "@/lib/compressImage";
+import { createClient } from "@/lib/supabase/client";
 
 export default function EditDesignPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
 
-  const existingProduct = products.find((p) => p.id === id);
-
+  const [existingProduct, setExistingProduct] = useState<Product | undefined>(undefined);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [compressInfo, setCompressInfo] = useState("");
 
-  const [name, setName] = useState(existingProduct?.name || "");
-  const [code, setCode] = useState(existingProduct?.code || "");
-  const [categorySlug, setCategorySlug] = useState(existingProduct?.categorySlug || "wedding");
-  const [description, setDescription] = useState(existingProduct?.description || "");
-  const [imageUrl, setImageUrl] = useState(existingProduct?.image || "");
-  const [formats, setFormats] = useState<FormatType[]>(existingProduct?.formats || ["printed"]);
-  const [featured, setFeatured] = useState(existingProduct?.featured || false);
-  const [newArrival, setNewArrival] = useState(existingProduct?.newArrival || false);
-  const [tags, setTags] = useState(existingProduct?.tags?.join(", ") || "");
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [categorySlug, setCategorySlug] = useState("wedding");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [formats, setFormats] = useState<FormatType[]>(["printed"]);
+  const [featured, setFeatured] = useState(false);
+  const [newArrival, setNewArrival] = useState(false);
+  const [tags, setTags] = useState("");
 
   useEffect(() => {
-    if (existingProduct) {
-      setName(existingProduct.name);
-      setCode(existingProduct.code);
-      setCategorySlug(existingProduct.categorySlug);
-      setDescription(existingProduct.description);
-      setImageUrl(existingProduct.image);
-      setFormats(existingProduct.formats);
-      setFeatured(existingProduct.featured);
-      setNewArrival(existingProduct.newArrival);
-      setTags(existingProduct.tags?.join(", ") || "");
+    const list = getStoredProducts();
+    const found = list.find((p) => p.id === id);
+    if (found) {
+      setExistingProduct(found);
+      setName(found.name);
+      setCode(found.code);
+      setCategorySlug(found.categorySlug);
+      setDescription(found.description);
+      setImageUrl(found.image);
+      setFormats(found.formats);
+      setFeatured(found.featured);
+      setNewArrival(found.newArrival);
+      setTags(found.tags?.join(", ") || "");
     }
-  }, [existingProduct]);
+  }, [id]);
 
   if (!existingProduct) {
     return (
@@ -61,17 +68,85 @@ export default function EditDesignPage() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
+
+    setUploading(true);
+    setCompressInfo("Compressing & stripping metadata...");
+
+    try {
+      const file = await compressImage(rawFile);
+      const originalMB = (rawFile.size / (1024 * 1024)).toFixed(2);
+      const compressedKB = (file.size / 1024).toFixed(0);
+      setCompressInfo(`Compressed ${originalMB}MB ➔ ${compressedKB}KB (metadata stripped)`);
+
+      const supabase = createClient();
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `products/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("card-images")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        setImageUrl(URL.createObjectURL(file));
+      } else {
+        const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
+        if (data?.publicUrl) {
+          setImageUrl(data.publicUrl);
+        }
+      }
+    } catch (err: any) {
+      console.error(err);
+      setImageUrl(URL.createObjectURL(rawFile));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formats.length === 0) {
       alert("Please select at least one format (Printed, PDF, or Video).");
       return;
     }
 
-    setIsSubmitted(true);
-    setTimeout(() => {
-      router.push("/admin/designs");
-    }, 1500);
+    setSaving(true);
+    try {
+      const matchedCategory = categories.find((c) => c.slug === categorySlug);
+      const tagArray = tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      await updateProductStore(id, {
+        name,
+        code,
+        category: matchedCategory?.name || "Wedding",
+        categorySlug,
+        description,
+        image: imageUrl,
+        formats,
+        featured,
+        newArrival,
+        tags: tagArray,
+      });
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        router.push("/admin/designs");
+      }, 1200);
+    } catch (err) {
+      console.error(err);
+      setIsSubmitted(true);
+      setTimeout(() => {
+        router.push("/admin/designs");
+      }, 1200);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -92,13 +167,13 @@ export default function EditDesignPage() {
       </div>
 
       {isSubmitted ? (
-        <div className="bg-surface-container-lowest border border-secondary p-10 text-center shadow-md">
+        <div className="bg-surface-container-lowest border border-secondary p-10 text-center shadow-md rounded-2xl">
           <span className="material-symbols-outlined text-secondary text-5xl mb-3">check_circle</span>
           <h3 className="font-headline-md text-headline-md text-primary mb-2">Changes Saved Successfully!</h3>
           <p className="font-body-md text-on-surface-variant">Redirecting to products list...</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-surface-container-lowest border border-outline/15 p-6 md:p-8 space-y-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="bg-surface-container-lowest border border-outline/15 p-6 md:p-8 space-y-6 shadow-sm rounded-2xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Design Name */}
             <div>
@@ -110,7 +185,7 @@ export default function EditDesignPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
               />
             </div>
 
@@ -124,7 +199,7 @@ export default function EditDesignPage() {
                 required
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
               />
             </div>
           </div>
@@ -138,7 +213,7 @@ export default function EditDesignPage() {
               <select
                 value={categorySlug}
                 onChange={(e) => setCategorySlug(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none cursor-pointer"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none cursor-pointer rounded-xl"
               >
                 {categories.map((cat) => (
                   <option key={cat.slug} value={cat.slug}>
@@ -148,18 +223,33 @@ export default function EditDesignPage() {
               </select>
             </div>
 
-            {/* Main Image URL */}
+            {/* Image File Upload & URL */}
             <div>
               <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary block mb-2">
-                Main Image URL *
+                Upload New Image *
               </label>
-              <input
-                type="text"
-                required
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
-              />
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageFileUpload}
+                  className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer rounded-lg"
+                />
+                {uploading && <p className="text-xs text-secondary animate-pulse">Compressing & Uploading file...</p>}
+                {compressInfo && <p className="text-xs text-secondary font-mono">{compressInfo}</p>}
+                <input
+                  type="text"
+                  required
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="w-full bg-surface border border-outline/20 px-4 py-2 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
+                />
+                {imageUrl && (
+                  <div className="w-16 h-20 bg-surface-container-low border border-outline/20 overflow-hidden rounded-lg">
+                    <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -178,7 +268,7 @@ export default function EditDesignPage() {
                     className="sr-only"
                   />
                   <div
-                    className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                    className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                       formats.includes(fmt) ? "bg-primary border-primary text-white" : "border-outline group-hover:border-secondary"
                     }`}
                   >
@@ -204,7 +294,7 @@ export default function EditDesignPage() {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-surface border border-outline/20 p-4 font-body-md text-on-surface focus:border-secondary outline-none resize-none"
+              className="w-full bg-surface border border-outline/20 p-4 font-body-md text-on-surface focus:border-secondary outline-none resize-none rounded-xl"
             />
           </div>
 
@@ -217,7 +307,7 @@ export default function EditDesignPage() {
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+              className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
             />
           </div>
 
@@ -231,7 +321,7 @@ export default function EditDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                   featured ? "bg-secondary border-secondary text-white" : "border-outline"
                 }`}
               >
@@ -250,7 +340,7 @@ export default function EditDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                   newArrival ? "bg-secondary border-secondary text-white" : "border-outline"
                 }`}
               >
@@ -264,8 +354,8 @@ export default function EditDesignPage() {
 
           {/* Submit */}
           <div className="pt-4 flex gap-4">
-            <button type="submit" className="btn-primary flex-1">
-              Update Design
+            <button type="submit" disabled={saving} className="btn-primary flex-1">
+              {saving ? "Updating..." : "Update Design"}
             </button>
             <Link href="/admin/designs" className="btn-secondary">
               Cancel

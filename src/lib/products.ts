@@ -1,8 +1,13 @@
-import { Product, FormatType } from "@/types";
-import { products } from "@/data/products";
+import { Product } from "@/types";
+import { getStoredProducts } from "./productStore";
+
+export function getAllProducts(): Product[] {
+  return getStoredProducts();
+}
 
 export function searchProducts(query: string): Product[] {
   const term = query.trim().toLowerCase();
+  const products = getStoredProducts();
   if (!term) return products;
 
   return products.filter(
@@ -17,25 +22,30 @@ export function searchProducts(query: string): Product[] {
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
+  const products = getStoredProducts();
   return products.filter((p) => p.categorySlug === categorySlug);
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
+  const products = getStoredProducts();
   return products.find((p) => p.slug === slug);
 }
 
 export function getSimilarProducts(product: Product, limit = 3): Product[] {
+  const products = getStoredProducts();
   return products
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, limit);
 }
 
 export function getFeaturedProducts(limit?: number): Product[] {
+  const products = getStoredProducts();
   const featured = products.filter((p) => p.featured);
   return limit ? featured.slice(0, limit) : featured;
 }
 
 export function getNewArrivals(limit?: number): Product[] {
+  const products = getStoredProducts();
   const arrivals = products.filter((p) => p.newArrival);
   return limit ? arrivals.slice(0, limit) : arrivals;
 }
@@ -49,6 +59,7 @@ export interface FilterOptions {
 }
 
 export function filterProducts(options: FilterOptions): Product[] {
+  const products = getStoredProducts();
   return products.filter((product) => {
     // Category filter
     if (
@@ -66,7 +77,7 @@ export function filterProducts(options: FilterOptions): Product[] {
       } else if (options.format === "digital") {
         const hasPdf = product.formats.includes("pdf");
         const hasVideo = product.formats.includes("video");
-        
+
         if (!hasPdf && !hasVideo) return false;
 
         // Sub-filter for digital type

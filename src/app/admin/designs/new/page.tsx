@@ -7,6 +7,7 @@ import { categories } from "@/data/categories";
 import { FormatType } from "@/types";
 import { createClient } from "@/lib/supabase/client";
 import { compressImage } from "@/lib/compressImage";
+import { addProductStore } from "@/lib/productStore";
 
 export default function AddNewDesignPage() {
   const router = useRouter();
@@ -41,7 +42,6 @@ export default function AddNewDesignPage() {
     setCompressInfo("Compressing & stripping metadata...");
 
     try {
-      // Automatically compress image and strip EXIF metadata
       const file = await compressImage(rawFile);
       const originalMB = (rawFile.size / (1024 * 1024)).toFixed(2);
       const compressedKB = (file.size / 1024).toFixed(0);
@@ -82,7 +82,6 @@ export default function AddNewDesignPage() {
 
     setSaving(true);
     try {
-      const supabase = createClient();
       const slug = name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
@@ -94,37 +93,31 @@ export default function AddNewDesignPage() {
         .map((t) => t.trim())
         .filter(Boolean);
 
-      const { error } = await supabase.from("products").insert([
-        {
-          slug: slug || `design-${Date.now()}`,
-          name,
-          code,
-          category: matchedCategory?.name || "Wedding",
-          category_slug: categorySlug,
-          description,
-          image: imageUrl || "/images/catalog-1.jpeg",
-          gallery: [imageUrl || "/images/catalog-1.jpeg"],
-          formats,
-          featured,
-          new_arrival: newArrival,
-          tags: tagArray,
-        },
-      ]);
-
-      if (error) {
-        console.warn("Database insert warning:", error.message);
-      }
+      await addProductStore({
+        slug: slug || `design-${Date.now()}`,
+        name,
+        code,
+        category: matchedCategory?.name || "Wedding",
+        categorySlug,
+        description,
+        image: imageUrl || "/images/catalog-1.jpeg",
+        gallery: [imageUrl || "/images/catalog-1.jpeg"],
+        formats,
+        featured,
+        newArrival,
+        tags: tagArray,
+      });
 
       setIsSubmitted(true);
       setTimeout(() => {
         router.push("/admin/designs");
-      }, 1500);
+      }, 1200);
     } catch (err) {
       console.error(err);
       setIsSubmitted(true);
       setTimeout(() => {
         router.push("/admin/designs");
-      }, 1500);
+      }, 1200);
     } finally {
       setSaving(false);
     }
@@ -148,13 +141,13 @@ export default function AddNewDesignPage() {
       </div>
 
       {isSubmitted ? (
-        <div className="bg-surface-container-lowest border border-secondary p-10 text-center shadow-md">
+        <div className="bg-surface-container-lowest border border-secondary p-10 text-center shadow-md rounded-2xl">
           <span className="material-symbols-outlined text-secondary text-5xl mb-3">check_circle</span>
           <h3 className="font-headline-md text-headline-md text-primary mb-2">Design Added Successfully!</h3>
           <p className="font-body-md text-on-surface-variant">Redirecting to products list...</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-surface-container-lowest border border-outline/15 p-6 md:p-8 space-y-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="bg-surface-container-lowest border border-outline/15 p-6 md:p-8 space-y-6 shadow-sm rounded-2xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Design Name */}
             <div>
@@ -167,7 +160,7 @@ export default function AddNewDesignPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Royal Mehfil"
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
               />
             </div>
 
@@ -182,7 +175,7 @@ export default function AddNewDesignPage() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="e.g. WED-007"
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
               />
             </div>
           </div>
@@ -196,7 +189,7 @@ export default function AddNewDesignPage() {
               <select
                 value={categorySlug}
                 onChange={(e) => setCategorySlug(e.target.value)}
-                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none cursor-pointer"
+                className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none cursor-pointer rounded-xl"
               >
                 {categories.map((cat) => (
                   <option key={cat.slug} value={cat.slug}>
@@ -216,9 +209,9 @@ export default function AddNewDesignPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleImageFileUpload}
-                  className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer"
+                  className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer rounded-lg"
                 />
-                {uploading && <p className="text-xs text-secondary animate-pulse">Compressing & Uploading file to Supabase Storage...</p>}
+                {uploading && <p className="text-xs text-secondary animate-pulse">Compressing & Uploading file...</p>}
                 {compressInfo && <p className="text-xs text-secondary font-mono">{compressInfo}</p>}
                 <input
                   type="text"
@@ -226,10 +219,10 @@ export default function AddNewDesignPage() {
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="Or enter image URL manually (/images/catalog-1.jpeg)"
-                  className="w-full bg-surface border border-outline/20 px-4 py-2 font-body-md text-sm text-on-surface focus:border-secondary outline-none"
+                  className="w-full bg-surface border border-outline/20 px-4 py-2 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
                 />
                 {imageUrl && (
-                  <div className="w-16 h-20 bg-surface-container-low border border-outline/20 overflow-hidden">
+                  <div className="w-16 h-20 bg-surface-container-low border border-outline/20 overflow-hidden rounded-lg">
                     <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}
@@ -252,7 +245,7 @@ export default function AddNewDesignPage() {
                     className="sr-only"
                   />
                   <div
-                    className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                    className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                       formats.includes(fmt) ? "bg-primary border-primary text-white" : "border-outline group-hover:border-secondary"
                     }`}
                   >
@@ -279,7 +272,7 @@ export default function AddNewDesignPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Detailed description of materials, gold foil, paper stock, or motion animations..."
-              className="w-full bg-surface border border-outline/20 p-4 font-body-md text-on-surface focus:border-secondary outline-none resize-none"
+              className="w-full bg-surface border border-outline/20 p-4 font-body-md text-on-surface focus:border-secondary outline-none resize-none rounded-xl"
             />
           </div>
 
@@ -293,7 +286,7 @@ export default function AddNewDesignPage() {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="Royal, Gold Foil, Traditional"
-              className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none"
+              className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
             />
           </div>
 
@@ -307,7 +300,7 @@ export default function AddNewDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                   featured ? "bg-secondary border-secondary text-white" : "border-outline"
                 }`}
               >
@@ -326,7 +319,7 @@ export default function AddNewDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
                   newArrival ? "bg-secondary border-secondary text-white" : "border-outline"
                 }`}
               >
@@ -341,7 +334,7 @@ export default function AddNewDesignPage() {
           {/* Submit */}
           <div className="pt-4 flex gap-4">
             <button type="submit" disabled={saving} className="btn-primary flex-1">
-              {saving ? "Saving to Database..." : "Save Design"}
+              {saving ? "Saving Design..." : "Save Design"}
             </button>
             <Link href="/admin/designs" className="btn-secondary">
               Cancel

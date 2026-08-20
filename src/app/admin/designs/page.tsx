@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { products as initialProducts } from "@/data/products";
 import { categories } from "@/data/categories";
 import { Product, FormatType } from "@/types";
+import { getStoredProducts, deleteProductStore, updateProductStore } from "@/lib/productStore";
 
 export default function AdminDesignsPage() {
-  const [productList, setProductList] = useState<Product[]>(initialProducts);
+  const [productList, setProductList] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
+
+  useEffect(() => {
+    setProductList(getStoredProducts());
+  }, []);
 
   const filteredProducts = productList.filter((product) => {
     // Search query
@@ -36,16 +40,18 @@ export default function AdminDesignsPage() {
     return true;
   });
 
-  const handleDeleteProduct = (id: string) => {
+  const handleDeleteProduct = async (id: string) => {
     if (confirm("Are you sure you want to delete this design?")) {
-      setProductList((prev) => prev.filter((p) => p.id !== id));
+      const updated = await deleteProductStore(id);
+      setProductList(updated);
     }
   };
 
-  const handleToggleFeatured = (id: string) => {
-    setProductList((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, featured: !p.featured } : p))
-    );
+  const handleToggleFeatured = async (id: string) => {
+    const target = productList.find((p) => p.id === id);
+    if (!target) return;
+    const updated = await updateProductStore(id, { featured: !target.featured });
+    setProductList(updated);
   };
 
   return (
@@ -68,7 +74,7 @@ export default function AdminDesignsPage() {
       </div>
 
       {/* Filter Controls Bar */}
-      <div className="bg-surface-container-low p-4 border border-outline/15 flex flex-col md:flex-row gap-4 justify-between items-center">
+      <div className="bg-surface-container-low p-4 border border-outline/15 flex flex-col md:flex-row gap-4 justify-between items-center rounded-xl">
         {/* Search */}
         <div className="relative w-full md:w-72">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">
@@ -79,7 +85,7 @@ export default function AdminDesignsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name or code..."
-            className="w-full pl-9 pr-4 py-2 bg-surface border border-outline/20 text-sm focus:border-secondary outline-none"
+            className="w-full pl-9 pr-4 py-2 bg-surface border border-outline/20 text-sm focus:border-secondary outline-none rounded-lg"
           />
         </div>
 
@@ -89,7 +95,7 @@ export default function AdminDesignsPage() {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             aria-label="Filter by Category"
-            className="px-3 py-2 bg-surface border border-outline/20 font-label-sm text-label-sm uppercase tracking-wider text-primary outline-none cursor-pointer"
+            className="px-3 py-2 bg-surface border border-outline/20 font-label-sm text-label-sm uppercase tracking-wider text-primary outline-none cursor-pointer rounded-lg"
           >
             <option value="all">All Categories</option>
             {categories.map((c) => (
@@ -103,7 +109,7 @@ export default function AdminDesignsPage() {
             value={selectedFormat}
             onChange={(e) => setSelectedFormat(e.target.value)}
             aria-label="Filter by Format"
-            className="px-3 py-2 bg-surface border border-outline/20 font-label-sm text-label-sm uppercase tracking-wider text-primary outline-none cursor-pointer"
+            className="px-3 py-2 bg-surface border border-outline/20 font-label-sm text-label-sm uppercase tracking-wider text-primary outline-none cursor-pointer rounded-lg"
           >
             <option value="all">All Formats</option>
             <option value="printed">Printed</option>
@@ -128,7 +134,7 @@ export default function AdminDesignsPage() {
       </div>
 
       {/* Designs Table */}
-      <div className="bg-surface-container-lowest border border-outline/15 overflow-hidden shadow-sm">
+      <div className="bg-surface-container-lowest border border-outline/15 overflow-hidden shadow-sm rounded-2xl">
         {filteredProducts.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -147,7 +153,7 @@ export default function AdminDesignsPage() {
                   <tr key={product.id} className="hover:bg-surface-container-low/60 transition-colors">
                     <td className="py-3.5 px-5">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-14 bg-surface-container-low border border-outline/20 overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-14 bg-surface-container-low border border-outline/20 overflow-hidden rounded-lg flex-shrink-0">
                           <img
                             src={product.image}
                             alt={product.name}
@@ -173,7 +179,7 @@ export default function AdminDesignsPage() {
                         {product.formats.map((fmt) => (
                           <span
                             key={fmt}
-                            className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface border border-outline/20 text-secondary"
+                            className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface border border-outline/20 text-secondary rounded-md"
                           >
                             {fmt}
                           </span>
@@ -184,7 +190,7 @@ export default function AdminDesignsPage() {
                       <button
                         type="button"
                         onClick={() => handleToggleFeatured(product.id)}
-                        className={`px-3 py-1 text-[11px] font-label-sm uppercase tracking-wider border transition-colors ${
+                        className={`px-3 py-1 text-[11px] font-label-sm uppercase tracking-wider border transition-colors rounded-lg ${
                           product.featured
                             ? "bg-secondary text-white border-secondary"
                             : "bg-surface text-on-surface-variant border-outline/30 hover:border-secondary"
@@ -213,7 +219,7 @@ export default function AdminDesignsPage() {
                         type="button"
                         onClick={() => handleDeleteProduct(product.id)}
                         className="text-error hover:text-error-container p-1.5 inline-block"
-                        title="Delete"
+                        title="Delete Design"
                       >
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>

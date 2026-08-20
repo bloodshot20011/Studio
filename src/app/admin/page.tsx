@@ -1,9 +1,17 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { products } from "@/data/products";
+import { Product } from "@/types";
+import { getStoredProducts } from "@/lib/productStore";
 
 export default function AdminDashboardPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    setProducts(getStoredProducts());
+  }, []);
+
   const totalProducts = products.length;
   const weddingCount = products.filter((p) => p.categorySlug === "wedding").length;
   const digitalCount = products.filter(
@@ -34,7 +42,7 @@ export default function AdminDashboardPage() {
 
       {/* Grid: Key Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between">
+        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between rounded-2xl shadow-sm">
           <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             Total Designs
           </span>
@@ -46,7 +54,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between">
+        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between rounded-2xl shadow-sm">
           <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             Wedding Cards
           </span>
@@ -58,7 +66,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between">
+        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between rounded-2xl shadow-sm">
           <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             Digital Formats
           </span>
@@ -70,7 +78,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between">
+        <div className="bg-surface-container-lowest border border-outline/15 p-5 flex flex-col justify-between rounded-2xl shadow-sm">
           <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             New Arrivals
           </span>
@@ -95,7 +103,7 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
 
-        <div className="bg-surface-container-lowest border border-outline/15 overflow-hidden shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline/15 overflow-hidden shadow-sm rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -113,7 +121,7 @@ export default function AdminDashboardPage() {
                   <tr key={product.id} className="hover:bg-surface-container-low/60 transition-colors">
                     <td className="py-3.5 px-5">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-12 bg-surface-container-low border border-outline/20 overflow-hidden flex-shrink-0">
+                        <div className="w-10 h-12 bg-surface-container-low border border-outline/20 overflow-hidden rounded-lg flex-shrink-0">
                           <img
                             src={product.image}
                             alt={product.name}
@@ -139,7 +147,7 @@ export default function AdminDashboardPage() {
                         {product.formats.map((fmt) => (
                           <span
                             key={fmt}
-                            className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface border border-outline/20 text-secondary"
+                            className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface border border-outline/20 text-secondary rounded-md"
                           >
                             {fmt}
                           </span>
@@ -148,11 +156,11 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="py-3.5 px-5">
                       {product.featured ? (
-                        <span className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/30">
+                        <span className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/30 rounded-md">
                           Featured
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface-container-low text-on-surface-variant">
+                        <span className="px-2 py-0.5 text-[10px] font-label-sm uppercase tracking-wider bg-surface-container-low text-on-surface-variant rounded-md">
                           Standard
                         </span>
                       )}
