@@ -2,7 +2,8 @@ import { Product } from "@/types";
 import { products as initialProducts } from "@/data/products";
 import { createClient } from "@/lib/supabase/client";
 
-const LOCAL_STORAGE_KEY = "kashvi_cards_products_v3";
+const LOCAL_STORAGE_KEY = "kashvi_cards_products_v4";
+const DELETED_CODES_KEY = "kashvi_cards_deleted_codes_v4";
 
 const CATEGORY_PREFIX_MAP: Record<string, string> = {
   wedding: "WED",
@@ -17,20 +18,55 @@ const CATEGORY_PREFIX_MAP: Record<string, string> = {
 };
 
 /**
+ * Gets array of deleted product codes to prevent initial static fallback from resurrecting deleted cards.
+ */
+export function getDeletedCodes(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = localStorage.getItem(DELETED_CODES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Records a deleted product code permanently.
+ */
+export function recordDeletedCode(code: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const current = getDeletedCodes();
+    const clean = code.trim().toUpperCase();
+    if (!current.includes(clean)) {
+      const updated = [...current, clean];
+      localStorage.setItem(DELETED_CODES_KEY, JSON.stringify(updated));
+    }
+  } catch (e) {
+    console.error("Error recording deleted code:", e);
+  }
+}
+
+/**
  * Reads all products.
- * Priority: LocalStorage -> Fallback initialProducts.
+ * Priority: LocalStorage -> Fallback filtered initialProducts (excluding deleted items).
  * Automatically triggers background sync with Supabase DB so changes cross-sync globally across all devices!
  */
 export function getStoredProducts(): Product[] {
   if (typeof window === "undefined") return initialProducts;
+  const deletedCodes = getDeletedCodes();
+  const cleanInitial = initialProducts.filter(
+    (p) => !deletedCodes.includes(p.code.trim().toUpperCase())
+  );
+
   try {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed) && parsed.length >= 0) {
         // Trigger background sync with Supabase DB
         syncProductsFromSupabase();
-        return parsed;
+        return parsed.filter((p: Product) => !deletedCodes.includes(p.code.trim().toUpperCase()));
       }
     }
   } catch (e) {
@@ -39,7 +75,7 @@ export function getStoredProducts(): Product[] {
 
   // Trigger background sync with Supabase DB
   syncProductsFromSupabase();
-  return initialProducts;
+  return cleanInitial;
 }
 
 /**
@@ -47,30 +83,41 @@ export function getStoredProducts(): Product[] {
  */
 export async function syncProductsFromSupabase(): Promise<Product[]> {
   if (typeof window === "undefined") return initialProducts;
+  const deletedCodes = getDeletedCodes();
+
   try {
     const supabase = createClient();
     const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
 
-    if (!error && Array.isArray(data) && data.length > 0) {
-      const dbProducts: Product[] = data.map((item: any) => ({
-        id: item.id || `card-${item.code}`,
-        slug: item.slug || `design-${item.code}`,
-        name: item.name,
-        code: item.code,
-        category: item.category || "Wedding",
-        categorySlug: item.category_slug || "wedding",
-        description: item.description || "",
-        image: item.image,
-        gallery: item.gallery || [item.image],
-        formats: item.formats || ["printed"],
-        featured: Boolean(item.featured),
-        newArrival: Boolean(item.new_arrival),
-        tags: item.tags || [],
-      }));
+    if (!error && Array.isArray(data)) {
+      const dbProducts: Product[] = data
+        .map((item: any) => ({
+          id: item.id || `card-${item.code}`,
+          slug: item.slug || `design-${item.code}`,
+          name: item.name,
+          code: item.code,
+          category: item.category || "Wedding",
+          categorySlug: item.category_slug || "wedding",
+          description: item.description || "",
+          image: item.image,
+          gallery: item.gallery || [item.image],
+          formats: item.formats || ["printed"],
+          videoUrl: item.video_url || item.videoUrl || item.digitalAssets?.video || "",
+          featured: Boolean(item.featured),
+          newArrival: Boolean(item.new_arrival),
+          tags: item.tags || [],
+        }))
+        .filter((p) => !deletedCodes.includes(p.code.trim().toUpperCase()));
 
-      // Merge Supabase DB items with initial static catalogue
-      const codeSet = new Set(dbProducts.map((p) => p.code.trim().toUpperCase()));
-      const fallbackList = initialProducts.filter((p) => !codeSet.has(p.code.trim().toUpperCase()));
+      // Merge Supabase DB items with initial static catalogue (excluding deleted ones)
+      const codeSet = new Set([
+        ...dbProducts.map((p) => p.code.trim().toUpperCase()),
+        ...deletedCodes,
+      ]);
+
+      const fallbackList = initialProducts.filter(
+        (p) => !codeSet.has(p.code.trim().toUpperCase())
+      );
       const combinedList = [...dbProducts, ...fallbackList];
 
       saveProductsToStorage(combinedList);
@@ -181,6 +228,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
         image: fullProduct.image,
         gallery: fullProduct.gallery || [fullProduct.image],
         formats: fullProduct.formats,
+        video_url: fullProduct.videoUrl || "",
         featured: fullProduct.featured,
         new_arrival: fullProduct.newArrival,
         tags: fullProduct.tags || [],
@@ -216,6 +264,7 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
           description: updatedProduct.description,
           image: updatedProduct.image,
           formats: updatedProduct.formats,
+          video_url: updatedProduct.videoUrl || "",
           featured: updatedProduct.featured,
           new_arrival: updatedProduct.newArrival,
           tags: updatedProduct.tags,
@@ -237,9 +286,8 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
   const target = currentList.find((p) => p.id === id);
   const updatedList = currentList.filter((p) => p.id !== id);
 
-  saveProductsToStorage(updatedList);
-
   if (target) {
+    recordDeletedCode(target.code);
     try {
       const supabase = createClient();
       await supabase.from("products").delete().eq("code", target.code);
@@ -248,6 +296,7 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
     }
   }
 
+  saveProductsToStorage(updatedList);
   return updatedList;
 }
 
@@ -257,6 +306,7 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
 export function resetProductsStorage(): Product[] {
   if (typeof window !== "undefined") {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(DELETED_CODES_KEY);
   }
   return initialProducts;
 }

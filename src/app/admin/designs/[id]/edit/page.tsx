@@ -23,6 +23,7 @@ export default function EditDesignPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [compressInfo, setCompressInfo] = useState("");
 
   const [name, setName] = useState("");
@@ -35,6 +36,7 @@ export default function EditDesignPage() {
 
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [formats, setFormats] = useState<FormatType[]>(["printed"]);
   const [featured, setFeatured] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
@@ -50,6 +52,7 @@ export default function EditDesignPage() {
       setCategorySlug(found.categorySlug);
       setDescription(found.description);
       setImageUrl(found.image);
+      setVideoUrl(found.videoUrl || found.digitalAssets?.video || "");
       setFormats(found.formats);
       setFeatured(found.featured);
       setNewArrival(found.newArrival);
@@ -57,7 +60,6 @@ export default function EditDesignPage() {
     }
   }, [id]);
 
-  // Check duplicate design code whenever code or category changes
   useEffect(() => {
     if (existingProduct) {
       const check = checkDuplicateDesignCode(code, existingProduct.id, categorySlug);
@@ -124,6 +126,38 @@ export default function EditDesignPage() {
     }
   };
 
+  const handleVideoFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingVideo(true);
+
+    try {
+      const supabase = createClient();
+      const fileExt = file.name.split(".").pop();
+      const fileName = `video_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `videos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("card-images")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        setVideoUrl(URL.createObjectURL(file));
+      } else {
+        const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
+        if (data?.publicUrl) {
+          setVideoUrl(data.publicUrl);
+        }
+      }
+    } catch (err: any) {
+      console.error(err);
+      setVideoUrl(URL.createObjectURL(file));
+    } finally {
+      setUploadingVideo(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (duplicateWarning.isDuplicate) {
@@ -151,6 +185,7 @@ export default function EditDesignPage() {
         description,
         image: imageUrl,
         formats,
+        videoUrl: formats.includes("video") ? videoUrl : "",
         featured,
         newArrival,
         tags: tagArray,
@@ -211,7 +246,7 @@ export default function EditDesignPage() {
               />
             </div>
 
-            {/* Design Code with Duplicate Check */}
+            {/* Design Code */}
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="font-label-sm text-label-sm uppercase tracking-widest text-primary block">
@@ -290,7 +325,7 @@ export default function EditDesignPage() {
                   onChange={handleImageFileUpload}
                   className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer rounded-lg"
                 />
-                {uploading && <p className="text-xs text-secondary animate-pulse">Compressing & Uploading file...</p>}
+                {uploading && <p className="text-xs text-secondary animate-pulse">Compressing & Uploading image...</p>}
                 {compressInfo && <p className="text-xs text-secondary font-mono">{compressInfo}</p>}
                 <input
                   type="text"
@@ -338,6 +373,50 @@ export default function EditDesignPage() {
               ))}
             </div>
           </div>
+
+          {/* Video Upload Field (Appears ONLY when "video" format checkbox is checked) */}
+          {formats.includes("video") && (
+            <div className="p-5 bg-secondary/5 border border-secondary/30 rounded-2xl space-y-3">
+              <div className="flex items-center gap-2 text-secondary">
+                <span className="material-symbols-outlined">videocam</span>
+                <label className="font-label-sm text-label-sm uppercase tracking-widest font-bold">
+                  Upload Digital Video (MP4 / WebM / Video Link) *
+                </label>
+              </div>
+
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime"
+                  onChange={handleVideoFileUpload}
+                  className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-secondary file:text-white hover:file:bg-secondary/90 cursor-pointer rounded-lg"
+                />
+                {uploadingVideo && <p className="text-xs text-secondary animate-pulse">Uploading video file...</p>}
+
+                <input
+                  type="text"
+                  required
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="Or enter video URL (e.g. https://domain.com/video.mp4 or YouTube link)"
+                  className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
+                />
+
+                {videoUrl && (
+                  <div className="p-3 bg-surface border border-outline/20 rounded-xl flex items-center justify-between text-xs text-primary font-mono">
+                    <span className="truncate">📹 Video Ready: {videoUrl}</span>
+                    <button
+                      type="button"
+                      onClick={() => setVideoUrl("")}
+                      className="text-error hover:underline text-[10px] uppercase font-label-sm ml-2"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Description */}
           <div>

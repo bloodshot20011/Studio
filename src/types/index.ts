@@ -24,9 +24,9 @@ export interface Product {
   image: string;
   gallery: string[];
   formats: FormatType[];
+  videoUrl?: string;
   digitalAssets?: DigitalAssets;
   featured: boolean;
   newArrival: boolean;
   tags?: string[];
 }
-
