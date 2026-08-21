@@ -39,6 +39,17 @@ function notifySubscribers(list: Enquiry[]) {
   });
 }
 
+function generateValidUUID(): string {
+  if (typeof window !== "undefined" && window.crypto && window.crypto.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 /**
  * Reads local cached enquiries from LocalStorage
  */
@@ -84,7 +95,7 @@ export async function getStoredEnquiries(): Promise<Enquiry[]> {
 
     if (!error && Array.isArray(data)) {
       const dbEnquiries: Enquiry[] = data.map((item: any) => ({
-        id: item.id,
+        id: item.id || generateValidUUID(),
         name: item.name || "Anonymous",
         phone: item.phone || "",
         email: item.email || "",
@@ -114,14 +125,15 @@ export async function getStoredEnquiries(): Promise<Enquiry[]> {
 }
 
 /**
- * Adds enquiry to LocalStorage AND Supabase DB, and returns pre-filled WhatsApp URL to 8107511164
+ * Adds enquiry to LocalStorage AND Supabase DB (using valid UUID format), returning WhatsApp URL to 8107511164
  */
 export async function addEnquiryStore(
   data: Omit<Enquiry, "id" | "createdAt" | "status">
 ): Promise<{ enquiry: Enquiry; whatsappUrl: string }> {
+  const validUuid = generateValidUUID();
   const newEnquiry: Enquiry = {
     ...data,
-    id: typeof window !== "undefined" && window.crypto?.randomUUID ? window.crypto.randomUUID() : `enq-${Date.now()}`,
+    id: validUuid,
     status: "New",
     createdAt: new Date().toISOString(),
   };
@@ -135,26 +147,35 @@ export async function addEnquiryStore(
   // 2. Insert into Supabase DB
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("enquiries").insert([
-      {
-        id: newEnquiry.id,
-        name: newEnquiry.name,
-        phone: newEnquiry.phone,
-        email: newEnquiry.email || "",
-        occasion: newEnquiry.subject || "General Enquiry",
-        product_code: newEnquiry.designCode || "",
-        product_name: newEnquiry.productName || "",
-        format_preference: newEnquiry.format || "",
-        message: newEnquiry.message,
-        status: newEnquiry.status,
-      },
-    ]);
+    const payload: any = {
+      id: validUuid,
+      name: newEnquiry.name,
+      phone: newEnquiry.phone,
+      email: newEnquiry.email || "",
+      occasion: newEnquiry.subject || "General Enquiry",
+      product_code: newEnquiry.designCode || "",
+      product_name: newEnquiry.productName || "",
+      format_preference: newEnquiry.format || "",
+      message: newEnquiry.message,
+      status: newEnquiry.status,
+    };
+
+    let { error } = await supabase.from("enquiries").insert([payload]);
+
+    // Fallback if UUID syntax error occurs: insert without id so Supabase autogenerates UUID
+    if (error && error.code === "22P02") {
+      delete payload.id;
+      const retry = await supabase.from("enquiries").insert([payload]);
+      error = retry.error;
+    }
 
     if (error) {
       console.error("Supabase enquiry insert error:", error);
     } else {
       console.log("Successfully recorded enquiry lead in Supabase DB!");
     }
+
+    await getStoredEnquiries();
   } catch (err) {
     console.warn("Supabase enquiry insert notice:", err);
   }
