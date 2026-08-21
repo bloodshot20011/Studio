@@ -17,6 +17,28 @@ export interface Enquiry {
 const PRIMARY_WHATSAPP_NUMBER = "918107511164";
 const LOCAL_STORAGE_KEY = "kashvi_cards_enquiries_v2";
 
+type EnquiryListener = (enquiries: Enquiry[]) => void;
+const listeners: Set<EnquiryListener> = new Set();
+let cachedEnquiries: Enquiry[] = [];
+
+export function subscribeEnquiries(listener: EnquiryListener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function notifySubscribers(list: Enquiry[]) {
+  cachedEnquiries = list;
+  listeners.forEach((cb) => {
+    try {
+      cb(list);
+    } catch (e) {
+      console.error("Error notifying enquiry listener:", e);
+    }
+  });
+}
+
 /**
  * Reads local cached enquiries from LocalStorage
  */
@@ -47,7 +69,7 @@ export function saveLocalEnquiries(list: Enquiry[]) {
 }
 
 /**
- * Fetches enquiries from Supabase DB and merges with LocalStorage
+ * Fetches enquiries directly from Supabase DB
  */
 export async function getStoredEnquiries(): Promise<Enquiry[]> {
   const localList = getLocalEnquiries();
@@ -55,6 +77,10 @@ export async function getStoredEnquiries(): Promise<Enquiry[]> {
   try {
     const supabase = createClient();
     const { data, error } = await supabase.from("enquiries").select("*").order("created_at", { ascending: false });
+
+    if (error) {
+      console.warn("Supabase enquiries fetch notice:", error.message || error);
+    }
 
     if (!error && Array.isArray(data)) {
       const dbEnquiries: Enquiry[] = data.map((item: any) => ({
@@ -76,12 +102,14 @@ export async function getStoredEnquiries(): Promise<Enquiry[]> {
       const combined = [...dbEnquiries, ...localList.filter((e) => !idSet.has(e.id))];
 
       saveLocalEnquiries(combined);
+      notifySubscribers(combined);
       return combined;
     }
   } catch (err) {
-    console.warn("Supabase enquiries fetch notice:", err);
+    console.warn("Supabase enquiries fetch exception:", err);
   }
 
+  notifySubscribers(localList);
   return localList;
 }
 
@@ -102,11 +130,12 @@ export async function addEnquiryStore(
   const localList = getLocalEnquiries();
   const updatedLocal = [newEnquiry, ...localList];
   saveLocalEnquiries(updatedLocal);
+  notifySubscribers(updatedLocal);
 
   // 2. Insert into Supabase DB
   try {
     const supabase = createClient();
-    await supabase.from("enquiries").insert([
+    const { error } = await supabase.from("enquiries").insert([
       {
         id: newEnquiry.id,
         name: newEnquiry.name,
@@ -120,6 +149,12 @@ export async function addEnquiryStore(
         status: newEnquiry.status,
       },
     ]);
+
+    if (error) {
+      console.error("Supabase enquiry insert error:", error);
+    } else {
+      console.log("Successfully recorded enquiry lead in Supabase DB!");
+    }
   } catch (err) {
     console.warn("Supabase enquiry insert notice:", err);
   }
@@ -144,6 +179,7 @@ export async function updateEnquiryStatusStore(
   const localList = getLocalEnquiries();
   const updatedLocal = localList.map((e) => (e.id === id ? { ...e, status } : e));
   saveLocalEnquiries(updatedLocal);
+  notifySubscribers(updatedLocal);
 
   try {
     const supabase = createClient();
@@ -157,6 +193,7 @@ export async function deleteEnquiryStore(id: string): Promise<void> {
   const localList = getLocalEnquiries();
   const updatedLocal = localList.filter((e) => e.id !== id);
   saveLocalEnquiries(updatedLocal);
+  notifySubscribers(updatedLocal);
 
   try {
     const supabase = createClient();

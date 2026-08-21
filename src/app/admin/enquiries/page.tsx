@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   getStoredEnquiries,
+  subscribeEnquiries,
   addEnquiryStore,
   updateEnquiryStatusStore,
   deleteEnquiryStore,
@@ -29,11 +30,18 @@ export default function AdminEnquiriesPage() {
 
   useEffect(() => {
     loadEnquiries();
-    // Auto-poll every 5 seconds to receive live customer enquiries from website/phones
+    const unsubscribe = subscribeEnquiries((list) => {
+      setEnquiries(list);
+    });
+
     const interval = setInterval(() => {
       loadEnquiries();
-    }, 5000);
-    return () => clearInterval(interval);
+    }, 4000);
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
   }, []);
 
   const filteredEnquiries = enquiries.filter((item) => {
