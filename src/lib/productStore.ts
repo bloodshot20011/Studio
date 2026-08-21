@@ -76,7 +76,6 @@ async function seedInitialProductsIfEmpty(supabase: any) {
       image: p.image,
       gallery: p.gallery || [p.image],
       formats: p.formats,
-      video_url: p.videoUrl || "",
       featured: p.featured,
       new_arrival: p.newArrival,
       tags: p.tags || [],
@@ -204,31 +203,42 @@ export function checkDuplicateDesignCode(
 
 /**
  * Adds a new product directly to Supabase DB as single source of truth.
+ * Handles missing video_url column gracefully if schema is updating.
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
   const id = generateValidUUID();
   const fullProduct: Product = { ...newProduct, id };
 
+  const payload: any = {
+    id: fullProduct.id,
+    slug: fullProduct.slug,
+    name: fullProduct.name,
+    code: fullProduct.code,
+    category: fullProduct.category,
+    category_slug: fullProduct.categorySlug,
+    description: fullProduct.description,
+    image: fullProduct.image,
+    gallery: fullProduct.gallery || [fullProduct.image],
+    formats: fullProduct.formats,
+    featured: fullProduct.featured,
+    new_arrival: fullProduct.newArrival,
+    tags: fullProduct.tags || [],
+  };
+
+  if (fullProduct.videoUrl) {
+    payload.video_url = fullProduct.videoUrl;
+  }
+
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("products").insert([
-      {
-        id: fullProduct.id,
-        slug: fullProduct.slug,
-        name: fullProduct.name,
-        code: fullProduct.code,
-        category: fullProduct.category,
-        category_slug: fullProduct.categorySlug,
-        description: fullProduct.description,
-        image: fullProduct.image,
-        gallery: fullProduct.gallery || [fullProduct.image],
-        formats: fullProduct.formats,
-        video_url: fullProduct.videoUrl || "",
-        featured: fullProduct.featured,
-        new_arrival: fullProduct.newArrival,
-        tags: fullProduct.tags || [],
-      },
-    ]);
+    let { error } = await supabase.from("products").insert([payload]);
+
+    // Fallback if video_url column missing
+    if (error && error.message?.includes("video_url")) {
+      delete payload.video_url;
+      const retry = await supabase.from("products").insert([payload]);
+      error = retry.error;
+    }
 
     if (error) {
       console.error("Supabase insert error details:", error);
@@ -246,26 +256,52 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
 /**
  * Updates an existing product directly in Supabase DB.
+ * Handles missing video_url column gracefully if schema is updating.
  */
 export async function updateProductStore(id: string, updatedData: Partial<Product>): Promise<Product[]> {
+  const target = cachedProducts.find((p) => p.id === id);
+  const code = updatedData.code || target?.code;
+
+  const payload: any = {
+    name: updatedData.name,
+    code: updatedData.code,
+    category: updatedData.category,
+    category_slug: updatedData.categorySlug,
+    description: updatedData.description,
+    image: updatedData.image,
+    formats: updatedData.formats,
+    featured: updatedData.featured,
+    new_arrival: updatedData.newArrival,
+    tags: updatedData.tags,
+  };
+
+  if (updatedData.videoUrl !== undefined) {
+    payload.video_url = updatedData.videoUrl;
+  }
+
   try {
     const supabase = createClient();
-    const { error } = await supabase
-      .from("products")
-      .update({
-        name: updatedData.name,
-        code: updatedData.code,
-        category: updatedData.category,
-        category_slug: updatedData.categorySlug,
-        description: updatedData.description,
-        image: updatedData.image,
-        formats: updatedData.formats,
-        video_url: updatedData.videoUrl || "",
-        featured: updatedData.featured,
-        new_arrival: updatedData.newArrival,
-        tags: updatedData.tags,
-      })
-      .eq("id", id);
+    let query = supabase.from("products").update(payload);
+    if (code) {
+      query = query.or(`id.eq.${id},code.eq.${code}`);
+    } else {
+      query = query.eq("id", id);
+    }
+
+    let { error } = await query;
+
+    // Fallback if video_url column missing
+    if (error && error.message?.includes("video_url")) {
+      delete payload.video_url;
+      let retryQuery = supabase.from("products").update(payload);
+      if (code) {
+        retryQuery = retryQuery.or(`id.eq.${id},code.eq.${code}`);
+      } else {
+        retryQuery = retryQuery.eq("id", id);
+      }
+      const retry = await retryQuery;
+      error = retry.error;
+    }
 
     if (error) {
       console.error("Supabase update error details:", error);
@@ -280,12 +316,22 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
 }
 
 /**
- * Deletes a product directly from Supabase DB permanently.
+ * Deletes a product directly from Supabase DB permanently by both ID and Design Code.
  */
 export async function deleteProductStore(id: string): Promise<Product[]> {
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const target = cachedProducts.find((p) => p.id === id);
+    const code = target?.code || "";
+
+    let query = supabase.from("products").delete();
+    if (code) {
+      query = query.or(`id.eq.${id},code.eq.${code}`);
+    } else {
+      query = query.eq("id", id);
+    }
+
+    const { error } = await query;
 
     if (error) {
       console.error("Supabase delete error details:", error);
