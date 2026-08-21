@@ -2,9 +2,6 @@ import { Product } from "@/types";
 import { products as initialProducts } from "@/data/products";
 import { createClient } from "@/lib/supabase/client";
 
-const LOCAL_STORAGE_KEY = "kashvi_cards_products_v5";
-const DELETED_CODES_KEY = "kashvi_cards_deleted_codes_v5";
-
 const CATEGORY_PREFIX_MAP: Record<string, string> = {
   wedding: "WED",
   birthday: "BIR",
@@ -20,6 +17,8 @@ const CATEGORY_PREFIX_MAP: Record<string, string> = {
 // Event listener subscribers for real-time reactivity
 type ProductsListener = (products: Product[]) => void;
 const listeners: Set<ProductsListener> = new Set();
+let cachedProducts: Product[] = [];
+let isSeeding = false;
 
 export function subscribeProducts(listener: ProductsListener): () => void {
   listeners.add(listener);
@@ -29,6 +28,7 @@ export function subscribeProducts(listener: ProductsListener): () => void {
 }
 
 function notifySubscribers(products: Product[]) {
+  cachedProducts = products;
   listeners.forEach((callback) => {
     try {
       callback(products);
@@ -38,9 +38,6 @@ function notifySubscribers(products: Product[]) {
   });
 }
 
-/**
- * Helper to generate valid UUIDs or fallback GUID string
- */
 function generateValidUUID(): string {
   if (typeof window !== "undefined" && window.crypto && window.crypto.randomUUID) {
     return window.crypto.randomUUID();
@@ -53,71 +50,55 @@ function generateValidUUID(): string {
 }
 
 /**
- * Gets array of deleted product codes to prevent initial static fallback from resurrecting deleted cards.
- */
-export function getDeletedCodes(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const stored = localStorage.getItem(DELETED_CODES_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch (e) {
-    return [];
-  }
-}
-
-/**
- * Records a deleted product code permanently.
- */
-export function recordDeletedCode(code: string) {
-  if (typeof window === "undefined") return;
-  try {
-    const current = getDeletedCodes();
-    const clean = code.trim().toUpperCase();
-    if (!current.includes(clean)) {
-      const updated = [...current, clean];
-      localStorage.setItem(DELETED_CODES_KEY, JSON.stringify(updated));
-    }
-  } catch (e) {
-    console.error("Error recording deleted code:", e);
-  }
-}
-
-/**
- * Reads all products.
- * Priority: LocalStorage -> Fallback filtered initialProducts (excluding deleted items).
- * Automatically triggers background sync with Supabase DB so changes cross-sync globally across all devices!
+ * Returns current cached products or initial fallbacks synchronously
  */
 export function getStoredProducts(): Product[] {
-  if (typeof window === "undefined") return initialProducts;
-  const deletedCodes = getDeletedCodes();
-  const cleanInitial = initialProducts.filter(
-    (p) => !deletedCodes.includes(p.code.trim().toUpperCase())
-  );
-
-  try {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length >= 0) {
-        syncProductsFromSupabase();
-        return parsed.filter((p: Product) => !deletedCodes.includes(p.code.trim().toUpperCase()));
-      }
-    }
-  } catch (e) {
-    console.error("Error reading stored products:", e);
-  }
-
-  syncProductsFromSupabase();
-  return cleanInitial;
+  if (cachedProducts.length > 0) return cachedProducts;
+  return initialProducts;
 }
 
 /**
- * Asynchronously pulls all product rows from Supabase DB to sync changes globally across all devices.
+ * Auto-seeds initial static catalog into Supabase DB ONCE if database is completely empty.
+ */
+async function seedInitialProductsIfEmpty(supabase: any) {
+  if (isSeeding) return;
+  isSeeding = true;
+
+  try {
+    const seedRows = initialProducts.map((p) => ({
+      id: generateValidUUID(),
+      slug: p.slug,
+      name: p.name,
+      code: p.code,
+      category: p.category,
+      category_slug: p.categorySlug,
+      description: p.description,
+      image: p.image,
+      gallery: p.gallery || [p.image],
+      formats: p.formats,
+      video_url: p.videoUrl || "",
+      featured: p.featured,
+      new_arrival: p.newArrival,
+      tags: p.tags || [],
+    }));
+
+    const { error } = await supabase.from("products").insert(seedRows);
+    if (error) {
+      console.warn("Auto-seeding notice:", error.message);
+    } else {
+      console.log("Successfully seeded 19 initial designs into Supabase DB!");
+    }
+  } catch (e) {
+    console.error("Error seeding initial products:", e);
+  } finally {
+    isSeeding = false;
+  }
+}
+
+/**
+ * Asynchronously pulls all product rows from Supabase DB as the SINGLE SOURCE OF TRUTH.
  */
 export async function syncProductsFromSupabase(): Promise<Product[]> {
-  if (typeof window === "undefined") return initialProducts;
-  const deletedCodes = getDeletedCodes();
-
   try {
     const supabase = createClient();
     const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
@@ -127,60 +108,42 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
     }
 
     if (!error && Array.isArray(data)) {
-      const dbProducts: Product[] = data
-        .map((item: any) => ({
-          id: item.id || generateValidUUID(),
-          slug: item.slug || `design-${item.code}`,
-          name: item.name,
-          code: item.code,
-          category: item.category || "Wedding",
-          categorySlug: item.category_slug || "wedding",
-          description: item.description || "",
-          image: item.image,
-          gallery: item.gallery || [item.image],
-          formats: item.formats || ["printed"],
-          videoUrl: item.video_url || item.videoUrl || item.digitalAssets?.video || "",
-          featured: Boolean(item.featured),
-          newArrival: Boolean(item.new_arrival),
-          tags: item.tags || [],
-        }))
-        .filter((p) => !deletedCodes.includes(p.code.trim().toUpperCase()));
+      // If table is completely empty (0 items), auto-seed once
+      if (data.length === 0 && !isSeeding) {
+        await seedInitialProductsIfEmpty(supabase);
+        return syncProductsFromSupabase();
+      }
 
-      // Merge Supabase DB items with initial static catalogue (excluding deleted ones)
-      const codeSet = new Set([
-        ...dbProducts.map((p) => p.code.trim().toUpperCase()),
-        ...deletedCodes,
-      ]);
+      const dbProducts: Product[] = data.map((item: any) => ({
+        id: item.id || generateValidUUID(),
+        slug: item.slug || `design-${item.code}`,
+        name: item.name,
+        code: item.code,
+        category: item.category || "Wedding",
+        categorySlug: item.category_slug || "wedding",
+        description: item.description || "",
+        image: item.image,
+        gallery: item.gallery || [item.image],
+        formats: item.formats || ["printed"],
+        videoUrl: item.video_url || item.videoUrl || item.digitalAssets?.video || "",
+        featured: Boolean(item.featured),
+        newArrival: Boolean(item.new_arrival),
+        tags: item.tags || [],
+      }));
 
-      const fallbackList = initialProducts.filter(
-        (p) => !codeSet.has(p.code.trim().toUpperCase())
-      );
-      const combinedList = [...dbProducts, ...fallbackList];
-
-      saveProductsToStorage(combinedList);
-      notifySubscribers(combinedList);
-      return combinedList;
+      notifySubscribers(dbProducts);
+      return dbProducts;
     }
   } catch (err) {
-    console.warn("Supabase fetch notice:", err);
+    console.warn("Supabase fetch exception:", err);
   }
+
+  notifySubscribers(cachedProducts.length > 0 ? cachedProducts : initialProducts);
   return getStoredProducts();
 }
 
 /**
- * Saves products array to localStorage.
- */
-export function saveProductsToStorage(productsList: Product[]) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(productsList));
-  } catch (e) {
-    console.error("Error saving products:", e);
-  }
-}
-
-/**
- * Suggests the next available design code based on occasion category (e.g. WED-007).
+ * Suggests next available design code by category
  */
 export function suggestDesignCodeByCategory(
   categorySlug: string,
@@ -213,8 +176,7 @@ export function suggestDesignCodeByCategory(
 }
 
 /**
- * Checks if a design code already exists.
- * Returns duplicate flag and a suggested alternative code.
+ * Checks if a design code already exists
  */
 export function checkDuplicateDesignCode(
   code: string,
@@ -241,18 +203,12 @@ export function checkDuplicateDesignCode(
 }
 
 /**
- * Adds a new product to storage and syncs to Supabase DB.
+ * Adds a new product directly to Supabase DB as single source of truth.
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
-  const currentList = getStoredProducts();
   const id = generateValidUUID();
   const fullProduct: Product = { ...newProduct, id };
-  const updatedList = [fullProduct, ...currentList];
 
-  saveProductsToStorage(updatedList);
-  notifySubscribers(updatedList);
-
-  // Sync to Supabase database
   try {
     const supabase = createClient();
     const { error } = await supabase.from("products").insert([
@@ -276,92 +232,69 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
     if (error) {
       console.error("Supabase insert error details:", error);
-    } else {
-      console.log("Successfully inserted product to Supabase DB:", fullProduct.code);
+      throw new Error(error.message || "Failed to insert product into Supabase");
     }
-  } catch (err) {
-    console.warn("Supabase insert notice:", err);
+
+    await syncProductsFromSupabase();
+  } catch (err: any) {
+    console.error("Error adding product:", err);
+    throw err;
   }
 
   return fullProduct;
 }
 
 /**
- * Updates an existing product in storage and syncs to Supabase DB.
+ * Updates an existing product directly in Supabase DB.
  */
 export async function updateProductStore(id: string, updatedData: Partial<Product>): Promise<Product[]> {
-  const currentList = getStoredProducts();
-  const updatedList = currentList.map((p) => (p.id === id ? { ...p, ...updatedData } : p));
+  try {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("products")
+      .update({
+        name: updatedData.name,
+        code: updatedData.code,
+        category: updatedData.category,
+        category_slug: updatedData.categorySlug,
+        description: updatedData.description,
+        image: updatedData.image,
+        formats: updatedData.formats,
+        video_url: updatedData.videoUrl || "",
+        featured: updatedData.featured,
+        new_arrival: updatedData.newArrival,
+        tags: updatedData.tags,
+      })
+      .eq("id", id);
 
-  saveProductsToStorage(updatedList);
-  notifySubscribers(updatedList);
-
-  const updatedProduct = updatedList.find((p) => p.id === id);
-  if (updatedProduct) {
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("products")
-        .update({
-          name: updatedProduct.name,
-          code: updatedProduct.code,
-          category: updatedProduct.category,
-          category_slug: updatedProduct.categorySlug,
-          description: updatedProduct.description,
-          image: updatedProduct.image,
-          formats: updatedProduct.formats,
-          video_url: updatedProduct.videoUrl || "",
-          featured: updatedProduct.featured,
-          new_arrival: updatedProduct.newArrival,
-          tags: updatedProduct.tags,
-        })
-        .eq("code", updatedProduct.code);
-
-      if (error) {
-        console.error("Supabase update error details:", error);
-      }
-    } catch (err) {
-      console.warn("Supabase update notice:", err);
+    if (error) {
+      console.error("Supabase update error details:", error);
+      throw new Error(error.message || "Failed to update product in Supabase");
     }
-  }
 
-  return updatedList;
+    return await syncProductsFromSupabase();
+  } catch (err: any) {
+    console.error("Error updating product:", err);
+    throw err;
+  }
 }
 
 /**
- * Deletes a product from storage and syncs deletion to Supabase DB.
+ * Deletes a product directly from Supabase DB permanently.
  */
 export async function deleteProductStore(id: string): Promise<Product[]> {
-  const currentList = getStoredProducts();
-  const target = currentList.find((p) => p.id === id);
-  const updatedList = currentList.filter((p) => p.id !== id);
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.from("products").delete().eq("id", id);
 
-  if (target) {
-    recordDeletedCode(target.code);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.from("products").delete().eq("code", target.code);
-      if (error) {
-        console.error("Supabase delete error details:", error);
-      }
-    } catch (err) {
-      console.warn("Supabase delete notice:", err);
+    if (error) {
+      console.error("Supabase delete error details:", error);
+      throw new Error(error.message || "Failed to delete product from Supabase");
     }
-  }
 
-  saveProductsToStorage(updatedList);
-  notifySubscribers(updatedList);
-  return updatedList;
-}
-
-/**
- * Resets all product changes back to initial state (optional utility).
- */
-export function resetProductsStorage(): Product[] {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-    localStorage.removeItem(DELETED_CODES_KEY);
+    return await syncProductsFromSupabase();
+  } catch (err: any) {
+    console.error("Error deleting product:", err);
+    throw err;
   }
-  notifySubscribers(initialProducts);
-  return initialProducts;
 }

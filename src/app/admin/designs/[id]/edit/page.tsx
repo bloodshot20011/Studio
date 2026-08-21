@@ -195,12 +195,9 @@ export default function EditDesignPage() {
       setTimeout(() => {
         router.push("/admin/designs");
       }, 1200);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setIsSubmitted(true);
-      setTimeout(() => {
-        router.push("/admin/designs");
-      }, 1200);
+      alert(err.message || "Failed to update design in Supabase Database. Please check your Supabase permissions.");
     } finally {
       setSaving(false);
     }

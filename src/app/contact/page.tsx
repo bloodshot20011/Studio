@@ -23,8 +23,8 @@ export default function ContactPage() {
     e.preventDefault();
     if (!name || !phone || !message) return;
 
-    // 1. Save lead to local store and Supabase table
-    await addEnquiryStore({
+    // 1. Save lead directly to Supabase DB and get formatted WhatsApp URL
+    const { whatsappUrl } = await addEnquiryStore({
       name,
       phone,
       subject: `${occasion.toUpperCase()} Enquiry`,
@@ -34,13 +34,9 @@ export default function ContactPage() {
 
     setIsSubmitted(true);
 
-    // 2. Open owner's WhatsApp with pre-filled enquiry message
-    const formattedPhone = "918107511164";
-    const whatsappMsg = `Hello Kashvi Cards,\n\nName: ${name}\nPhone: ${phone}\nOccasion: ${occasion}\nFormat: ${format}\nMessage: ${message}`;
-    const targetUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(whatsappMsg)}`;
-
+    // 2. Open owner's WhatsApp pre-filled
     setTimeout(() => {
-      window.open(targetUrl, "_blank");
+      window.open(whatsappUrl, "_blank");
     }, 800);
   };
 

@@ -181,12 +181,9 @@ export default function AddNewDesignPage() {
       setTimeout(() => {
         router.push("/admin/designs");
       }, 1200);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setIsSubmitted(true);
-      setTimeout(() => {
-        router.push("/admin/designs");
-      }, 1200);
+      alert(err.message || "Failed to save design to Supabase Database. Please check your Supabase permissions.");
     } finally {
       setSaving(false);
     }

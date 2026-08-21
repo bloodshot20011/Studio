@@ -13,8 +13,13 @@ export default function AdminEnquiriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | "New" | "Contacted" | "Resolved">("All");
 
+  const loadEnquiries = async () => {
+    const list = await getStoredEnquiries();
+    setEnquiries(list);
+  };
+
   useEffect(() => {
-    setEnquiries(getStoredEnquiries());
+    loadEnquiries();
   }, []);
 
   const filteredEnquiries = enquiries.filter((item) => {
@@ -35,14 +40,14 @@ export default function AdminEnquiriesPage() {
   });
 
   const handleStatusChange = async (id: string, newStatus: "New" | "Contacted" | "Resolved") => {
-    const updated = await updateEnquiryStatusStore(id, newStatus);
-    setEnquiries(updated);
+    await updateEnquiryStatusStore(id, newStatus);
+    loadEnquiries();
   };
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this enquiry lead?")) {
-      const updated = await deleteEnquiryStore(id);
-      setEnquiries(updated);
+      await deleteEnquiryStore(id);
+      loadEnquiries();
     }
   };
 

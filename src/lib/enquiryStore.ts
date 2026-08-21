@@ -7,82 +7,55 @@ export interface Enquiry {
   email?: string;
   subject?: string;
   designCode?: string;
+  productName?: string;
   message: string;
   format?: string;
   status: "New" | "Contacted" | "Resolved";
   createdAt: string;
 }
 
-const LOCAL_STORAGE_KEY = "kashvi_cards_enquiries_v1";
+const PRIMARY_WHATSAPP_NUMBER = "919057525833";
 
-const INITIAL_ENQUIRIES: Enquiry[] = [
-  {
-    id: "enq-101",
-    name: "Ramesh Sharma",
-    phone: "9829012345",
-    email: "ramesh.sharma@gmail.com",
-    subject: "Wedding Invitation Suite",
-    designCode: "WED-001",
-    message: "Interested in Royal Heritage 350gsm paper card for 500 guests.",
-    format: "printed",
-    status: "New",
-    createdAt: "2026-08-20T14:30:00Z",
-  },
-  {
-    id: "enq-102",
-    name: "Priya Verma",
-    phone: "8107599988",
-    email: "priya.verma@outlook.com",
-    subject: "Video Invitation Enquiry",
-    designCode: "WED-002",
-    message: "Requesting video invitation customization with custom music.",
-    format: "video",
-    status: "Contacted",
-    createdAt: "2026-08-19T10:15:00Z",
-  },
-];
-
-export function getStoredEnquiries(): Enquiry[] {
-  if (typeof window === "undefined") return INITIAL_ENQUIRIES;
+export async function getStoredEnquiries(): Promise<Enquiry[]> {
   try {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
+    const supabase = createClient();
+    const { data, error } = await supabase.from("enquiries").select("*").order("created_at", { ascending: false });
+
+    if (!error && Array.isArray(data)) {
+      return data.map((item: any) => ({
+        id: item.id,
+        name: item.name || "Anonymous",
+        phone: item.phone || "",
+        email: item.email || "",
+        subject: item.occasion || item.subject || "Card Enquiry",
+        designCode: item.product_code || item.designCode || "",
+        productName: item.product_name || "",
+        message: item.message || "",
+        format: item.format_preference || item.format || "",
+        status: (item.status as any) || "New",
+        createdAt: item.created_at || new Date().toISOString(),
+      }));
     }
-  } catch (e) {
-    console.error("Error reading stored enquiries:", e);
+  } catch (err) {
+    console.warn("Supabase enquiries fetch notice:", err);
   }
-  return INITIAL_ENQUIRIES;
+  return [];
 }
 
-export function saveEnquiriesToStorage(enquiries: Enquiry[]) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(enquiries));
-  } catch (e) {
-    console.error("Error saving enquiries:", e);
-  }
-}
-
+/**
+ * Adds enquiry directly to Supabase DB and generates pre-filled WhatsApp link
+ */
 export async function addEnquiryStore(
   data: Omit<Enquiry, "id" | "createdAt" | "status">
-): Promise<Enquiry> {
-  const currentList = getStoredEnquiries();
-  const id = `enq-${Date.now()}`;
+): Promise<{ enquiry: Enquiry; whatsappUrl: string }> {
   const newEnquiry: Enquiry = {
     ...data,
-    id,
+    id: typeof window !== "undefined" && window.crypto?.randomUUID ? window.crypto.randomUUID() : `enq-${Date.now()}`,
     status: "New",
     createdAt: new Date().toISOString(),
   };
 
-  const updatedList = [newEnquiry, ...currentList];
-  saveEnquiriesToStorage(updatedList);
-
-  // Sync to Supabase table if table exists
+  // 1. Insert into Supabase DB
   try {
     const supabase = createClient();
     await supabase.from("enquiries").insert([
@@ -91,54 +64,48 @@ export async function addEnquiryStore(
         name: newEnquiry.name,
         phone: newEnquiry.phone,
         email: newEnquiry.email || "",
-        subject: newEnquiry.subject || "",
-        design_code: newEnquiry.designCode || "",
+        occasion: newEnquiry.subject || "General Enquiry",
+        product_code: newEnquiry.designCode || "",
+        product_name: newEnquiry.productName || "",
+        format_preference: newEnquiry.format || "",
         message: newEnquiry.message,
-        format: newEnquiry.format || "",
         status: newEnquiry.status,
-        created_at: newEnquiry.createdAt,
       },
     ]);
   } catch (err) {
     console.warn("Supabase enquiry insert notice:", err);
   }
 
-  return newEnquiry;
+  // 2. Generate WhatsApp pre-filled link
+  let text = `Namaste Kashvi Cards! 🙏\n\n`;
+  text += `Name: *${newEnquiry.name}*\n`;
+  text += `Phone: *${newEnquiry.phone}*\n`;
+  if (newEnquiry.designCode) text += `Design Code: *${newEnquiry.designCode}*\n`;
+  if (newEnquiry.format) text += `Preferred Format: *${newEnquiry.format.toUpperCase()}*\n`;
+  text += `Message: ${newEnquiry.message}`;
+
+  const whatsappUrl = `https://wa.me/${PRIMARY_WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
+  return { enquiry: newEnquiry, whatsappUrl };
 }
 
 export async function updateEnquiryStatusStore(
   id: string,
   status: "New" | "Contacted" | "Resolved"
-): Promise<Enquiry[]> {
-  const currentList = getStoredEnquiries();
-  const updatedList = currentList.map((e) =>
-    e.id === id ? { ...e, status } : e
-  );
-
-  saveEnquiriesToStorage(updatedList);
-
+): Promise<void> {
   try {
     const supabase = createClient();
     await supabase.from("enquiries").update({ status }).eq("id", id);
   } catch (err) {
     console.warn("Supabase enquiry update notice:", err);
   }
-
-  return updatedList;
 }
 
-export async function deleteEnquiryStore(id: string): Promise<Enquiry[]> {
-  const currentList = getStoredEnquiries();
-  const updatedList = currentList.filter((e) => e.id !== id);
-
-  saveEnquiriesToStorage(updatedList);
-
+export async function deleteEnquiryStore(id: string): Promise<void> {
   try {
     const supabase = createClient();
     await supabase.from("enquiries").delete().eq("id", id);
   } catch (err) {
     console.warn("Supabase enquiry delete notice:", err);
   }
-
-  return updatedList;
 }
