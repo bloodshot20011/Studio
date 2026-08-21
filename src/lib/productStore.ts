@@ -2,7 +2,7 @@ import { Product } from "@/types";
 import { products as initialProducts } from "@/data/products";
 import { createClient } from "@/lib/supabase/client";
 
-const LOCAL_STORAGE_KEY = "kashvi_cards_products_v2";
+const LOCAL_STORAGE_KEY = "kashvi_cards_products_v3";
 
 const CATEGORY_PREFIX_MAP: Record<string, string> = {
   wedding: "WED",
@@ -18,7 +18,8 @@ const CATEGORY_PREFIX_MAP: Record<string, string> = {
 
 /**
  * Reads all products.
- * Priority: LocalStorage (persists client changes instantly) -> Fallback initialProducts.
+ * Priority: LocalStorage -> Fallback initialProducts.
+ * Automatically triggers background sync with Supabase DB so changes cross-sync globally across all devices!
  */
 export function getStoredProducts(): Product[] {
   if (typeof window === "undefined") return initialProducts;
@@ -26,14 +27,59 @@ export function getStoredProducts(): Product[] {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Trigger background sync with Supabase DB
+        syncProductsFromSupabase();
         return parsed;
       }
     }
   } catch (e) {
     console.error("Error reading stored products:", e);
   }
+
+  // Trigger background sync with Supabase DB
+  syncProductsFromSupabase();
   return initialProducts;
+}
+
+/**
+ * Asynchronously pulls all product rows from Supabase DB to sync changes globally across all devices.
+ */
+export async function syncProductsFromSupabase(): Promise<Product[]> {
+  if (typeof window === "undefined") return initialProducts;
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
+
+    if (!error && Array.isArray(data) && data.length > 0) {
+      const dbProducts: Product[] = data.map((item: any) => ({
+        id: item.id || `card-${item.code}`,
+        slug: item.slug || `design-${item.code}`,
+        name: item.name,
+        code: item.code,
+        category: item.category || "Wedding",
+        categorySlug: item.category_slug || "wedding",
+        description: item.description || "",
+        image: item.image,
+        gallery: item.gallery || [item.image],
+        formats: item.formats || ["printed"],
+        featured: Boolean(item.featured),
+        newArrival: Boolean(item.new_arrival),
+        tags: item.tags || [],
+      }));
+
+      // Merge Supabase DB items with initial static catalogue
+      const codeSet = new Set(dbProducts.map((p) => p.code.trim().toUpperCase()));
+      const fallbackList = initialProducts.filter((p) => !codeSet.has(p.code.trim().toUpperCase()));
+      const combinedList = [...dbProducts, ...fallbackList];
+
+      saveProductsToStorage(combinedList);
+      return combinedList;
+    }
+  } catch (err) {
+    console.warn("Supabase fetch notice:", err);
+  }
+  return getStoredProducts();
 }
 
 /**
@@ -58,7 +104,6 @@ export function suggestDesignCodeByCategory(
   const products = existingList || getStoredProducts();
   const prefix = CATEGORY_PREFIX_MAP[categorySlug] || "CARD";
 
-  // Find all existing codes matching this prefix
   const numbers: number[] = [];
   products.forEach((p) => {
     const cleanCode = p.code.trim().toUpperCase();
@@ -74,7 +119,6 @@ export function suggestDesignCodeByCategory(
   let nextNum = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
   let candidate = `${prefix}-${String(nextNum).padStart(3, "0")}`;
 
-  // Ensure candidate code does not collide with any existing code
   while (products.some((p) => p.code.trim().toUpperCase() === candidate.toUpperCase())) {
     nextNum++;
     candidate = `${prefix}-${String(nextNum).padStart(3, "0")}`;
@@ -112,7 +156,7 @@ export function checkDuplicateDesignCode(
 }
 
 /**
- * Adds a new product to storage and syncs to Supabase.
+ * Adds a new product to storage and syncs to Supabase DB.
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
   const currentList = getStoredProducts();
@@ -122,11 +166,12 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
   saveProductsToStorage(updatedList);
 
-  // Async sync to Supabase database
+  // Sync to Supabase database
   try {
     const supabase = createClient();
     await supabase.from("products").insert([
       {
+        id: fullProduct.id,
         slug: fullProduct.slug,
         name: fullProduct.name,
         code: fullProduct.code,
@@ -149,7 +194,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 }
 
 /**
- * Updates an existing product in storage and syncs to Supabase.
+ * Updates an existing product in storage and syncs to Supabase DB.
  */
 export async function updateProductStore(id: string, updatedData: Partial<Product>): Promise<Product[]> {
   const currentList = getStoredProducts();
@@ -185,7 +230,7 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
 }
 
 /**
- * Deletes a product from storage and syncs deletion to Supabase.
+ * Deletes a product from storage and syncs deletion to Supabase DB.
  */
 export async function deleteProductStore(id: string): Promise<Product[]> {
   const currentList = getStoredProducts();

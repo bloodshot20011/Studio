@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/data/site";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLayout({
   children,
@@ -10,6 +11,24 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    // 1. Clear admin security cookie
+    document.cookie = "kashvi_admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+    // 2. Sign out of Supabase Auth
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn("Sign out notice:", e);
+    }
+
+    // 3. Redirect to login page
+    router.push("/admin/login");
+    router.refresh();
+  };
 
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: "dashboard" },
@@ -60,6 +79,15 @@ export default function AdminLayout({
             <span className="material-symbols-outlined text-[20px]">storefront</span>
             Back to Shop
           </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded font-label-sm text-label-sm uppercase tracking-wider text-error hover:bg-error-container/40 transition-colors text-left"
+          >
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+            Logout
+          </button>
         </div>
       </aside>
 
@@ -89,13 +117,15 @@ export default function AdminLayout({
             >
               <span className="material-symbols-outlined text-sm">add</span> Add Design
             </Link>
-            <Link
-              href="/"
-              className="text-on-surface-variant hover:text-primary p-2 transition-colors"
-              title="View Storefront"
+            
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="text-on-surface-variant hover:text-error p-2 transition-colors inline-flex items-center gap-1 font-label-sm text-xs uppercase tracking-wider"
+              title="Logout from Admin"
             >
-              <span className="material-symbols-outlined">open_in_new</span>
-            </Link>
+              <span className="material-symbols-outlined text-sm">logout</span> Logout
+            </button>
           </div>
         </header>
 

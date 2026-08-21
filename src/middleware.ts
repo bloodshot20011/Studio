@@ -35,18 +35,21 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const adminCookie = request.cookies.get("kashvi_admin_auth")?.value;
+  const isAuthenticated = Boolean(user || adminCookie === "authenticated");
+
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
   const isLoginPage = request.nextUrl.pathname === "/admin/login";
 
-  // If user is accessing an /admin route (except /admin/login) and is NOT logged in
-  if (isAdminRoute && !isLoginPage && !user) {
+  // Block unauthenticated visitors from accessing /admin routes
+  if (isAdminRoute && !isLoginPage && !isAuthenticated) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
     return NextResponse.redirect(url);
   }
 
-  // If user is logged in and visits /admin/login, redirect to /admin dashboard
-  if (isLoginPage && user) {
+  // Redirect authenticated users away from /admin/login directly to /admin dashboard
+  if (isLoginPage && isAuthenticated) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
     return NextResponse.redirect(url);

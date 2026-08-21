@@ -58,12 +58,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Frosted Glassmorphism Navigation Bar */}
+      {/* High-Contrast Glassmorphism Navigation Bar */}
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-surface/75 backdrop-blur-xl border-b border-outline/15 shadow-md shadow-primary/5"
-            : "bg-surface/60 backdrop-blur-md border-b border-outline/10"
+            ? "bg-surface/95 backdrop-blur-xl border-b border-outline/15 shadow-md shadow-primary/5"
+            : "bg-surface/90 md:bg-surface/75 backdrop-blur-md border-b border-outline/10"
         }`}
       >
         <div
@@ -71,13 +71,15 @@ export default function Navbar() {
             isScrolled ? "h-16" : "h-20"
           }`}
         >
+          {/* Brand Title */}
           <Link
             href="/"
-            className="font-headline-md text-headline-md tracking-tighter text-primary flex-shrink-0"
+            className="font-headline-md text-headline-md tracking-tighter text-primary flex-shrink-0 font-bold"
           >
             {siteConfig.brand}
           </Link>
 
+          {/* Desktop Nav Items */}
           <div className="hidden md:flex space-x-8 items-center">
             {navLinks.slice(0, 2).map((link) => {
               const isActive =
@@ -89,7 +91,7 @@ export default function Navbar() {
                   href={link.href}
                   className={`${
                     isActive
-                      ? "text-primary border-b-2 border-secondary pb-1"
+                      ? "text-primary border-b-2 border-secondary pb-1 font-semibold"
                       : "text-on-surface-variant hover:text-secondary"
                   } transition-all duration-300 font-label-md text-label-md uppercase tracking-widest`}
                 >
@@ -98,14 +100,14 @@ export default function Navbar() {
               );
             })}
 
-            {/* Categories dropdown with glassmorphism */}
+            {/* Categories dropdown */}
             <div className="relative" ref={categoriesRef}>
               <button
                 type="button"
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
                 className={`flex items-center gap-1 transition-all duration-300 font-label-md text-label-md uppercase tracking-widest ${
                   isCategoryActive
-                    ? "text-primary border-b-2 border-secondary pb-1"
+                    ? "text-primary border-b-2 border-secondary pb-1 font-semibold"
                     : "text-on-surface-variant hover:text-secondary"
                 }`}
                 aria-expanded={isCategoriesOpen}
@@ -124,14 +126,14 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.96 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-60 bg-surface/90 backdrop-blur-2xl border border-outline/20 shadow-2xl rounded-2xl py-3 z-50 overflow-hidden"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-60 bg-surface/95 backdrop-blur-2xl border border-outline/20 shadow-2xl rounded-2xl py-3 z-50 overflow-hidden"
                   >
                     {categories.map((cat) => (
                       <Link
                         key={cat.slug}
                         href={`/category/${cat.slug}`}
                         onClick={() => setIsCategoriesOpen(false)}
-                        className="block px-5 py-2.5 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary hover:bg-surface-container-low/80 transition-colors"
+                        className="block px-5 py-2.5 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors"
                       >
                         {cat.name}
                       </Link>
@@ -149,7 +151,7 @@ export default function Navbar() {
                   href={link.href}
                   className={`${
                     isActive
-                      ? "text-primary border-b-2 border-secondary pb-1"
+                      ? "text-primary border-b-2 border-secondary pb-1 font-semibold"
                       : "text-on-surface-variant hover:text-secondary"
                   } transition-all duration-300 font-label-md text-label-md uppercase tracking-widest`}
                 >
@@ -173,22 +175,23 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* Mobile Right Controls */}
           <div className="md:hidden flex items-center gap-3">
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
-              className="text-primary p-1.5"
+              className="text-primary p-2 rounded-lg bg-surface-container-low/80 border border-outline/10 flex items-center justify-center"
               aria-label="Search"
             >
-              <span className="material-symbols-outlined">search</span>
+              <span className="material-symbols-outlined text-[22px]">search</span>
             </button>
             <button
               type="button"
-              className="text-primary p-1.5"
+              className="text-primary p-2 rounded-lg bg-surface-container-low/80 border border-outline/10 flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Menu"
+              aria-label="Toggle Navigation Menu"
             >
-              <span className="material-symbols-outlined">
+              <span className="material-symbols-outlined text-[24px]">
                 {isMobileMenuOpen ? "close" : "menu"}
               </span>
             </button>
@@ -204,23 +207,28 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-surface/95 backdrop-blur-2xl flex flex-col items-center justify-center overflow-y-auto py-24"
+            className="fixed inset-0 z-[100] bg-surface/98 backdrop-blur-2xl flex flex-col items-center justify-center overflow-y-auto py-20 px-6"
           >
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute top-6 right-6 text-primary p-2"
+              className="absolute top-6 right-6 text-primary p-2 rounded-full bg-surface-container-low border border-outline/20"
               aria-label="Close menu"
             >
-              <span className="material-symbols-outlined text-[32px]">close</span>
+              <span className="material-symbols-outlined text-[28px]">close</span>
             </button>
 
-            <div className="flex flex-col space-y-6 items-center w-full max-w-sm px-6">
+            <div className="flex flex-col space-y-6 items-center w-full max-w-sm pt-6">
+              <span className="font-label-sm text-xs text-secondary uppercase tracking-widest">
+                Navigation
+              </span>
+
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="font-display-lg-mobile text-display-lg-mobile text-primary hover:text-secondary transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-headline-lg text-headline-lg text-primary hover:text-secondary transition-colors text-center"
                 >
                   {link.name}
                 </Link>
@@ -230,12 +238,13 @@ export default function Navbar() {
                 <p className="font-label-sm text-label-sm text-secondary uppercase tracking-widest text-center mb-4">
                   Categories
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2.5">
                   {categories.map((cat) => (
                     <Link
                       key={cat.slug}
                       href={`/category/${cat.slug}`}
-                      className="text-center py-2 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary border border-outline/20 hover:border-secondary transition-colors rounded-lg bg-surface/80"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-center py-2.5 px-3 font-label-sm text-xs uppercase tracking-widest text-primary border border-outline/20 hover:border-secondary transition-colors rounded-xl bg-surface-container-lowest shadow-sm"
                     >
                       {cat.name}
                     </Link>
@@ -243,7 +252,7 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <Link href="/collections" className="btn-primary w-full justify-center mt-4 rounded-xl">
+              <Link href="/collections" onClick={() => setIsMobileMenuOpen(false)} className="btn-primary w-full justify-center mt-4 rounded-xl py-3.5">
                 Explore Collection
               </Link>
             </div>
@@ -258,7 +267,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-surface/80 backdrop-blur-2xl flex items-start justify-center pt-32"
+            className="fixed inset-0 z-[110] bg-surface/85 backdrop-blur-2xl flex items-start justify-center pt-24 px-4"
             onClick={(e) => {
               if (e.target === e.currentTarget) setIsSearchOpen(false);
             }}
@@ -267,7 +276,7 @@ export default function Navbar() {
               initial={{ opacity: 0, y: -20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              className="w-full max-w-2xl px-margin-mobile bg-surface-container-lowest/90 border border-outline/20 p-6 rounded-2xl shadow-2xl backdrop-blur-xl"
+              className="w-full max-w-2xl bg-surface-container-lowest border border-outline/20 p-6 rounded-2xl shadow-2xl backdrop-blur-xl"
             >
               <form onSubmit={handleSearchSubmit} className="relative">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[28px]">
@@ -278,7 +287,7 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search designs, occasions, design codes..."
+                  placeholder="Search designs, occasions, codes..."
                   className="w-full bg-surface border-b-2 border-secondary py-4 pl-14 pr-10 font-body-lg text-body-lg text-on-surface placeholder:text-outline/50 outline-none rounded-t-xl"
                 />
                 <button
@@ -299,15 +308,12 @@ export default function Navbar() {
                       router.push(`/search?q=${encodeURIComponent(term)}`);
                       setIsSearchOpen(false);
                     }}
-                    className="px-4 py-2 border border-outline/30 font-label-sm text-label-sm text-on-surface-variant hover:border-secondary hover:text-primary transition-colors uppercase tracking-widest rounded-xl bg-surface/70"
+                    className="px-4 py-2 border border-outline/30 font-label-sm text-label-sm text-on-surface-variant hover:border-secondary hover:text-primary transition-colors uppercase tracking-widest rounded-xl bg-surface"
                   >
                     {term}
                   </button>
                 ))}
               </div>
-              <p className="mt-4 font-label-sm text-label-sm text-outline uppercase tracking-widest">
-                Popular Searches
-              </p>
             </motion.div>
           </motion.div>
         )}

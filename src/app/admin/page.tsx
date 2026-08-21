@@ -34,7 +34,7 @@ export default function AdminDashboardPage() {
           </p>
         </div>
 
-        <Link href="/admin/designs/new" className="btn-primary flex items-center gap-2">
+        <Link href="/admin/designs/new" className="btn-primary flex items-center gap-2 rounded-xl">
           <span className="material-symbols-outlined text-sm">add_circle</span>
           Add New Design
         </Link>
