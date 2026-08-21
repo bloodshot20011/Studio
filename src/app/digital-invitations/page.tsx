@@ -105,7 +105,7 @@ export default function DigitalInvitationsPage() {
               <motion.div variants={fadeUp} className="group">
                 <div className="bg-surface p-8 h-full border border-outline/10 hover:border-secondary transition-all duration-500 flex flex-col items-center text-center">
                   <div className="aspect-[4/5] w-full bg-surface-container-lowest mb-6 overflow-hidden relative border border-outline/10">
-                    <img src="https://images.unsplash.com/photo-1606821211756-302a249c40af?w=600&q=80" alt="Video Invitations" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <img src="/images/digital-preview.jpg" alt="Video Invitations" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-14 h-14 rounded-full bg-surface/85 backdrop-blur-md text-primary flex items-center justify-center border border-secondary/40 shadow-lg group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all">
                         <span className="material-symbols-outlined text-[28px] ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>

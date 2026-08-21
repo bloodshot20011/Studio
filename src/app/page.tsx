@@ -292,7 +292,7 @@ export default function Home() {
                 <div className="aspect-[9/19] bg-surface-container-low rounded-[2rem] p-3 border border-[#C5A059]/30 shadow-2xl">
                   <div className="w-full h-full rounded-[1.5rem] overflow-hidden bg-white">
                     <img
-                      src="https://images.unsplash.com/photo-1606821211756-302a249c40af?w=400&h=800&fit=crop&q=80"
+                      src="/images/digital-preview.jpg"
                       alt="Digital Invitation Preview"
                       className="w-full h-full object-cover"
                     />

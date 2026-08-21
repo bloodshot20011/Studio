@@ -81,8 +81,8 @@ export const products: Product[] = [
     categorySlug: "wedding",
     code: "WED-005",
     description: "A stunning multi-page PDF digital wedding invitation with animated gold-dust reveals and cinematic typography. Optimised for WhatsApp, email, and Instagram.",
-    image: "https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80",
-    gallery: ["https://images.unsplash.com/photo-1606821211756-302a249c40af?w=800&q=80"],
+    image: "/images/digital-preview.jpg",
+    gallery: ["/images/digital-preview.jpg"],
     formats: ["pdf"],
     digitalAssets: {
       pdf: "#pdf-preview-noor",
