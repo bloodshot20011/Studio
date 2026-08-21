@@ -67,39 +67,57 @@ export default function AddNewDesignPage() {
     );
   };
 
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawFile = e.target.files?.[0];
     if (!rawFile) return;
 
     setUploading(true);
-    setCompressInfo("Compressing & stripping metadata...");
+    setCompressInfo("Compressing image...");
 
     try {
       const file = await compressImage(rawFile);
       const originalMB = (rawFile.size / (1024 * 1024)).toFixed(2);
       const compressedKB = (file.size / 1024).toFixed(0);
-      setCompressInfo(`Compressed ${originalMB}MB ➔ ${compressedKB}KB (metadata stripped)`);
 
       const supabase = createClient();
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileExt = file.name.split(".").pop() || "jpg";
+      const fileName = `img_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("card-images")
         .upload(filePath, file);
 
-      if (uploadError) {
-        setImageUrl(URL.createObjectURL(file));
-      } else {
+      if (!uploadError) {
         const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
         if (data?.publicUrl) {
           setImageUrl(data.publicUrl);
+          setCompressInfo(`Uploaded to Supabase Cloud Storage (${compressedKB}KB)`);
+          return;
         }
       }
+
+      // Dual-Safety Fallback: Convert to Data URL (base64)
+      const base64Data = await fileToBase64(file);
+      setImageUrl(base64Data);
+      setCompressInfo(`Saved as Dual-Safety Image (${compressedKB}KB)`);
     } catch (err: any) {
       console.error(err);
-      setImageUrl(URL.createObjectURL(rawFile));
+      try {
+        const base64Data = await fileToBase64(rawFile);
+        setImageUrl(base64Data);
+      } catch (e) {
+        alert("Failed to process image. Please choose another image file.");
+      }
     } finally {
       setUploading(false);
     }
@@ -113,7 +131,7 @@ export default function AddNewDesignPage() {
 
     try {
       const supabase = createClient();
-      const fileExt = file.name.split(".").pop();
+      const fileExt = file.name.split(".").pop() || "mp4";
       const fileName = `video_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `videos/${fileName}`;
 
@@ -121,17 +139,20 @@ export default function AddNewDesignPage() {
         .from("card-images")
         .upload(filePath, file);
 
-      if (uploadError) {
-        setVideoUrl(URL.createObjectURL(file));
-      } else {
+      if (!uploadError) {
         const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
         if (data?.publicUrl) {
           setVideoUrl(data.publicUrl);
+          return;
         }
       }
+
+      // Dual-Safety Fallback: Convert to Data URL (base64)
+      const base64Data = await fileToBase64(file);
+      setVideoUrl(base64Data);
     } catch (err: any) {
       console.error(err);
-      setVideoUrl(URL.createObjectURL(file));
+      alert("Storage upload error. Please paste a video link or YouTube URL directly.");
     } finally {
       setUploadingVideo(false);
     }
