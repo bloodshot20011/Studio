@@ -10,7 +10,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import CategoryNavigation from "@/components/ui/CategoryNavigation";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FormatFilter, { FormatFilterValue, DigitalTypeFilterValue } from "@/components/ui/FormatFilter";
-import { filterProducts, getFeaturedProducts, getNewArrivals } from "@/lib/products";
+import { useProducts } from "@/lib/useProducts";
 
 function CollectionsContent() {
   const searchParams = useSearchParams();
@@ -122,16 +122,29 @@ function CollectionsContent() {
     showFeatured ||
     showNewArrivals;
 
-  const filteredProducts = filterProducts({
-    categorySlug: activeCategory,
-    format: activeFormat,
-    digitalType: activeDigitalType,
-    featured: showFeatured || undefined,
-    newArrival: showNewArrivals || undefined,
+  const allProducts = useProducts();
+
+  const filteredProducts = allProducts.filter((product) => {
+    if (activeCategory && activeCategory !== "all" && product.categorySlug !== activeCategory) {
+      return false;
+    }
+    if (activeFormat && activeFormat !== "all") {
+      if (activeFormat === "printed" && !product.formats.includes("printed")) return false;
+      if (activeFormat === "digital") {
+        const hasPdf = product.formats.includes("pdf");
+        const hasVideo = product.formats.includes("video");
+        if (!hasPdf && !hasVideo) return false;
+        if (activeDigitalType === "pdf" && !hasPdf) return false;
+        if (activeDigitalType === "video" && !hasVideo) return false;
+      }
+    }
+    if (showFeatured && !product.featured) return false;
+    if (showNewArrivals && !product.newArrival) return false;
+    return true;
   });
 
-  const featuredProducts = getFeaturedProducts(3);
-  const newArrivalProducts = getNewArrivals(3);
+  const featuredProducts = allProducts.filter((p) => p.featured).slice(0, 3);
+  const newArrivalProducts = allProducts.filter((p) => p.newArrival).slice(0, 3);
   const showHighlightSections = !isFiltered;
 
   return (

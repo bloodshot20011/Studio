@@ -10,7 +10,7 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import CategoryNavigation from "@/components/ui/CategoryNavigation";
 import FormatFilter, { FormatFilterValue, DigitalTypeFilterValue } from "@/components/ui/FormatFilter";
 import { categories } from "@/data/categories";
-import { filterProducts } from "@/lib/products";
+import { useProducts } from "@/lib/useProducts";
 
 function CategoryContent() {
   const params = useParams();
@@ -83,10 +83,21 @@ function CategoryContent() {
 
   const isFiltered = activeFormat !== "all" || activeDigitalType !== "all";
 
-  const categoryProducts = filterProducts({
-    categorySlug,
-    format: activeFormat,
-    digitalType: activeDigitalType,
+  const allProducts = useProducts();
+
+  const categoryProducts = allProducts.filter((product) => {
+    if (product.categorySlug !== categorySlug) return false;
+    if (activeFormat && activeFormat !== "all") {
+      if (activeFormat === "printed" && !product.formats.includes("printed")) return false;
+      if (activeFormat === "digital") {
+        const hasPdf = product.formats.includes("pdf");
+        const hasVideo = product.formats.includes("video");
+        if (!hasPdf && !hasVideo) return false;
+        if (activeDigitalType === "pdf" && !hasPdf) return false;
+        if (activeDigitalType === "video" && !hasVideo) return false;
+      }
+    }
+    return true;
   });
 
   if (!category) {

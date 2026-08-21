@@ -3,14 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/types";
-import { getStoredProducts } from "@/lib/productStore";
+import { useProducts } from "@/lib/useProducts";
 
 export default function AdminDashboardPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    setProducts(getStoredProducts());
-  }, []);
+  const products = useProducts();
 
   const totalProducts = products.length;
   const weddingCount = products.filter((p) => p.categorySlug === "wedding").length;

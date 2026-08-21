@@ -6,7 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductGrid from "@/components/ui/ProductGrid";
-import { searchProducts } from "@/lib/products";
+import { useProducts } from "@/lib/useProducts";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -40,7 +40,19 @@ function SearchContent() {
     return () => clearTimeout(timer);
   }, [query, router, searchParams]);
 
-  const filteredProducts = searchProducts(debouncedQuery);
+  const products = useProducts();
+  const term = debouncedQuery.trim().toLowerCase();
+  const filteredProducts = !term
+    ? products
+    : products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(term) ||
+          product.description.toLowerCase().includes(term) ||
+          product.category.toLowerCase().includes(term) ||
+          product.categorySlug.toLowerCase().includes(term) ||
+          product.code.toLowerCase().includes(term) ||
+          product.tags?.some((t) => t.toLowerCase().includes(term))
+      );
 
   return (
     <>

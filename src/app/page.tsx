@@ -8,7 +8,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { WhatsAppFloatingButton } from "@/components/ui/WhatsAppButton";
-import { getFeaturedProducts, getNewArrivals } from "@/lib/products";
+import { useProducts } from "@/lib/useProducts";
 import { containerVariants, itemVariants } from "@/lib/animations";
 
 const WHY_US = [
@@ -35,8 +35,9 @@ const WHY_US = [
 ];
 
 export default function Home() {
-  const featuredProducts = getFeaturedProducts(3);
-  const newArrivals = getNewArrivals(3);
+  const products = useProducts();
+  const featuredProducts = products.filter((p) => p.featured).slice(0, 3);
+  const newArrivals = products.filter((p) => p.newArrival).slice(0, 3);
 
   return (
     <>
