@@ -14,15 +14,50 @@ export interface Enquiry {
   createdAt: string;
 }
 
-const PRIMARY_WHATSAPP_NUMBER = "919057525833";
+const PRIMARY_WHATSAPP_NUMBER = "918107511164";
+const LOCAL_STORAGE_KEY = "kashvi_cards_enquiries_v2";
 
+/**
+ * Reads local cached enquiries from LocalStorage
+ */
+export function getLocalEnquiries(): Enquiry[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {
+    console.error("Error reading local enquiries:", e);
+  }
+  return [];
+}
+
+/**
+ * Saves enquiries array to LocalStorage
+ */
+export function saveLocalEnquiries(list: Enquiry[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.error("Error saving local enquiries:", e);
+  }
+}
+
+/**
+ * Fetches enquiries from Supabase DB and merges with LocalStorage
+ */
 export async function getStoredEnquiries(): Promise<Enquiry[]> {
+  const localList = getLocalEnquiries();
+
   try {
     const supabase = createClient();
     const { data, error } = await supabase.from("enquiries").select("*").order("created_at", { ascending: false });
 
     if (!error && Array.isArray(data)) {
-      return data.map((item: any) => ({
+      const dbEnquiries: Enquiry[] = data.map((item: any) => ({
         id: item.id,
         name: item.name || "Anonymous",
         phone: item.phone || "",
@@ -35,15 +70,23 @@ export async function getStoredEnquiries(): Promise<Enquiry[]> {
         status: (item.status as any) || "New",
         createdAt: item.created_at || new Date().toISOString(),
       }));
+
+      // Merge DB rows with LocalStorage
+      const idSet = new Set(dbEnquiries.map((e) => e.id));
+      const combined = [...dbEnquiries, ...localList.filter((e) => !idSet.has(e.id))];
+
+      saveLocalEnquiries(combined);
+      return combined;
     }
   } catch (err) {
     console.warn("Supabase enquiries fetch notice:", err);
   }
-  return [];
+
+  return localList;
 }
 
 /**
- * Adds enquiry directly to Supabase DB and generates pre-filled WhatsApp link
+ * Adds enquiry to LocalStorage AND Supabase DB, and returns pre-filled WhatsApp URL to 8107511164
  */
 export async function addEnquiryStore(
   data: Omit<Enquiry, "id" | "createdAt" | "status">
@@ -55,7 +98,12 @@ export async function addEnquiryStore(
     createdAt: new Date().toISOString(),
   };
 
-  // 1. Insert into Supabase DB
+  // 1. Save to LocalStorage immediately
+  const localList = getLocalEnquiries();
+  const updatedLocal = [newEnquiry, ...localList];
+  saveLocalEnquiries(updatedLocal);
+
+  // 2. Insert into Supabase DB
   try {
     const supabase = createClient();
     await supabase.from("enquiries").insert([
@@ -76,7 +124,7 @@ export async function addEnquiryStore(
     console.warn("Supabase enquiry insert notice:", err);
   }
 
-  // 2. Generate WhatsApp pre-filled link
+  // 3. Generate WhatsApp pre-filled link to 8107511164
   let text = `Namaste Kashvi Cards! 🙏\n\n`;
   text += `Name: *${newEnquiry.name}*\n`;
   text += `Phone: *${newEnquiry.phone}*\n`;
@@ -93,6 +141,10 @@ export async function updateEnquiryStatusStore(
   id: string,
   status: "New" | "Contacted" | "Resolved"
 ): Promise<void> {
+  const localList = getLocalEnquiries();
+  const updatedLocal = localList.map((e) => (e.id === id ? { ...e, status } : e));
+  saveLocalEnquiries(updatedLocal);
+
   try {
     const supabase = createClient();
     await supabase.from("enquiries").update({ status }).eq("id", id);
@@ -102,6 +154,10 @@ export async function updateEnquiryStatusStore(
 }
 
 export async function deleteEnquiryStore(id: string): Promise<void> {
+  const localList = getLocalEnquiries();
+  const updatedLocal = localList.filter((e) => e.id !== id);
+  saveLocalEnquiries(updatedLocal);
+
   try {
     const supabase = createClient();
     await supabase.from("enquiries").delete().eq("id", id);
