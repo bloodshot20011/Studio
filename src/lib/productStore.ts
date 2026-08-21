@@ -2,8 +2,8 @@ import { Product } from "@/types";
 import { products as initialProducts } from "@/data/products";
 import { createClient } from "@/lib/supabase/client";
 
-const LOCAL_STORAGE_KEY = "kashvi_cards_products_v4";
-const DELETED_CODES_KEY = "kashvi_cards_deleted_codes_v4";
+const LOCAL_STORAGE_KEY = "kashvi_cards_products_v5";
+const DELETED_CODES_KEY = "kashvi_cards_deleted_codes_v5";
 
 const CATEGORY_PREFIX_MAP: Record<string, string> = {
   wedding: "WED",
@@ -35,6 +35,20 @@ function notifySubscribers(products: Product[]) {
     } catch (e) {
       console.error("Error notifying product listener:", e);
     }
+  });
+}
+
+/**
+ * Helper to generate valid UUIDs or fallback GUID string
+ */
+function generateValidUUID(): string {
+  if (typeof window !== "undefined" && window.crypto && window.crypto.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
   });
 }
 
@@ -85,7 +99,6 @@ export function getStoredProducts(): Product[] {
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length >= 0) {
-        // Trigger background sync with Supabase DB
         syncProductsFromSupabase();
         return parsed.filter((p: Product) => !deletedCodes.includes(p.code.trim().toUpperCase()));
       }
@@ -94,7 +107,6 @@ export function getStoredProducts(): Product[] {
     console.error("Error reading stored products:", e);
   }
 
-  // Trigger background sync with Supabase DB
   syncProductsFromSupabase();
   return cleanInitial;
 }
@@ -110,10 +122,14 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
     const supabase = createClient();
     const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
 
+    if (error) {
+      console.warn("Supabase fetch notice:", error.message || error);
+    }
+
     if (!error && Array.isArray(data)) {
       const dbProducts: Product[] = data
         .map((item: any) => ({
-          id: item.id || `card-${item.code}`,
+          id: item.id || generateValidUUID(),
           slug: item.slug || `design-${item.code}`,
           name: item.name,
           code: item.code,
@@ -229,7 +245,7 @@ export function checkDuplicateDesignCode(
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
   const currentList = getStoredProducts();
-  const id = `card-${Date.now()}`;
+  const id = generateValidUUID();
   const fullProduct: Product = { ...newProduct, id };
   const updatedList = [fullProduct, ...currentList];
 
@@ -239,7 +255,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
   // Sync to Supabase database
   try {
     const supabase = createClient();
-    await supabase.from("products").insert([
+    const { error } = await supabase.from("products").insert([
       {
         id: fullProduct.id,
         slug: fullProduct.slug,
@@ -257,8 +273,12 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
         tags: fullProduct.tags || [],
       },
     ]);
-    // Trigger global re-sync
-    syncProductsFromSupabase();
+
+    if (error) {
+      console.error("Supabase insert error details:", error);
+    } else {
+      console.log("Successfully inserted product to Supabase DB:", fullProduct.code);
+    }
   } catch (err) {
     console.warn("Supabase insert notice:", err);
   }
@@ -280,7 +300,7 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
   if (updatedProduct) {
     try {
       const supabase = createClient();
-      await supabase
+      const { error } = await supabase
         .from("products")
         .update({
           name: updatedProduct.name,
@@ -297,7 +317,9 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
         })
         .eq("code", updatedProduct.code);
 
-      syncProductsFromSupabase();
+      if (error) {
+        console.error("Supabase update error details:", error);
+      }
     } catch (err) {
       console.warn("Supabase update notice:", err);
     }
@@ -318,7 +340,10 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
     recordDeletedCode(target.code);
     try {
       const supabase = createClient();
-      await supabase.from("products").delete().eq("code", target.code);
+      const { error } = await supabase.from("products").delete().eq("code", target.code);
+      if (error) {
+        console.error("Supabase delete error details:", error);
+      }
     } catch (err) {
       console.warn("Supabase delete notice:", err);
     }
@@ -326,7 +351,6 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
 
   saveProductsToStorage(updatedList);
   notifySubscribers(updatedList);
-  syncProductsFromSupabase();
   return updatedList;
 }
 
