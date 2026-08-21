@@ -1,8 +1,13 @@
-import Link from "next/link";
+"use client";
+
+import React from "react";
 import { getWhatsAppUrl } from "@/data/site";
+import { addEnquiryStore } from "@/lib/enquiryStore";
 
 interface WhatsAppButtonProps {
   message?: string;
+  designCode?: string;
+  productName?: string;
   className?: string;
   children?: React.ReactNode;
   variant?: "primary" | "secondary" | "link";
@@ -10,23 +15,47 @@ interface WhatsAppButtonProps {
 
 export default function WhatsAppButton({
   message,
+  designCode,
+  productName,
   className = "",
   children = "Enquire on WhatsApp",
   variant = "primary",
 }: WhatsAppButtonProps) {
   const href = getWhatsAppUrl(message);
 
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    // 1. Record enquiry lead in Admin Panel & Supabase DB
+    try {
+      await addEnquiryStore({
+        name: "Website WhatsApp Visitor",
+        phone: "WhatsApp Direct",
+        designCode: designCode || "",
+        productName: productName || "",
+        message: message || "Interested in invitation card design.",
+        subject: designCode ? `Enquiry for ${designCode}` : "WhatsApp Invitation Enquiry",
+      });
+    } catch (err) {
+      console.warn("Notice saving enquiry lead:", err);
+    }
+
+    // 2. Redirect to WhatsApp
+    window.open(href, "_blank");
+  };
+
   const variantClasses = {
     primary:
-      "w-full bg-primary-container text-on-primary py-4 font-label-md text-label-md border border-transparent hover:border-secondary transition-all flex items-center justify-center gap-2 group",
+      "w-full bg-primary-container text-on-primary py-4 font-label-md text-label-md border border-transparent hover:border-secondary transition-all flex items-center justify-center gap-2 group cursor-pointer",
     secondary:
-      "inline-flex items-center gap-2 border border-secondary text-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 hover:bg-secondary/10 transition-colors",
-    link: "inline-flex items-center gap-2 font-label-md text-label-md text-secondary uppercase tracking-widest hover:text-primary transition-colors",
+      "inline-flex items-center gap-2 border border-secondary text-primary font-label-md text-label-md uppercase tracking-widest px-8 py-4 hover:bg-secondary/10 transition-colors cursor-pointer",
+    link: "inline-flex items-center gap-2 font-label-md text-label-md text-secondary uppercase tracking-widest hover:text-primary transition-colors cursor-pointer",
   };
 
   return (
     <a
       href={href}
+      onClick={handleClick}
       target="_blank"
       rel="noopener noreferrer"
       className={`${variantClasses[variant]} ${className}`}
@@ -45,12 +74,32 @@ export default function WhatsAppButton({
 }
 
 export function WhatsAppFloatingButton() {
+  const href = getWhatsAppUrl();
+
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    try {
+      await addEnquiryStore({
+        name: "Floating WhatsApp Visitor",
+        phone: "WhatsApp Direct",
+        message: "Customer clicked floating WhatsApp chat button.",
+        subject: "General WhatsApp Floating Lead",
+      });
+    } catch (err) {
+      console.warn("Notice saving floating lead:", err);
+    }
+
+    window.open(href, "_blank");
+  };
+
   return (
     <a
-      href={getWhatsAppUrl()}
+      href={href}
+      onClick={handleClick}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer"
       aria-label="Chat on WhatsApp"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-7 h-7">

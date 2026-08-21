@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   getStoredEnquiries,
+  addEnquiryStore,
   updateEnquiryStatusStore,
   deleteEnquiryStore,
   Enquiry,
@@ -13,6 +14,14 @@ export default function AdminEnquiriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | "New" | "Contacted" | "Resolved">("All");
 
+  // Modal State for Manual Lead Entry
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [designCode, setDesignCode] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
   const loadEnquiries = async () => {
     const list = await getStoredEnquiries();
     setEnquiries(list);
@@ -20,6 +29,11 @@ export default function AdminEnquiriesPage() {
 
   useEffect(() => {
     loadEnquiries();
+    // Auto-poll every 5 seconds to receive live customer enquiries from website/phones
+    const interval = setInterval(() => {
+      loadEnquiries();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const filteredEnquiries = enquiries.filter((item) => {
@@ -51,6 +65,33 @@ export default function AdminEnquiriesPage() {
     }
   };
 
+  const handleManualSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone) return;
+
+    setIsSaving(true);
+    try {
+      await addEnquiryStore({
+        name,
+        phone,
+        designCode,
+        subject: designCode ? `Manual Lead for ${designCode}` : "Walk-in / Phone Enquiry",
+        message: message || "Direct customer inquiry.",
+      });
+
+      setName("");
+      setPhone("");
+      setDesignCode("");
+      setMessage("");
+      setIsModalOpen(false);
+      await loadEnquiries();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const getWhatsAppLink = (phone: string, name: string, designCode?: string) => {
     const cleanPhone = phone.replace(/[^0-9]/g, "");
     const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
@@ -67,9 +108,18 @@ export default function AdminEnquiriesPage() {
             Enquiries & Customer Leads ({filteredEnquiries.length})
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-            Manage incoming customer messages, card inquiries, and WhatsApp leads.
+            Live customer messages, card inquiries, and WhatsApp leads.
           </p>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="bg-primary text-white font-label-md text-sm px-4 py-2.5 rounded-xl hover:bg-secondary transition-colors inline-flex items-center gap-2 shadow-sm"
+        >
+          <span className="material-symbols-outlined text-lg">add</span>
+          Log Customer Lead
+        </button>
       </div>
 
       {/* Filter Controls Bar */}
@@ -177,7 +227,7 @@ export default function AdminEnquiriesPage() {
                   className="bg-[#25D366] text-white px-4 py-2 font-label-sm text-xs uppercase tracking-wider inline-flex items-center gap-1.5 rounded-lg shadow-sm hover:bg-[#1EBE57] transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">chat</span>
-                  Chat on WhatsApp
+                  Reply on WhatsApp
                 </a>
 
                 <button
@@ -195,11 +245,102 @@ export default function AdminEnquiriesPage() {
             <span className="material-symbols-outlined text-4xl text-outline mb-2">contact_support</span>
             <h3 className="font-headline-md text-primary mb-1">No enquiries found</h3>
             <p className="font-body-md text-on-surface-variant text-sm">
-              Incoming customer messages and card inquiries will appear here.
+              Incoming customer messages, WhatsApp leads, and card inquiries will appear here live.
             </p>
           </div>
         )}
       </div>
+
+      {/* Manual Lead Entry Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-surface p-6 md:p-8 rounded-2xl max-w-md w-full border border-outline/20 shadow-2xl space-y-6">
+            <div className="flex justify-between items-center border-b border-outline/10 pb-4">
+              <h3 className="font-headline-md text-lg text-primary">Log Customer Lead</h3>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-on-surface-variant hover:text-primary"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleManualSubmit} className="space-y-4">
+              <div>
+                <label className="text-xs uppercase tracking-wider text-primary font-semibold block mb-1">
+                  Customer Name *
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Rahul Sharma"
+                  className="w-full px-3 py-2 border border-outline/20 rounded-lg text-sm outline-none focus:border-secondary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs uppercase tracking-wider text-primary font-semibold block mb-1">
+                  Phone Number *
+                </label>
+                <input
+                  required
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="e.g. 9829012345"
+                  className="w-full px-3 py-2 border border-outline/20 rounded-lg text-sm outline-none focus:border-secondary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs uppercase tracking-wider text-primary font-semibold block mb-1">
+                  Design Code (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={designCode}
+                  onChange={(e) => setDesignCode(e.target.value)}
+                  placeholder="e.g. WED-001"
+                  className="w-full px-3 py-2 border border-outline/20 rounded-lg text-sm outline-none focus:border-secondary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs uppercase tracking-wider text-primary font-semibold block mb-1">
+                  Customer Message / Notes
+                </label>
+                <textarea
+                  rows={3}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Notes from phone call or WhatsApp discussion..."
+                  className="w-full px-3 py-2 border border-outline/20 rounded-lg text-sm outline-none focus:border-secondary resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="w-1/2 py-2.5 border border-outline/20 text-on-surface-variant text-sm font-semibold rounded-xl hover:bg-surface-container-low"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="w-1/2 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors"
+                >
+                  {isSaving ? "Saving..." : "Save Lead"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

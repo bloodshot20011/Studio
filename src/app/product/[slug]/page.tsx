@@ -353,7 +353,11 @@ export default function ProductDetailPage() {
 
             {/* CTAs */}
             <div className="flex flex-col gap-4 mt-auto">
-              <WhatsAppButton message={whatsappMessage}>
+              <WhatsAppButton
+                message={whatsappMessage}
+                designCode={product.code}
+                productName={product.name}
+              >
                 {getPrimaryCtaText()}
               </WhatsAppButton>
               <CallButton />
