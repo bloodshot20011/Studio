@@ -159,62 +159,76 @@ export default function ProductDetailPage() {
                   className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                 >
                   <div className="w-full max-w-md aspect-[9/16] bg-black rounded-2xl overflow-hidden relative shadow-2xl border border-secondary/40">
-                    {(product.videoUrl || product.digitalAssets?.video) ? (
-                      <video
-                        src={product.videoUrl || product.digitalAssets?.video || ""}
-                        controls
-                        autoPlay
-                        loop
-                        playsInline
-                        poster={product.image}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : !isPlayingVideo ? (
-                      <div className="w-full h-full relative">
-                        <img
-                          src={product.digitalAssets?.videoThumbnail || product.image}
-                          alt={`${product.name} Video Preview`}
-                          className="w-full h-full object-cover opacity-90"
+                    {(() => {
+                      const rawUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
+                      const targetUrl = rawUrl || (isPlayingVideo ? "https://assets.mixkit.co/videos/preview/mixkit-gold-particles-floating-in-the-air-41525-large.mp4" : "");
+
+                      if (!targetUrl) {
+                        return (
+                          <div className="w-full h-full relative">
+                            <img
+                              src={product.digitalAssets?.videoThumbnail || product.image}
+                              alt={`${product.name} Video Preview`}
+                              className="w-full h-full object-cover opacity-90"
+                            />
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                              <button
+                                type="button"
+                                onClick={() => setIsPlayingVideo(true)}
+                                aria-label="Play sample video"
+                                className="w-16 h-16 rounded-full bg-surface/90 text-primary flex items-center justify-center shadow-2xl hover:scale-110 hover:bg-primary hover:text-white transition-all duration-300 border border-secondary/50 group"
+                              >
+                                <span className="material-symbols-outlined text-[32px] ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>
+                                  play_arrow
+                                </span>
+                              </button>
+                            </div>
+                            <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-md p-3 text-left border border-outline/20 rounded-xl">
+                              <span className="font-label-sm text-[10px] text-secondary uppercase tracking-widest block">
+                                Video Motion Suite
+                              </span>
+                              <span className="font-headline-md text-sm text-primary">
+                                1080p Full HD • Custom Music
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // YouTube URL parser
+                      if (targetUrl.includes("youtube.com") || targetUrl.includes("youtu.be")) {
+                        let videoId = "";
+                        if (targetUrl.includes("youtu.be/")) {
+                          videoId = targetUrl.split("youtu.be/")[1]?.split("?")[0] || "";
+                        } else if (targetUrl.includes("v=")) {
+                          videoId = targetUrl.split("v=")[1]?.split("&")[0] || "";
+                        }
+                        if (videoId) {
+                          return (
+                            <iframe
+                              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1`}
+                              title="Video Preview"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full border-0"
+                            />
+                          );
+                        }
+                      }
+
+                      // Standard HTML5 MP4 / WebM / Storage Video Player
+                      return (
+                        <video
+                          src={targetUrl}
+                          controls
+                          autoPlay
+                          loop
+                          playsInline
+                          poster={product.image}
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                          <button
-                            type="button"
-                            onClick={() => setIsPlayingVideo(true)}
-                            aria-label="Play sample video"
-                            className="w-16 h-16 rounded-full bg-surface/90 text-primary flex items-center justify-center shadow-2xl hover:scale-110 hover:bg-primary hover:text-white transition-all duration-300 border border-secondary/50 group"
-                          >
-                            <span className="material-symbols-outlined text-[32px] ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>
-                              play_arrow
-                            </span>
-                          </button>
-                        </div>
-                        <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-md p-3 text-left border border-outline/20 rounded-xl">
-                          <span className="font-label-sm text-[10px] text-secondary uppercase tracking-widest block">
-                            Video Motion Suite
-                          </span>
-                          <span className="font-headline-md text-sm text-primary">
-                            1080p Full HD • Custom Music
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-primary text-white p-6 relative">
-                        <span className="material-symbols-outlined text-5xl text-secondary mb-4 animate-pulse">
-                          movie
-                        </span>
-                        <h4 className="font-headline-md text-lg mb-2">Cinematic Preview</h4>
-                        <p className="font-body-md text-xs text-white/80 max-w-xs mb-6">
-                          Sample motion graphics preview with custom music & typography transitions.
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => setIsPlayingVideo(false)}
-                          className="px-4 py-2 border border-white/40 text-xs uppercase tracking-widest hover:border-secondary hover:text-secondary transition-colors rounded-xl"
-                        >
-                          Close Preview
-                        </button>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 </motion.div>
               )}
