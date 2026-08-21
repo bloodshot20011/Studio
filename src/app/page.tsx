@@ -20,7 +20,7 @@ const WHY_US = [
   {
     icon: "diamond",
     title: "Premium Materials",
-    desc: "We use only the finest 300–600gsm papers, authentic gold leafing, and archival inks."
+    desc: "We use only the finest luxury imported papers, authentic gold leafing, and archival inks."
   },
   {
     icon: "groups",

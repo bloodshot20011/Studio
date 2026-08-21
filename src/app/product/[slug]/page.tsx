@@ -159,7 +159,17 @@ export default function ProductDetailPage() {
                   className="bg-surface-container-low border border-outline/20 p-6 md:p-10 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                 >
                   <div className="w-full max-w-md aspect-[9/16] bg-black rounded-2xl overflow-hidden relative shadow-2xl border border-secondary/40">
-                    {!isPlayingVideo ? (
+                    {(product.videoUrl || product.digitalAssets?.video) ? (
+                      <video
+                        src={product.videoUrl || product.digitalAssets?.video || ""}
+                        controls
+                        autoPlay
+                        loop
+                        playsInline
+                        poster={product.image}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : !isPlayingVideo ? (
                       <div className="w-full h-full relative">
                         <img
                           src={product.digitalAssets?.videoThumbnail || product.image}
@@ -270,7 +280,7 @@ export default function ProductDetailPage() {
                       Material Profile
                     </span>
                     <p className="font-body-md text-body-md text-on-surface-variant">
-                      350gsm artisanal cotton rag paper with subtle textured finish. Premium gold leafing and letterpress options available.
+                      Handcrafted premium artisanal cotton rag paper with subtle textured finish. Premium gold leafing and letterpress options available.
                     </p>
                   </div>
                   <div>

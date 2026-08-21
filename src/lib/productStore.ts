@@ -17,6 +17,27 @@ const CATEGORY_PREFIX_MAP: Record<string, string> = {
   "gift-envelopes": "GIF",
 };
 
+// Event listener subscribers for real-time reactivity
+type ProductsListener = (products: Product[]) => void;
+const listeners: Set<ProductsListener> = new Set();
+
+export function subscribeProducts(listener: ProductsListener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function notifySubscribers(products: Product[]) {
+  listeners.forEach((callback) => {
+    try {
+      callback(products);
+    } catch (e) {
+      console.error("Error notifying product listener:", e);
+    }
+  });
+}
+
 /**
  * Gets array of deleted product codes to prevent initial static fallback from resurrecting deleted cards.
  */
@@ -121,6 +142,7 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
       const combinedList = [...dbProducts, ...fallbackList];
 
       saveProductsToStorage(combinedList);
+      notifySubscribers(combinedList);
       return combinedList;
     }
   } catch (err) {
@@ -212,6 +234,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
   const updatedList = [fullProduct, ...currentList];
 
   saveProductsToStorage(updatedList);
+  notifySubscribers(updatedList);
 
   // Sync to Supabase database
   try {
@@ -234,6 +257,8 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
         tags: fullProduct.tags || [],
       },
     ]);
+    // Trigger global re-sync
+    syncProductsFromSupabase();
   } catch (err) {
     console.warn("Supabase insert notice:", err);
   }
@@ -249,6 +274,7 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
   const updatedList = currentList.map((p) => (p.id === id ? { ...p, ...updatedData } : p));
 
   saveProductsToStorage(updatedList);
+  notifySubscribers(updatedList);
 
   const updatedProduct = updatedList.find((p) => p.id === id);
   if (updatedProduct) {
@@ -270,6 +296,8 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
           tags: updatedProduct.tags,
         })
         .eq("code", updatedProduct.code);
+
+      syncProductsFromSupabase();
     } catch (err) {
       console.warn("Supabase update notice:", err);
     }
@@ -297,6 +325,8 @@ export async function deleteProductStore(id: string): Promise<Product[]> {
   }
 
   saveProductsToStorage(updatedList);
+  notifySubscribers(updatedList);
+  syncProductsFromSupabase();
   return updatedList;
 }
 
@@ -308,5 +338,6 @@ export function resetProductsStorage(): Product[] {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     localStorage.removeItem(DELETED_CODES_KEY);
   }
+  notifySubscribers(initialProducts);
   return initialProducts;
 }

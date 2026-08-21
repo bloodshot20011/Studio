@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { categories } from "@/data/categories";
 import { Product, FormatType } from "@/types";
-import { getStoredProducts, deleteProductStore, updateProductStore } from "@/lib/productStore";
+import { getStoredProducts, deleteProductStore, updateProductStore, subscribeProducts } from "@/lib/productStore";
 
 export default function AdminDesignsPage() {
   const [productList, setProductList] = useState<Product[]>([]);
@@ -14,6 +14,10 @@ export default function AdminDesignsPage() {
 
   useEffect(() => {
     setProductList(getStoredProducts());
+    const unsubscribe = subscribeProducts((updated) => {
+      setProductList(updated);
+    });
+    return () => unsubscribe();
   }, []);
 
   const filteredProducts = productList.filter((product) => {
