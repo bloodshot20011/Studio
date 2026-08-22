@@ -153,11 +153,11 @@ function CollectionsContent() {
       <main className="flex-grow pt-[100px]">
         {/* Header Banner */}
         <section className="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
-          <span className="block font-label-md text-label-md text-secondary uppercase tracking-[0.15em] mb-4">
-            Kashvi Cards
+          <span className="block font-label-md text-label-md text-secondary uppercase tracking-[0.15em] mb-3">
+            Designed for Every Occasion
           </span>
           <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6">
-            Designed for Every Occasion
+            Kashvi Cards
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
             Discover our meticulously curated selection of bespoke stationery and fine invitations.
