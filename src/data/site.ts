@@ -9,8 +9,8 @@ export const siteConfig = {
     phoneHref: "tel:+918107511164",
     whatsapp: "+91 81075 11164",
     whatsappNumber: "918107511164",
-    email: "jainmukku@gmail.com",
-    emailHref: "mailto:jainmukku@gmail.com",
+    email: "kashvicardkota@gmail.com",
+    emailHref: "mailto:kashvicardkota@gmail.com",
     address: {
       line1: "Opp Rampura Kotwali,",
       line2: "Rampura, Kota, Rajasthan - 324006",

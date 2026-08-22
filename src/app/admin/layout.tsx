@@ -47,8 +47,13 @@ export default function AdminLayout({
       {/* Desktop Sidebar Navigation */}
       <aside className="hidden md:flex flex-col h-full py-6 px-4 border-r border-outline/10 bg-surface-container-low fixed left-0 top-0 w-64 z-50">
         <div className="mb-8 px-2">
-          <Link href="/" className="font-headline-lg text-headline-lg font-bold text-primary block">
-            {siteConfig.brand}
+          <Link href="/" className="flex items-center gap-3 font-headline-lg text-headline-lg font-bold text-primary">
+            <img
+              src="/images/logo.jpg"
+              alt={siteConfig.brand}
+              className="h-10 w-10 rounded-full object-cover border border-secondary/40 shadow-sm"
+            />
+            <span>{siteConfig.brand}</span>
           </Link>
           <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest block mt-1">
             Admin Dashboard

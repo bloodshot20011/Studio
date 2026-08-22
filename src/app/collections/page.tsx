@@ -154,7 +154,7 @@ function CollectionsContent() {
         {/* Header Banner */}
         <section className="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
           <span className="block font-label-md text-label-md text-secondary uppercase tracking-[0.15em] mb-4">
-            Our Collection
+            Kashvi Cards
           </span>
           <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6">
             Designed for Every Occasion

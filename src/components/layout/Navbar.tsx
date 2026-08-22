@@ -74,9 +74,14 @@ export default function Navbar() {
           {/* Brand Title */}
           <Link
             href="/"
-            className="font-headline-md text-headline-md tracking-tighter text-primary flex-shrink-0 font-bold"
+            className="flex items-center gap-3 font-headline-md text-headline-md tracking-tighter text-primary flex-shrink-0 font-bold group"
           >
-            {siteConfig.brand}
+            <img
+              src="/images/logo.jpg"
+              alt={siteConfig.brand}
+              className="h-10 w-10 rounded-full object-cover border border-secondary/40 shadow-sm group-hover:scale-105 transition-transform"
+            />
+            <span className="font-headline-md text-headline-md text-primary">{siteConfig.brand}</span>
           </Link>
 
           {/* Desktop Nav Items */}

@@ -12,8 +12,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div>
-            <Link href="/" className="font-headline-md text-headline-md text-primary block mb-4">
-              {siteConfig.brand}
+            <Link href="/" className="flex items-center gap-3 font-headline-md text-headline-md text-primary mb-4 group">
+              <img
+                src="/images/logo.jpg"
+                alt={siteConfig.brand}
+                className="h-10 w-10 rounded-full object-cover border border-secondary/40 shadow-sm group-hover:scale-105 transition-transform"
+              />
+              <span className="font-headline-md text-headline-md text-primary">{siteConfig.brand}</span>
             </Link>
             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
               {siteConfig.description}
