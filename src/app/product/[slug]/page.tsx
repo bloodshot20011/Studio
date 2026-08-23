@@ -17,17 +17,6 @@ import { getProductWhatsAppMessage } from "@/data/site";
 import { FormatType, Product } from "@/types";
 import { useProducts } from "@/lib/useProducts";
 
-function extractYouTubeId(url: string): string | null {
-  if (!url) return null;
-  const clean = url.trim();
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = clean.match(regExp);
-  if (match && match[2] && match[2].length === 11) {
-    return match[2];
-  }
-  return null;
-}
-
 export default function ProductDetailPage() {
   const params = useParams();
   const productSlug = params.slug as string;
@@ -53,7 +42,8 @@ export default function ProductDetailPage() {
         if (foundProduct.videoUrl) {
           setSelectedFormat("video");
         } else if (foundProduct.formats?.length) {
-          setSelectedFormat(foundProduct.formats[0]);
+          const validFormat = foundProduct.formats.find((f) => f === "printed" || f === "video");
+          setSelectedFormat(validFormat || "printed");
         }
       }
     }
@@ -105,14 +95,15 @@ export default function ProductDetailPage() {
         return "Enquire for Printed Cards";
       case "video":
         return "Enquire for Video Invitation";
+      default:
+        return "Enquire via WhatsApp";
     }
   };
 
   const rawVideoUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
-  const youtubeId = extractYouTubeId(rawVideoUrl);
   const videoWhatsAppMsg = `Hello Kashvi Cards, I would like to watch a video invitation sample for design: ${product.name} (#${product.code}).`;
-  const validFormats = product.formats.filter((f) => f === "printed" || f === "video");
-  const activeFormats = validFormats.length > 0 ? validFormats : ["printed" as FormatType];
+  const availableFormats = product.formats.filter((f) => f === "printed" || f === "video");
+  const displayFormats: FormatType[] = availableFormats.length > 0 ? availableFormats : ["printed"];
 
   return (
     <>
@@ -157,13 +148,15 @@ export default function ProductDetailPage() {
                     className="bg-surface-container-low border border-outline/20 p-4 md:p-8 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                   >
                     <div className="w-full max-w-md aspect-[9/16] bg-black rounded-2xl overflow-hidden relative shadow-2xl border border-secondary/40">
-                      {youtubeId ? (
-                        <iframe
-                          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=0&controls=1`}
-                          title={`${product.name} YouTube Preview`}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="w-full h-full border-0"
+                      {rawVideoUrl ? (
+                        <video
+                          src={rawVideoUrl}
+                          controls
+                          autoPlay
+                          loop
+                          playsInline
+                          poster={product.image}
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full relative flex flex-col items-center justify-center p-6 text-center">
@@ -216,19 +209,29 @@ export default function ProductDetailPage() {
                   Design Code: <strong className="text-primary font-mono font-semibold">#{product.code}</strong>
                 </span>
 
-                {/* Video Preview Quick Button */}
-                {product.videoUrl && (
-                  <div className="pt-1">
+                {/* Instant Motion Video Quick Action Button */}
+                <div className="flex flex-wrap gap-2.5 pt-1">
+                  {product.videoUrl ? (
                     <button
                       type="button"
                       onClick={() => setSelectedFormat("video")}
                       className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/10 hover:bg-secondary text-primary hover:text-white border border-secondary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
                     >
                       <span className="material-symbols-outlined text-base">videocam</span>
-                      Watch Video Preview
+                      Watch Video Motion Preview
                     </button>
-                  </div>
-                )}
+                  ) : (
+                    <a
+                      href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/5 hover:bg-secondary text-primary hover:text-white border border-secondary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base">videocam</span>
+                      Request Motion Video
+                    </a>
+                  )}
+                </div>
               </div>
 
               {/* Format Selection Segmented Control */}
@@ -237,7 +240,7 @@ export default function ProductDetailPage() {
                   Format Options
                 </label>
                 <div className="bg-surface-container-low p-1.5 border border-outline/20 flex rounded-2xl">
-                  {activeFormats.map((fmt) => {
+                  {displayFormats.map((fmt) => {
                     const isSelected = selectedFormat === fmt;
                     const labels: Record<FormatType, string> = {
                       printed: "Printed Card",

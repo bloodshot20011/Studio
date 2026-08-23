@@ -53,6 +53,7 @@ export function getNewArrivals(limit?: number): Product[] {
 export interface FilterOptions {
   categorySlug?: string;
   format?: "all" | "printed" | "digital";
+  digitalType?: "all" | "pdf" | "video";
   featured?: boolean;
   newArrival?: boolean;
 }

@@ -9,7 +9,7 @@ import ProductGrid from "@/components/ui/ProductGrid";
 import ProductCard from "@/components/ui/ProductCard";
 import CategoryNavigation from "@/components/ui/CategoryNavigation";
 import SectionHeading from "@/components/ui/SectionHeading";
-import FormatFilter, { FormatFilterValue } from "@/components/ui/FormatFilter";
+import FormatFilter, { FormatFilterValue, DigitalTypeFilterValue } from "@/components/ui/FormatFilter";
 import { useProducts } from "@/lib/useProducts";
 
 function CollectionsContent() {
@@ -19,19 +19,22 @@ function CollectionsContent() {
 
   // Read URL query params
   const formatParam = (searchParams.get("format") as FormatFilterValue) || "all";
+  const typeParam = (searchParams.get("type") as DigitalTypeFilterValue) || "all";
   const categoryParam = searchParams.get("category") || "all";
   const featuredParam = searchParams.get("featured") === "true";
   const newArrivalParam = searchParams.get("newArrival") === "true";
 
   const [activeCategory, setActiveCategory] = useState(categoryParam);
   const [activeFormat, setActiveFormat] = useState<FormatFilterValue>(formatParam);
+  const [activeDigitalType, setActiveDigitalType] = useState<DigitalTypeFilterValue>(typeParam);
   const [showFeatured, setShowFeatured] = useState(featuredParam);
   const [showNewArrivals, setShowNewArrivals] = useState(newArrivalParam);
 
-  // Sync state when URL params change
+  // Sync state when URL params change (e.g. browser back/forward or direct navigation)
   useEffect(() => {
     setActiveCategory(searchParams.get("category") || "all");
     setActiveFormat((searchParams.get("format") as FormatFilterValue) || "all");
+    setActiveDigitalType((searchParams.get("type") as DigitalTypeFilterValue) || "all");
     setShowFeatured(searchParams.get("featured") === "true");
     setShowNewArrivals(searchParams.get("newArrival") === "true");
   }, [searchParams]);
@@ -40,6 +43,7 @@ function CollectionsContent() {
   const updateQueryParams = (newParams: {
     category?: string;
     format?: FormatFilterValue;
+    type?: DigitalTypeFilterValue;
     featured?: boolean;
     newArrival?: boolean;
   }) => {
@@ -53,9 +57,18 @@ function CollectionsContent() {
     if (newParams.format !== undefined) {
       if (newParams.format === "all") {
         params.delete("format");
+        params.delete("type");
       } else {
         params.set("format", newParams.format);
+        if (newParams.format !== "digital") {
+          params.delete("type");
+        }
       }
+    }
+
+    if (newParams.type !== undefined) {
+      if (newParams.type === "all") params.delete("type");
+      else params.set("type", newParams.type);
     }
 
     if (newParams.featured !== undefined) {
@@ -80,12 +93,23 @@ function CollectionsContent() {
 
   const handleFormatChange = (format: FormatFilterValue) => {
     setActiveFormat(format);
-    updateQueryParams({ format });
+    if (format !== "digital") {
+      setActiveDigitalType("all");
+      updateQueryParams({ format, type: "all" });
+    } else {
+      updateQueryParams({ format });
+    }
+  };
+
+  const handleDigitalTypeChange = (type: DigitalTypeFilterValue) => {
+    setActiveDigitalType(type);
+    updateQueryParams({ type });
   };
 
   const handleClearFilters = () => {
     setActiveCategory("all");
     setActiveFormat("all");
+    setActiveDigitalType("all");
     setShowFeatured(false);
     setShowNewArrivals(false);
     router.push(pathname, { scroll: false });
@@ -94,6 +118,7 @@ function CollectionsContent() {
   const isFiltered =
     activeCategory !== "all" ||
     activeFormat !== "all" ||
+    activeDigitalType !== "all" ||
     showFeatured ||
     showNewArrivals;
 
@@ -105,7 +130,9 @@ function CollectionsContent() {
     }
     if (activeFormat && activeFormat !== "all") {
       if (activeFormat === "printed" && !product.formats.includes("printed")) return false;
-      if (activeFormat === "digital" && !product.formats.includes("video")) return false;
+      if (activeFormat === "digital") {
+        if (!product.formats.includes("video")) return false;
+      }
     }
     if (showFeatured && !product.featured) return false;
     if (showNewArrivals && !product.newArrival) return false;
@@ -207,7 +234,9 @@ function CollectionsContent() {
             {/* Format System Filter (Printed / Digital / PDF / Video) */}
             <FormatFilter
               activeFormat={activeFormat}
+              activeDigitalType={activeDigitalType}
               onFormatChange={handleFormatChange}
+              onDigitalTypeChange={handleDigitalTypeChange}
               totalResultsCount={filteredProducts.length}
               onClearFilters={handleClearFilters}
               isFiltered={isFiltered}
