@@ -5,13 +5,13 @@ import { createClient } from "@/lib/supabase/client";
 const CATEGORY_PREFIX_MAP: Record<string, string> = {
   wedding: "WED",
   birthday: "BIR",
-  mundan: "MUN",
+  "baby-shower": "BAB",
   "griha-pravesh": "GRI",
   "shop-opening": "SHO",
   retirement: "RET",
   "visiting-cards": "VIS",
-  "letter-pads": "LET",
   "gift-envelopes": "GIF",
+  others: "OTH",
 };
 
 // Event listener subscribers for real-time reactivity
@@ -85,7 +85,7 @@ async function seedInitialProductsIfEmpty(supabase: any) {
     if (error) {
       console.warn("Auto-seeding notice:", error.message);
     } else {
-      console.log("Successfully seeded 19 initial designs into Supabase DB!");
+      console.log("Successfully seeded initial designs into Supabase DB!");
     }
   } catch (e) {
     console.error("Error seeding initial products:", e);
@@ -107,7 +107,6 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
     }
 
     if (!error && Array.isArray(data)) {
-      // If table is completely empty (0 items), auto-seed once
       if (data.length === 0 && !isSeeding) {
         await seedInitialProductsIfEmpty(supabase);
         return syncProductsFromSupabase();
@@ -125,6 +124,7 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
         gallery: item.gallery || [item.image],
         formats: item.formats || ["printed"],
         videoUrl: item.video_url || item.videoUrl || item.digitalAssets?.video || "",
+        pdfUrl: item.pdf_url || item.pdfUrl || item.digitalAssets?.pdf || "",
         featured: Boolean(item.featured),
         newArrival: Boolean(item.new_arrival),
         tags: item.tags || [],
@@ -203,7 +203,7 @@ export function checkDuplicateDesignCode(
 
 /**
  * Adds a new product directly to Supabase DB as single source of truth.
- * Handles missing video_url column gracefully if schema is updating.
+ * Handles missing video_url / pdf_url columns gracefully.
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
   const id = generateValidUUID();
@@ -228,14 +228,18 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
   if (fullProduct.videoUrl) {
     payload.video_url = fullProduct.videoUrl;
   }
+  if (fullProduct.pdfUrl) {
+    payload.pdf_url = fullProduct.pdfUrl;
+  }
 
   try {
     const supabase = createClient();
     let { error } = await supabase.from("products").insert([payload]);
 
-    // Fallback if video_url column missing
-    if (error && error.message?.includes("video_url")) {
+    // Fallback if video_url or pdf_url columns missing
+    if (error && (error.message?.includes("video_url") || error.message?.includes("pdf_url"))) {
       delete payload.video_url;
+      delete payload.pdf_url;
       const retry = await supabase.from("products").insert([payload]);
       error = retry.error;
     }
@@ -256,7 +260,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
 /**
  * Updates an existing product directly in Supabase DB.
- * Handles missing video_url column gracefully if schema is updating.
+ * Handles missing video_url / pdf_url columns gracefully.
  */
 export async function updateProductStore(id: string, updatedData: Partial<Product>): Promise<Product[]> {
   const target = cachedProducts.find((p) => p.id === id);
@@ -278,6 +282,9 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
   if (updatedData.videoUrl !== undefined) {
     payload.video_url = updatedData.videoUrl;
   }
+  if (updatedData.pdfUrl !== undefined) {
+    payload.pdf_url = updatedData.pdfUrl;
+  }
 
   try {
     const supabase = createClient();
@@ -290,9 +297,10 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
 
     let { error } = await query;
 
-    // Fallback if video_url column missing
-    if (error && error.message?.includes("video_url")) {
+    // Fallback if video_url or pdf_url column missing
+    if (error && (error.message?.includes("video_url") || error.message?.includes("pdf_url"))) {
       delete payload.video_url;
+      delete payload.pdf_url;
       let retryQuery = supabase.from("products").update(payload);
       if (code) {
         retryQuery = retryQuery.or(`id.eq.${id},code.eq.${code}`);

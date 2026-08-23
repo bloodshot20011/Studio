@@ -90,6 +90,29 @@ export default function Home() {
                 Contact Us
               </Link>
             </motion.div>
+
+            {/* Format Filter Quick-Access Buttons */}
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-3 justify-center items-center mt-6">
+              <Link
+                href="/collections?format=digital"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
+              >
+                <span className="material-symbols-outlined text-sm text-secondary group-hover:scale-110 transition-transform">
+                  devices
+                </span>
+                Digital Cards
+              </Link>
+
+              <Link
+                href="/collections?format=printed"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
+              >
+                <span className="material-symbols-outlined text-sm text-secondary group-hover:scale-110 transition-transform">
+                  print
+                </span>
+                Printed Cards
+              </Link>
+            </motion.div>
           </motion.div>
         </section>
 

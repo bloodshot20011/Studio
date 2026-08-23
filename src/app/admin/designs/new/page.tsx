@@ -20,10 +20,12 @@ export default function AddNewDesignPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
   const [compressInfo, setCompressInfo] = useState("");
 
   const [name, setName] = useState("");
   const [categorySlug, setCategorySlug] = useState("wedding");
+  const [customCategoryName, setCustomCategoryName] = useState("");
   const [code, setCode] = useState("");
   const [duplicateWarning, setDuplicateWarning] = useState<{
     isDuplicate: boolean;
@@ -33,6 +35,7 @@ export default function AddNewDesignPage() {
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [pdfUrl, setPdfUrl] = useState("");
   const [formats, setFormats] = useState<FormatType[]>(["printed"]);
   const [featured, setFeatured] = useState(false);
   const [newArrival, setNewArrival] = useState(true);
@@ -98,25 +101,30 @@ export default function AddNewDesignPage() {
         .upload(filePath, file);
 
       if (!uploadError) {
-        const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
-        if (data?.publicUrl) {
-          setImageUrl(data.publicUrl);
-          setCompressInfo(`Uploaded to Supabase Cloud Storage (${compressedKB}KB)`);
+        const { data: publicUrlData } = supabase.storage
+          .from("card-images")
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          setImageUrl(publicUrlData.publicUrl);
+          setCompressInfo(`Uploaded: ${originalMB}MB ➔ ${compressedKB}KB`);
+          setUploading(false);
           return;
         }
       }
 
-      // Dual-Safety Fallback: Convert to Data URL (base64)
-      const base64Data = await fileToBase64(file);
-      setImageUrl(base64Data);
-      setCompressInfo(`Saved as Dual-Safety Image (${compressedKB}KB)`);
+      console.warn("Storage upload notice, falling back to data URL:", uploadError?.message);
+      const dataUrl = await fileToBase64(file);
+      setImageUrl(dataUrl);
+      setCompressInfo(`Saved (${compressedKB}KB compressed)`);
     } catch (err: any) {
-      console.error(err);
+      console.error("Image compression/upload exception:", err);
       try {
-        const base64Data = await fileToBase64(rawFile);
-        setImageUrl(base64Data);
-      } catch (e) {
-        alert("Failed to process image. Please choose another image file.");
+        const dataUrl = await fileToBase64(rawFile);
+        setImageUrl(dataUrl);
+        setCompressInfo("Saved (Fallback data URL)");
+      } catch (fErr) {
+        alert("Failed to process image file. Please enter image URL manually.");
       }
     } finally {
       setUploading(false);
@@ -128,11 +136,10 @@ export default function AddNewDesignPage() {
     if (!file) return;
 
     setUploadingVideo(true);
-
     try {
       const supabase = createClient();
       const fileExt = file.name.split(".").pop() || "mp4";
-      const fileName = `video_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileName = `vid_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `videos/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -140,91 +147,130 @@ export default function AddNewDesignPage() {
         .upload(filePath, file);
 
       if (!uploadError) {
-        const { data } = supabase.storage.from("card-images").getPublicUrl(filePath);
-        if (data?.publicUrl) {
-          setVideoUrl(data.publicUrl);
+        const { data: publicUrlData } = supabase.storage
+          .from("card-images")
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          setVideoUrl(publicUrlData.publicUrl);
+          setUploadingVideo(false);
           return;
         }
       }
 
-      // Dual-Safety Fallback: Convert to Data URL (base64)
-      const base64Data = await fileToBase64(file);
-      setVideoUrl(base64Data);
+      const dataUrl = await fileToBase64(file);
+      setVideoUrl(dataUrl);
     } catch (err: any) {
-      console.error(err);
-      alert("Storage upload error. Please paste a video link or YouTube URL directly.");
+      console.error("Video upload notice:", err);
     } finally {
       setUploadingVideo(false);
     }
   };
 
+  const handlePdfFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingPdf(true);
+    try {
+      const supabase = createClient();
+      const fileExt = file.name.split(".").pop() || "pdf";
+      const fileName = `pdf_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `documents/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("card-images")
+        .upload(filePath, file);
+
+      if (!uploadError) {
+        const { data: publicUrlData } = supabase.storage
+          .from("card-images")
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          setPdfUrl(publicUrlData.publicUrl);
+          setUploadingPdf(false);
+          return;
+        }
+      }
+
+      const dataUrl = await fileToBase64(file);
+      setPdfUrl(dataUrl);
+    } catch (err: any) {
+      console.error("PDF upload notice:", err);
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (duplicateWarning.isDuplicate) {
-      alert(`Design code "${code}" already exists! Please use a unique design code like ${duplicateWarning.suggestedCode}.`);
-      return;
-    }
-    if (formats.length === 0) {
-      alert("Please select at least one format (Printed, PDF, or Video).");
+      alert(`Design code "${code}" is already taken! Please click "Suggested: ${duplicateWarning.suggestedCode}" to use a unique code.`);
       return;
     }
 
     setSaving(true);
-    try {
-      const slug = name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
 
-      const matchedCategory = categories.find((c) => c.slug === categorySlug);
-      const tagArray = tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+    try {
+      const selectedCatObj = categories.find((c) => c.slug === categorySlug);
+      const categoryName = categorySlug === "others" && customCategoryName.trim()
+        ? customCategoryName.trim()
+        : (selectedCatObj?.name || "Wedding");
+
+      const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${code.toLowerCase()}`;
 
       await addProductStore({
-        slug: slug || `design-${Date.now()}`,
+        slug,
         name,
-        code,
-        category: matchedCategory?.name || "Wedding",
-        categorySlug,
+        code: code.toUpperCase(),
+        category: categoryName,
+        categorySlug: categorySlug === "others" && customCategoryName.trim()
+          ? customCategoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")
+          : categorySlug,
         description,
         image: imageUrl || "/images/catalog-1.jpeg",
         gallery: [imageUrl || "/images/catalog-1.jpeg"],
         formats,
-        videoUrl: formats.includes("video") ? videoUrl : "",
+        videoUrl,
+        pdfUrl,
         featured,
         newArrival,
-        tags: tagArray,
+        tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       });
 
       setIsSubmitted(true);
       setTimeout(() => {
         router.push("/admin/designs");
+        router.refresh();
       }, 1200);
     } catch (err: any) {
-      console.error(err);
-      alert(err.message || "Failed to save design to Supabase Database. Please check your Supabase permissions.");
+      console.error("Error creating design:", err);
+      alert(`Error saving design: ${err?.message || "Check database connection"}`);
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-outline/10 pb-4">
+    <div className="max-w-container-max mx-auto space-y-6 pb-12">
+      {/* Top Header */}
+      <div className="flex justify-between items-center">
         <div>
-          <Link
-            href="/admin/designs"
-            className="font-label-sm text-label-sm text-secondary hover:text-primary uppercase tracking-widest inline-flex items-center gap-1 mb-1"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span> Back to Designs
-          </Link>
-          <h1 className="font-display-lg-mobile md:font-display-lg text-primary text-display-lg-mobile md:text-display-lg">
+          <h1 className="font-display-lg text-primary text-display-lg-mobile md:text-display-lg">
             Add New Design
           </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+            Create a new invitation card or digital product for your catalog.
+          </p>
         </div>
+        <Link
+          href="/admin/designs"
+          className="font-label-sm text-label-sm text-secondary hover:text-primary uppercase tracking-widest flex items-center gap-1"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span> Back to Designs
+        </Link>
       </div>
 
       {isSubmitted ? (
@@ -252,6 +298,23 @@ export default function AddNewDesignPage() {
                   </option>
                 ))}
               </select>
+
+              {/* Custom Category Input if "Others" selected */}
+              {categorySlug === "others" && (
+                <div className="mt-3">
+                  <label className="font-label-sm text-xs uppercase tracking-widest text-secondary block mb-1">
+                    Custom Category / Occasion Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={customCategoryName}
+                    onChange={(e) => setCustomCategoryName(e.target.value)}
+                    placeholder="e.g. Anniversary, Naming Ceremony, Housewarming..."
+                    className="w-full bg-surface border border-secondary/50 px-4 py-2.5 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Design Code */}
@@ -381,15 +444,62 @@ export default function AddNewDesignPage() {
             </div>
           </div>
 
-          {/* Video Upload Field (Appears ONLY when "video" format checkbox is checked) */}
+          {/* PDF Upload Field (Appears ONLY when "pdf" format is selected) */}
+          {formats.includes("pdf") && (
+            <div className="p-5 bg-primary/5 border border-primary/20 rounded-2xl space-y-3">
+              <div className="flex items-center gap-2 text-primary">
+                <span className="material-symbols-outlined">picture_as_pdf</span>
+                <label className="font-label-sm text-label-sm uppercase tracking-widest font-bold">
+                  Upload Digital PDF Sample / Proof File *
+                </label>
+              </div>
+
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handlePdfFileUpload}
+                  className="w-full text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-label-sm file:uppercase file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer rounded-lg"
+                />
+                {uploadingPdf && <p className="text-xs text-secondary animate-pulse">Uploading PDF document...</p>}
+
+                <input
+                  type="text"
+                  value={pdfUrl}
+                  onChange={(e) => setPdfUrl(e.target.value)}
+                  placeholder="Or enter PDF URL (e.g. https://domain.com/sample.pdf)"
+                  className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
+                />
+
+                {pdfUrl && (
+                  <div className="p-3 bg-surface border border-outline/20 rounded-xl flex items-center justify-between text-xs text-primary font-mono">
+                    <span className="truncate">📄 PDF Ready: {pdfUrl}</span>
+                    <button
+                      type="button"
+                      onClick={() => setPdfUrl("")}
+                      className="text-error hover:underline text-[10px] uppercase font-label-sm ml-2"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Video Upload Field (Appears ONLY when "video" format is selected) */}
           {formats.includes("video") && (
             <div className="p-5 bg-secondary/5 border border-secondary/30 rounded-2xl space-y-3">
               <div className="flex items-center gap-2 text-secondary">
                 <span className="material-symbols-outlined">videocam</span>
                 <label className="font-label-sm text-label-sm uppercase tracking-widest font-bold">
-                  Upload Digital Video (MP4 / WebM / Video Link) *
+                  Upload Digital Video (MP4 / WebM / YouTube Link) *
                 </label>
               </div>
+
+              <p className="text-xs text-on-surface-variant leading-relaxed">
+                💡 <strong>YouTube Links Supported!</strong> Paste any YouTube video URL (e.g. <code>https://youtu.be/xyz</code> or <code>https://www.youtube.com/watch?v=xyz</code>) or upload an MP4 file. It will automatically embed as a HD preview video for customers!
+              </p>
 
               <div className="space-y-3">
                 <input
@@ -402,10 +512,9 @@ export default function AddNewDesignPage() {
 
                 <input
                   type="text"
-                  required
                   value={videoUrl}
                   onChange={(e) => setVideoUrl(e.target.value)}
-                  placeholder="Or enter video URL (e.g. https://domain.com/video.mp4 or YouTube link)"
+                  placeholder="Or enter YouTube / MP4 video link (https://www.youtube.com/watch?v=...)"
                   className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-sm text-on-surface focus:border-secondary outline-none rounded-xl"
                 />
 
@@ -449,14 +558,14 @@ export default function AddNewDesignPage() {
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              placeholder="Royal, Gold Foil, Traditional"
+              placeholder="Gold Foil, Traditional, Royal, Handmade Paper"
               className="w-full bg-surface border border-outline/20 px-4 py-2.5 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl"
             />
           </div>
 
           {/* Toggles */}
-          <div className="flex flex-wrap gap-6 pt-2">
-            <label className="flex items-center gap-2 cursor-pointer">
+          <div className="flex flex-wrap gap-8 pt-2">
+            <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={featured}
@@ -464,18 +573,18 @@ export default function AddNewDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
-                  featured ? "bg-secondary border-secondary text-white" : "border-outline"
+                className={`w-6 h-6 border flex items-center justify-center transition-colors rounded-md ${
+                  featured ? "bg-secondary border-secondary text-white" : "border-outline group-hover:border-secondary"
                 }`}
               >
-                {featured && <span className="material-symbols-outlined text-xs">check</span>}
+                {featured && <span className="material-symbols-outlined text-sm">check</span>}
               </div>
               <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary">
-                Featured Design (Shows on Homepage)
+                Featured Design
               </span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={newArrival}
@@ -483,32 +592,33 @@ export default function AddNewDesignPage() {
                 className="sr-only"
               />
               <div
-                className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
-                  newArrival ? "bg-secondary border-secondary text-white" : "border-outline"
+                className={`w-6 h-6 border flex items-center justify-center transition-colors rounded-md ${
+                  newArrival ? "bg-secondary border-secondary text-white" : "border-outline group-hover:border-secondary"
                 }`}
               >
-                {newArrival && <span className="material-symbols-outlined text-xs">check</span>}
+                {newArrival && <span className="material-symbols-outlined text-sm">check</span>}
               </div>
               <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary">
-                New Arrival
+                New Arrival Tag
               </span>
             </label>
           </div>
 
-          {/* Submit */}
-          <div className="pt-4 flex gap-4">
-            <button
-              type="submit"
-              disabled={saving || duplicateWarning.isDuplicate}
-              className={`btn-primary flex-1 ${
-                duplicateWarning.isDuplicate ? "opacity-50 cursor-not-allowed bg-outline" : ""
-              }`}
+          {/* Form Actions */}
+          <div className="pt-6 border-t border-outline/10 flex justify-end gap-4">
+            <Link
+              href="/admin/designs"
+              className="px-6 py-3 border border-outline/20 text-on-surface-variant font-label-md text-label-md uppercase tracking-widest hover:bg-surface-container-low transition-colors rounded-xl"
             >
-              {saving ? "Saving Design..." : "Save Design"}
-            </button>
-            <Link href="/admin/designs" className="btn-secondary">
               Cancel
             </Link>
+            <button
+              type="submit"
+              disabled={saving}
+              className="btn-primary px-8 py-3 font-label-md text-label-md uppercase tracking-widest rounded-xl"
+            >
+              {saving ? "Saving Design..." : "Publish Design"}
+            </button>
           </div>
         </form>
       )}

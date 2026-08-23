@@ -25,6 +25,7 @@ export interface Product {
   gallery: string[];
   formats: FormatType[];
   videoUrl?: string;
+  pdfUrl?: string;
   digitalAssets?: DigitalAssets;
   featured: boolean;
   newArrival: boolean;

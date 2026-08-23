@@ -322,9 +322,21 @@ export default function ProductDetailPage() {
                     <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
                       Turnaround Time
                     </span>
-                    <p className="font-body-md text-body-md text-on-surface-variant">
+                    <p className="font-body-md text-body-md text-on-surface-variant mb-4">
                       Digital PDF proof delivered within 48 hours of design approval.
                     </p>
+
+                    {product.pdfUrl && (
+                      <a
+                        href={product.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all"
+                      >
+                        <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+                        View / Download Sample PDF Proof
+                      </a>
+                    )}
                   </div>
                 </>
               )}
