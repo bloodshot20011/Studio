@@ -42,8 +42,7 @@ export default function ProductDetailPage() {
         if (foundProduct.videoUrl) {
           setSelectedFormat("video");
         } else if (foundProduct.formats?.length) {
-          const validFormat = foundProduct.formats.find((f) => f === "printed" || f === "video");
-          setSelectedFormat(validFormat || "printed");
+          setSelectedFormat(foundProduct.formats[0]);
         }
       }
     }
@@ -93,6 +92,8 @@ export default function ProductDetailPage() {
     switch (selectedFormat) {
       case "printed":
         return "Enquire for Printed Cards";
+      case "pdf":
+        return "Enquire for Digital PDF";
       case "video":
         return "Enquire for Video Invitation";
       default:
@@ -102,8 +103,7 @@ export default function ProductDetailPage() {
 
   const rawVideoUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
   const videoWhatsAppMsg = `Hello Kashvi Cards, I would like to watch a video invitation sample for design: ${product.name} (#${product.code}).`;
-  const availableFormats = product.formats.filter((f) => f === "printed" || f === "video");
-  const displayFormats: FormatType[] = availableFormats.length > 0 ? availableFormats : ["printed"];
+  const displayFormats: FormatType[] = product.formats?.length > 0 ? product.formats : ["printed"];
 
   return (
     <>
@@ -244,6 +244,7 @@ export default function ProductDetailPage() {
                     const isSelected = selectedFormat === fmt;
                     const labels: Record<FormatType, string> = {
                       printed: "Printed Card",
+                      pdf: "Digital PDF",
                       video: "Video Motion",
                     };
                     return (
@@ -282,6 +283,27 @@ export default function ProductDetailPage() {
                       </span>
                       <p className="font-body-md text-body-md text-on-surface-variant">
                         Available in custom dual-script (Hindi/English) or single language styling. Tailored typography and motifs.
+                      </p>
+                    </div>
+                  </>
+                )}
+
+                {selectedFormat === "pdf" && (
+                  <>
+                    <div>
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
+                        Digital PDF Specification
+                      </span>
+                      <p className="font-body-md text-body-md text-on-surface-variant">
+                        Ultra high-resolution e-card format ready to share instantly via WhatsApp, email, and social media with custom event details.
+                      </p>
+                    </div>
+                    <div>
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
+                        Turnaround Time
+                      </span>
+                      <p className="font-body-md text-body-md text-on-surface-variant">
+                        Digital PDF proof delivered within 24 to 48 hours of design approval.
                       </p>
                     </div>
                   </>

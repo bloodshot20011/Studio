@@ -90,7 +90,11 @@ function CategoryContent() {
     if (activeFormat && activeFormat !== "all") {
       if (activeFormat === "printed" && !product.formats.includes("printed")) return false;
       if (activeFormat === "digital") {
-        if (!product.formats.includes("video")) return false;
+        const hasPdf = product.formats.includes("pdf");
+        const hasVideo = product.formats.includes("video");
+        if (!hasPdf && !hasVideo) return false;
+        if (activeDigitalType === "pdf" && !hasPdf) return false;
+        if (activeDigitalType === "video" && !hasVideo) return false;
       }
     }
     return true;

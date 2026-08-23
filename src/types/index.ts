@@ -5,7 +5,7 @@ export interface Category {
   image?: string;
 }
 
-export type FormatType = "printed" | "video";
+export type FormatType = "printed" | "pdf" | "video";
 
 export interface DigitalAssets {
   video?: string | null;

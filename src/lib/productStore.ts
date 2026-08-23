@@ -114,7 +114,7 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
 
       const dbProducts: Product[] = data.map((item: any) => {
         const rawFormats: FormatType[] = Array.isArray(item.formats)
-          ? item.formats.filter((f: string) => f === "printed" || f === "video")
+          ? item.formats.filter((f: string) => f === "printed" || f === "pdf" || f === "video")
           : ["printed"];
         const videoUrl = item.video_url || item.videoUrl || item.digitalAssets?.video || "";
 

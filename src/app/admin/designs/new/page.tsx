@@ -379,28 +379,35 @@ export default function AddNewDesignPage() {
               Available Formats * (Select at least one)
             </label>
             <div className="flex flex-wrap gap-4 pt-1">
-              {(["printed", "video"] as FormatType[]).map((fmt) => (
-                <label key={fmt} className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={formats.includes(fmt)}
-                    onChange={() => handleFormatToggle(fmt)}
-                    className="sr-only"
-                  />
-                  <div
-                    className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
-                      formats.includes(fmt) ? "bg-primary border-primary text-white" : "border-outline group-hover:border-secondary"
-                    }`}
-                  >
-                    {formats.includes(fmt) && (
-                      <span className="material-symbols-outlined text-xs">check</span>
-                    )}
-                  </div>
-                  <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary">
-                    {fmt === "printed" ? "Printed Card" : "Video Motion"}
-                  </span>
-                </label>
-              ))}
+              {(["printed", "pdf", "video"] as FormatType[]).map((fmt) => {
+                const labels: Record<FormatType, string> = {
+                  printed: "Printed Card",
+                  pdf: "Digital PDF",
+                  video: "Video Motion",
+                };
+                return (
+                  <label key={fmt} className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={formats.includes(fmt)}
+                      onChange={() => handleFormatToggle(fmt)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
+                        formats.includes(fmt) ? "bg-primary border-primary text-white" : "border-outline group-hover:border-secondary"
+                      }`}
+                    >
+                      {formats.includes(fmt) && (
+                        <span className="material-symbols-outlined text-xs">check</span>
+                      )}
+                    </div>
+                    <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary">
+                      {labels[fmt]}
+                    </span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 
