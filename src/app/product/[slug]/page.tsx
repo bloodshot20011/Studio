@@ -64,7 +64,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | undefined>(undefined);
   const [isMounted, setIsMounted] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<FormatType>("printed");
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -79,7 +78,7 @@ export default function ProductDetailPage() {
       if (foundProduct) {
         setProduct(foundProduct);
 
-        // Auto-select video or pdf format if present
+        // Intelligently select default format based on available assets
         if (foundProduct.videoUrl) {
           setSelectedFormat("video");
         } else if (foundProduct.pdfUrl) {
@@ -95,7 +94,7 @@ export default function ProductDetailPage() {
     return (
       <>
         <Navbar />
-        <main className="flex-grow pt-28 md:pt-36 pb-section-gap min-h-screen">
+        <main className="flex-grow pt-32 md:pt-40 pb-section-gap min-h-screen">
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 text-center">
             <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="font-body-md text-on-surface-variant">Loading design details...</p>
@@ -142,10 +141,15 @@ export default function ProductDetailPage() {
     }
   };
 
+  const rawVideoUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
+  const youtubeId = extractYouTubeId(rawVideoUrl);
+  const pdfWhatsAppMsg = `Hello Kashvi Cards, I would like to view a sample PDF proof for design: ${product.name} (#${product.code}).`;
+  const videoWhatsAppMsg = `Hello Kashvi Cards, I would like to watch a video invitation sample for design: ${product.name} (#${product.code}).`;
+
   return (
     <>
       <Navbar />
-      <main className="flex-grow pt-28 md:pt-36 pb-section-gap">
+      <main className="flex-grow pt-32 md:pt-40 pb-section-gap">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-8">
           <Breadcrumb
             items={[
@@ -185,76 +189,61 @@ export default function ProductDetailPage() {
                     className="bg-surface-container-low border border-outline/20 p-4 md:p-8 flex flex-col items-center justify-center text-center min-h-[450px] rounded-2xl"
                   >
                     <div className="w-full max-w-md aspect-[9/16] bg-black rounded-2xl overflow-hidden relative shadow-2xl border border-secondary/40">
-                      {(() => {
-                        const rawUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
-                        const youtubeId = extractYouTubeId(rawUrl);
-
-                        if (youtubeId) {
-                          return (
-                            <iframe
-                              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=0&controls=1`}
-                              title={`${product.name} YouTube Preview`}
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              className="w-full h-full border-0"
-                            />
-                          );
-                        }
-
-                        const targetUrl = rawUrl || (isPlayingVideo ? "https://assets.mixkit.co/videos/preview/mixkit-gold-particles-floating-in-the-air-41525-large.mp4" : "");
-
-                        if (!targetUrl) {
-                          return (
-                            <div className="w-full h-full relative">
-                              <img
-                                src={product.digitalAssets?.videoThumbnail || product.image}
-                                alt={`${product.name} Video Preview`}
-                                className="w-full h-full object-cover opacity-90"
-                              />
-                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                <button
-                                  type="button"
-                                  onClick={() => setIsPlayingVideo(true)}
-                                  aria-label="Play sample video"
-                                  className="w-16 h-16 rounded-full bg-surface/90 text-primary flex items-center justify-center shadow-2xl hover:scale-110 hover:bg-primary hover:text-white transition-all duration-300 border border-secondary/50 group cursor-pointer"
-                                >
-                                  <span className="material-symbols-outlined text-[32px] ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>
-                                    play_arrow
-                                  </span>
-                                </button>
-                              </div>
-                              <div className="absolute bottom-4 left-4 right-4 bg-surface/90 backdrop-blur-md p-3 text-left border border-outline/20 rounded-xl">
-                                <span className="font-label-sm text-[10px] text-secondary uppercase tracking-widest block">
-                                  Video Motion Suite
-                                </span>
-                                <span className="font-headline-md text-sm text-primary">
-                                  1080p Full HD • Custom Music
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        return (
-                          <video
-                            src={targetUrl}
-                            controls
-                            autoPlay
-                            loop
-                            playsInline
-                            poster={product.image}
-                            className="w-full h-full object-cover"
+                      {youtubeId ? (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=0&controls=1`}
+                          title={`${product.name} YouTube Preview`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full border-0"
+                        />
+                      ) : rawVideoUrl ? (
+                        <video
+                          src={rawVideoUrl}
+                          controls
+                          autoPlay
+                          loop
+                          playsInline
+                          poster={product.image}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full relative flex flex-col items-center justify-center p-6 text-center">
+                          <img
+                            src={product.digitalAssets?.videoThumbnail || product.image}
+                            alt={`${product.name} Video Preview`}
+                            className="absolute inset-0 w-full h-full object-cover opacity-60"
                           />
-                        );
-                      })()}
+                          <div className="absolute inset-0 bg-primary/60 backdrop-blur-xs flex flex-col items-center justify-center p-6">
+                            <span className="material-symbols-outlined text-5xl text-secondary mb-3">
+                              videocam
+                            </span>
+                            <h3 className="font-headline-md text-white text-lg mb-1">
+                              Custom Motion Video Available
+                            </h3>
+                            <p className="font-body-sm text-white/80 text-xs max-w-xs mb-6">
+                              We craft bespoke animated video invitations tailored with your event music, dates, & couple portraits!
+                            </p>
+                            <a
+                              href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-5 py-2.5 bg-secondary text-white font-label-sm text-xs uppercase tracking-wider rounded-xl shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+                            >
+                              <span className="material-symbols-outlined text-sm">chat</span>
+                              Request Video Sample on WhatsApp
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Right Column: Information & Format Switcher */}
-            <div className="md:col-span-4 md:col-start-9 flex flex-col pt-4 md:pt-8">
+            {/* Right Column: Information & Format Switcher (Sticky on desktop) */}
+            <div className="md:col-span-4 md:col-start-9 flex flex-col pt-2 md:pt-4 md:sticky md:top-28 md:self-start">
               <div className="mb-6">
                 <Link
                   href={`/category/${product.categorySlug}`}
@@ -271,7 +260,7 @@ export default function ProductDetailPage() {
 
                 {/* Instant Digital Asset Direct Quick Action Buttons */}
                 <div className="flex flex-wrap gap-2.5 pt-1">
-                  {product.pdfUrl && (
+                  {product.pdfUrl ? (
                     <button
                       type="button"
                       onClick={() => handlePdfOpen(product.pdfUrl!)}
@@ -280,24 +269,44 @@ export default function ProductDetailPage() {
                       <span className="material-symbols-outlined text-base">picture_as_pdf</span>
                       View Sample PDF Proof
                     </button>
+                  ) : (
+                    <a
+                      href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/5 hover:bg-primary text-primary hover:text-white border border-primary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base">picture_as_pdf</span>
+                      Request PDF Proof
+                    </a>
                   )}
 
-                  {product.videoUrl && (
+                  {product.videoUrl ? (
                     <button
                       type="button"
                       onClick={() => setSelectedFormat("video")}
                       className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/10 hover:bg-secondary text-primary hover:text-white border border-secondary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
                     >
                       <span className="material-symbols-outlined text-base">videocam</span>
-                      Watch Video Motion Preview
+                      Watch Video Preview
                     </button>
+                  ) : (
+                    <a
+                      href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/5 hover:bg-secondary text-primary hover:text-white border border-secondary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base">videocam</span>
+                      Request Motion Video
+                    </a>
                   )}
                 </div>
               </div>
 
               {/* Format Selection Segmented Control */}
-              <div className="mb-8">
-                <label className="font-label-sm text-label-sm text-primary uppercase block mb-3">
+              <div className="mb-6">
+                <label className="font-label-sm text-label-sm text-primary uppercase block mb-2.5">
                   Format Options
                 </label>
                 <div className="bg-surface-container-low p-1.5 border border-outline/20 flex rounded-2xl">
@@ -314,7 +323,6 @@ export default function ProductDetailPage() {
                         type="button"
                         onClick={() => {
                           setSelectedFormat(fmt);
-                          setIsPlayingVideo(false);
                         }}
                         className={`flex-1 py-2.5 px-3 font-label-sm text-label-sm uppercase tracking-wider transition-all rounded-xl cursor-pointer ${
                           isSelected
@@ -330,23 +338,23 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Dynamic Specifications Based on Format */}
-              <div className="space-y-6 mb-8 border-t border-b border-outline/10 py-6">
+              <div className="space-y-5 mb-6 border-t border-b border-outline/10 py-5">
                 {selectedFormat === "printed" && (
                   <>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Material Profile
                       </span>
                       <p className="font-body-md text-body-md text-on-surface-variant">
-                        Handcrafted premium artisanal cotton rag paper with subtle textured finish. Premium gold leafing and letterpress options available.
+                        Handcrafted premium artisanal cotton rag paper with subtle textured finish. Gold leafing and letterpress options available.
                       </p>
                     </div>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Customization
                       </span>
                       <p className="font-body-md text-body-md text-on-surface-variant">
-                        Available in custom dual-script (Hindi/English) or single language styling. Colours, typography, and motifs tailored to your celebration.
+                        Available in custom dual-script (Hindi/English) or single language styling. Tailored typography and motifs.
                       </p>
                     </div>
                   </>
@@ -355,30 +363,40 @@ export default function ProductDetailPage() {
                 {selectedFormat === "pdf" && (
                   <>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Digital Specification
                       </span>
                       <p className="font-body-md text-body-md text-on-surface-variant">
-                        Ready to share digitally via WhatsApp, email, and social media. Interactive links for venue maps, RSVP, and wedding registry.
+                        Ready to share digitally via WhatsApp, email, and social media. Interactive links for venue maps & RSVP.
                       </p>
                     </div>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Turnaround Time & Sample PDF
                       </span>
-                      <p className="font-body-md text-body-md text-on-surface-variant mb-4">
+                      <p className="font-body-md text-body-md text-on-surface-variant mb-3">
                         Digital PDF proof delivered within 48 hours of design approval.
                       </p>
 
-                      {product.pdfUrl && (
+                      {product.pdfUrl ? (
                         <button
                           type="button"
                           onClick={() => handlePdfOpen(product.pdfUrl!)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white hover:bg-primary/90 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
                         >
                           <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
                           View / Download Sample PDF Proof
                         </button>
+                      ) : (
+                        <a
+                          href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                        >
+                          <span className="material-symbols-outlined text-sm">chat</span>
+                          Request PDF Sample on WhatsApp
+                        </a>
                       )}
                     </div>
                   </>
@@ -387,27 +405,39 @@ export default function ProductDetailPage() {
                 {selectedFormat === "video" && (
                   <>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Video Features
                       </span>
                       <p className="font-body-md text-body-md text-on-surface-variant">
-                        High-definition 1080p MP4 format. Features cinematic typography animations, royalty-free audio tracks, and custom event transitions.
+                        High-definition 1080p MP4 format. Features cinematic typography animations, royalty-free audio, and custom transitions.
                       </p>
                     </div>
                     <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-2">
+                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Optimised Sharing
                       </span>
-                      <p className="font-body-md text-body-md text-on-surface-variant">
-                        Perfect size compression for instant messaging on WhatsApp family groups and Instagram stories without quality loss.
+                      <p className="font-body-md text-body-md text-on-surface-variant mb-3">
+                        Perfect size compression for instant messaging on WhatsApp family groups and Instagram stories.
                       </p>
+
+                      {rawVideoUrl ? null : (
+                        <a
+                          href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-white hover:bg-secondary/90 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-md"
+                        >
+                          <span className="material-symbols-outlined text-sm">chat</span>
+                          Request Video Motion Sample on WhatsApp
+                        </a>
+                      )}
                     </div>
                   </>
                 )}
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-col gap-4 mt-auto">
+              <div className="flex flex-col gap-3 mt-auto">
                 <WhatsAppButton
                   message={whatsappMessage}
                   designCode={product.code}
