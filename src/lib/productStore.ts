@@ -269,6 +269,17 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
       error = retryFk.error;
     }
 
+    // Fallback if duplicate design code (products_code_key 23505) occurs
+    if (error && (error.code === "23505" || error.message?.includes("products_code_key") || error.message?.includes("unique constraint"))) {
+      console.warn("Duplicate code detected in database, auto-generating next available code...");
+      const allDb = await syncProductsFromSupabase();
+      const freshSuggested = suggestDesignCodeByCategory(fullProduct.categorySlug, allDb);
+      payload.code = freshSuggested;
+      fullProduct.code = freshSuggested;
+      const retryCode = await supabase.from("products").insert([payload]);
+      error = retryCode.error;
+    }
+
     if (error) {
       console.error("Supabase insert error details:", error);
       throw new Error(error.message || "Failed to insert product into Supabase");

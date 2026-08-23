@@ -12,6 +12,7 @@ import {
   suggestDesignCodeByCategory,
   checkDuplicateDesignCode,
   getStoredProducts,
+  syncProductsFromSupabase,
 } from "@/lib/productStore";
 
 export default function AddNewDesignPage() {
@@ -40,14 +41,15 @@ export default function AddNewDesignPage() {
   const [tags, setTags] = useState("Gold Foil, Traditional");
 
   useEffect(() => {
-    const products = getStoredProducts();
-    const suggested = suggestDesignCodeByCategory("wedding", products);
-    setCode(suggested);
+    syncProductsFromSupabase().then((products) => {
+      const suggested = suggestDesignCodeByCategory("wedding", products);
+      setCode(suggested);
+    });
   }, []);
 
-  const handleCategoryChange = (newSlug: string) => {
+  const handleCategoryChange = async (newSlug: string) => {
     setCategorySlug(newSlug);
-    const products = getStoredProducts();
+    const products = await syncProductsFromSupabase();
     const suggested = suggestDesignCodeByCategory(newSlug, products);
     setCode(suggested);
 
