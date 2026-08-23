@@ -226,9 +226,7 @@ export default function AddNewDesignPage() {
         name,
         code: code.toUpperCase(),
         category: categoryName,
-        categorySlug: categorySlug === "others" && customCategoryName.trim()
-          ? customCategoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")
-          : categorySlug,
+        categorySlug: categorySlug,
         description,
         image: imageUrl || "/images/catalog-1.jpeg",
         gallery: [imageUrl || "/images/catalog-1.jpeg"],

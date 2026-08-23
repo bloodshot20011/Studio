@@ -256,9 +256,7 @@ export default function EditDesignPage({
         name,
         code: code.toUpperCase(),
         category: categoryName,
-        categorySlug: categorySlug === "others" && customCategoryName.trim()
-          ? customCategoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")
-          : categorySlug,
+        categorySlug: categorySlug,
         description,
         image: imageUrl,
         formats,
