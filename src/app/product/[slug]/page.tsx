@@ -102,6 +102,7 @@ export default function ProductDetailPage() {
   };
 
   const rawVideoUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
+  const pdfWhatsAppMsg = `Hello Kashvi Cards, I would like to request a PDF sample for design: ${product.name} (#${product.code}).`;
   const videoWhatsAppMsg = `Hello Kashvi Cards, I would like to watch a video invitation sample for design: ${product.name} (#${product.code}).`;
   const displayFormats: FormatType[] = product.formats?.length > 0 ? product.formats : ["printed"];
 
@@ -209,28 +210,38 @@ export default function ProductDetailPage() {
                   Design Code: <strong className="text-primary font-mono font-semibold">#{product.code}</strong>
                 </span>
 
-                {/* Instant Motion Video Quick Action Button */}
+                {/* Quick Action Buttons (PDF & Video) */}
                 <div className="flex flex-wrap gap-2.5 pt-1">
+                  <a
+                    href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/10 hover:bg-secondary text-primary hover:text-white border border-secondary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-base">picture_as_pdf</span>
+                    Request PDF Sample
+                  </a>
+
                   {product.videoUrl ? (
                     <button
                       type="button"
                       onClick={() => setSelectedFormat("video")}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/10 hover:bg-secondary text-primary hover:text-white border border-secondary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-surface hover:bg-secondary/10 text-primary border border-outline/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
                     >
                       <span className="material-symbols-outlined text-base">videocam</span>
-                      Watch Video Motion Preview
+                      Watch Video Motion
                     </button>
-                  ) : (
+                  ) : product.formats?.includes("video") ? (
                     <a
                       href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/5 hover:bg-secondary text-primary hover:text-white border border-secondary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-surface hover:bg-secondary/10 text-primary border border-outline/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
                     >
                       <span className="material-symbols-outlined text-base">videocam</span>
                       Request Motion Video
                     </a>
-                  )}
+                  ) : null}
                 </div>
               </div>
 
@@ -302,9 +313,18 @@ export default function ProductDetailPage() {
                       <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
                         Turnaround Time
                       </span>
-                      <p className="font-body-md text-body-md text-on-surface-variant">
+                      <p className="font-body-md text-body-md text-on-surface-variant mb-3">
                         Digital PDF proof delivered within 24 to 48 hours of design approval.
                       </p>
+                      <a
+                        href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-white hover:bg-secondary/90 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-md"
+                      >
+                        <span className="material-symbols-outlined text-sm">chat</span>
+                        Request PDF Sample on WhatsApp
+                      </a>
                     </div>
                   </>
                 )}
