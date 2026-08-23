@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Product, FormatType } from "@/types";
 
 function formatBadgeText(formats: FormatType[] = []) {
-  const order: FormatType[] = ["printed", "pdf", "video"];
+  const order: FormatType[] = ["printed", "video"];
   const sorted = order.filter((f) => formats.includes(f));
   return sorted.map((f) => f.toUpperCase()).join(" · ");
 }

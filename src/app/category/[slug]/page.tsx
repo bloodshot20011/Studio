@@ -8,7 +8,7 @@ import Footer from "@/components/layout/Footer";
 import ProductGrid from "@/components/ui/ProductGrid";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import CategoryNavigation from "@/components/ui/CategoryNavigation";
-import FormatFilter, { FormatFilterValue, DigitalTypeFilterValue } from "@/components/ui/FormatFilter";
+import FormatFilter, { FormatFilterValue } from "@/components/ui/FormatFilter";
 import { categories } from "@/data/categories";
 import { useProducts } from "@/lib/useProducts";
 
@@ -22,37 +22,21 @@ function CategoryContent() {
   const category = categories.find((c) => c.slug === categorySlug);
 
   const formatParam = (searchParams.get("format") as FormatFilterValue) || "all";
-  const typeParam = (searchParams.get("type") as DigitalTypeFilterValue) || "all";
-
   const [activeFormat, setActiveFormat] = useState<FormatFilterValue>(formatParam);
-  const [activeDigitalType, setActiveDigitalType] = useState<DigitalTypeFilterValue>(typeParam);
 
   useEffect(() => {
     setActiveFormat((searchParams.get("format") as FormatFilterValue) || "all");
-    setActiveDigitalType((searchParams.get("type") as DigitalTypeFilterValue) || "all");
   }, [searchParams]);
 
-  const updateQueryParams = (newParams: {
-    format?: FormatFilterValue;
-    type?: DigitalTypeFilterValue;
-  }) => {
+  const updateQueryParams = (newParams: { format?: FormatFilterValue }) => {
     const qParams = new URLSearchParams(searchParams.toString());
 
     if (newParams.format !== undefined) {
       if (newParams.format === "all") {
         qParams.delete("format");
-        qParams.delete("type");
       } else {
         qParams.set("format", newParams.format);
-        if (newParams.format !== "digital") {
-          qParams.delete("type");
-        }
       }
-    }
-
-    if (newParams.type !== undefined) {
-      if (newParams.type === "all") qParams.delete("type");
-      else qParams.set("type", newParams.type);
     }
 
     const queryString = qParams.toString();
@@ -62,26 +46,15 @@ function CategoryContent() {
 
   const handleFormatChange = (format: FormatFilterValue) => {
     setActiveFormat(format);
-    if (format !== "digital") {
-      setActiveDigitalType("all");
-      updateQueryParams({ format, type: "all" });
-    } else {
-      updateQueryParams({ format });
-    }
-  };
-
-  const handleDigitalTypeChange = (type: DigitalTypeFilterValue) => {
-    setActiveDigitalType(type);
-    updateQueryParams({ type });
+    updateQueryParams({ format });
   };
 
   const handleClearFilters = () => {
     setActiveFormat("all");
-    setActiveDigitalType("all");
     router.push(pathname, { scroll: false });
   };
 
-  const isFiltered = activeFormat !== "all" || activeDigitalType !== "all";
+  const isFiltered = activeFormat !== "all";
 
   const allProducts = useProducts();
 
@@ -89,13 +62,7 @@ function CategoryContent() {
     if (product.categorySlug !== categorySlug) return false;
     if (activeFormat && activeFormat !== "all") {
       if (activeFormat === "printed" && !product.formats.includes("printed")) return false;
-      if (activeFormat === "digital") {
-        const hasPdf = product.formats.includes("pdf");
-        const hasVideo = product.formats.includes("video");
-        if (!hasPdf && !hasVideo) return false;
-        if (activeDigitalType === "pdf" && !hasPdf) return false;
-        if (activeDigitalType === "video" && !hasVideo) return false;
-      }
+      if (activeFormat === "digital" && !product.formats.includes("video")) return false;
     }
     return true;
   });
@@ -148,9 +115,7 @@ function CategoryContent() {
             {/* Format System Filter (Printed / Digital / PDF / Video) */}
             <FormatFilter
               activeFormat={activeFormat}
-              activeDigitalType={activeDigitalType}
               onFormatChange={handleFormatChange}
-              onDigitalTypeChange={handleDigitalTypeChange}
               totalResultsCount={categoryProducts.length}
               onClearFilters={handleClearFilters}
               isFiltered={isFiltered}

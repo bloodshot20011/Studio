@@ -10,9 +10,7 @@ export default function AdminDashboardPage() {
 
   const totalProducts = products.length;
   const weddingCount = products.filter((p) => p.categorySlug === "wedding").length;
-  const digitalCount = products.filter(
-    (p) => p.formats.includes("pdf") || p.formats.includes("video")
-  ).length;
+  const digitalCount = products.filter((p) => p.formats.includes("video")).length;
   const newArrivalsCount = products.filter((p) => p.newArrival).length;
 
   const recentProducts = products.slice(0, 6);

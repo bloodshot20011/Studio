@@ -28,34 +28,6 @@ function extractYouTubeId(url: string): string | null {
   return null;
 }
 
-function handlePdfOpen(pdfUrl: string) {
-  if (!pdfUrl) return;
-
-  if (pdfUrl.startsWith("data:")) {
-    try {
-      const parts = pdfUrl.split(";base64,");
-      const contentType = parts[0].replace("data:", "") || "application/pdf";
-      const raw = window.atob(parts[1]);
-      const rawLength = raw.length;
-      const uInt8Array = new Uint8Array(rawLength);
-      for (let i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
-      }
-      const blob = new Blob([uInt8Array], { type: contentType });
-      const blobUrl = URL.createObjectURL(blob);
-      window.open(blobUrl, "_blank");
-    } catch (e) {
-      console.error("Error opening base64 PDF:", e);
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.download = "invitation-sample.pdf";
-      link.click();
-    }
-  } else {
-    window.open(pdfUrl, "_blank");
-  }
-}
-
 export default function ProductDetailPage() {
   const params = useParams();
   const productSlug = params.slug as string;
@@ -78,11 +50,8 @@ export default function ProductDetailPage() {
       if (foundProduct) {
         setProduct(foundProduct);
 
-        // Intelligently select default format based on available assets
         if (foundProduct.videoUrl) {
           setSelectedFormat("video");
-        } else if (foundProduct.pdfUrl) {
-          setSelectedFormat("pdf");
         } else if (foundProduct.formats?.length) {
           setSelectedFormat(foundProduct.formats[0]);
         }
@@ -134,8 +103,6 @@ export default function ProductDetailPage() {
     switch (selectedFormat) {
       case "printed":
         return "Enquire for Printed Cards";
-      case "pdf":
-        return "Enquire for Digital PDF";
       case "video":
         return "Enquire for Video Invitation";
     }
@@ -143,8 +110,9 @@ export default function ProductDetailPage() {
 
   const rawVideoUrl = (product.videoUrl || product.digitalAssets?.video || "").trim();
   const youtubeId = extractYouTubeId(rawVideoUrl);
-  const pdfWhatsAppMsg = `Hello Kashvi Cards, I would like to view a sample PDF proof for design: ${product.name} (#${product.code}).`;
   const videoWhatsAppMsg = `Hello Kashvi Cards, I would like to watch a video invitation sample for design: ${product.name} (#${product.code}).`;
+  const validFormats = product.formats.filter((f) => f === "printed" || f === "video");
+  const activeFormats = validFormats.length > 0 ? validFormats : ["printed" as FormatType];
 
   return (
     <>
@@ -197,16 +165,6 @@ export default function ProductDetailPage() {
                           allowFullScreen
                           className="w-full h-full border-0"
                         />
-                      ) : rawVideoUrl ? (
-                        <video
-                          src={rawVideoUrl}
-                          controls
-                          autoPlay
-                          loop
-                          playsInline
-                          poster={product.image}
-                          className="w-full h-full object-cover"
-                        />
                       ) : (
                         <div className="w-full h-full relative flex flex-col items-center justify-center p-6 text-center">
                           <img
@@ -258,30 +216,9 @@ export default function ProductDetailPage() {
                   Design Code: <strong className="text-primary font-mono font-semibold">#{product.code}</strong>
                 </span>
 
-                {/* Instant Digital Asset Direct Quick Action Buttons */}
-                <div className="flex flex-wrap gap-2.5 pt-1">
-                  {product.pdfUrl ? (
-                    <button
-                      type="button"
-                      onClick={() => handlePdfOpen(product.pdfUrl!)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
-                    >
-                      <span className="material-symbols-outlined text-base">picture_as_pdf</span>
-                      View Sample PDF Proof
-                    </button>
-                  ) : (
-                    <a
-                      href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/5 hover:bg-primary text-primary hover:text-white border border-primary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
-                    >
-                      <span className="material-symbols-outlined text-base">picture_as_pdf</span>
-                      Request PDF Proof
-                    </a>
-                  )}
-
-                  {product.videoUrl ? (
+                {/* Video Preview Quick Button */}
+                {product.videoUrl && (
+                  <div className="pt-1">
                     <button
                       type="button"
                       onClick={() => setSelectedFormat("video")}
@@ -290,18 +227,8 @@ export default function ProductDetailPage() {
                       <span className="material-symbols-outlined text-base">videocam</span>
                       Watch Video Preview
                     </button>
-                  ) : (
-                    <a
-                      href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/5 hover:bg-secondary text-primary hover:text-white border border-secondary/20 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
-                    >
-                      <span className="material-symbols-outlined text-base">videocam</span>
-                      Request Motion Video
-                    </a>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
 
               {/* Format Selection Segmented Control */}
@@ -310,20 +237,17 @@ export default function ProductDetailPage() {
                   Format Options
                 </label>
                 <div className="bg-surface-container-low p-1.5 border border-outline/20 flex rounded-2xl">
-                  {product.formats.map((fmt) => {
+                  {activeFormats.map((fmt) => {
                     const isSelected = selectedFormat === fmt;
                     const labels: Record<FormatType, string> = {
                       printed: "Printed Card",
-                      pdf: "Digital PDF",
                       video: "Video Motion",
                     };
                     return (
                       <button
                         key={fmt}
                         type="button"
-                        onClick={() => {
-                          setSelectedFormat(fmt);
-                        }}
+                        onClick={() => setSelectedFormat(fmt)}
                         className={`flex-1 py-2.5 px-3 font-label-sm text-label-sm uppercase tracking-wider transition-all rounded-xl cursor-pointer ${
                           isSelected
                             ? "bg-surface text-primary shadow-sm font-semibold border border-outline/10"
@@ -360,48 +284,6 @@ export default function ProductDetailPage() {
                   </>
                 )}
 
-                {selectedFormat === "pdf" && (
-                  <>
-                    <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
-                        Digital Specification
-                      </span>
-                      <p className="font-body-md text-body-md text-on-surface-variant">
-                        Ready to share digitally via WhatsApp, email, and social media. Interactive links for venue maps & RSVP.
-                      </p>
-                    </div>
-                    <div>
-                      <span className="font-label-sm text-label-sm text-primary uppercase block mb-1.5">
-                        Turnaround Time & Sample PDF
-                      </span>
-                      <p className="font-body-md text-body-md text-on-surface-variant mb-3">
-                        Digital PDF proof delivered within 48 hours of design approval.
-                      </p>
-
-                      {product.pdfUrl ? (
-                        <button
-                          type="button"
-                          onClick={() => handlePdfOpen(product.pdfUrl!)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white hover:bg-primary/90 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
-                        >
-                          <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-                          View / Download Sample PDF Proof
-                        </button>
-                      ) : (
-                        <a
-                          href={`https://wa.me/918107511164?text=${encodeURIComponent(pdfWhatsAppMsg)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm"
-                        >
-                          <span className="material-symbols-outlined text-sm">chat</span>
-                          Request PDF Sample on WhatsApp
-                        </a>
-                      )}
-                    </div>
-                  </>
-                )}
-
                 {selectedFormat === "video" && (
                   <>
                     <div>
@@ -420,7 +302,7 @@ export default function ProductDetailPage() {
                         Perfect size compression for instant messaging on WhatsApp family groups and Instagram stories.
                       </p>
 
-                      {rawVideoUrl ? null : (
+                      {!rawVideoUrl && (
                         <a
                           href={`https://wa.me/918107511164?text=${encodeURIComponent(videoWhatsAppMsg)}`}
                           target="_blank"

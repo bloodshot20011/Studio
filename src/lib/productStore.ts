@@ -113,12 +113,13 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
       }
 
       const dbProducts: Product[] = data.map((item: any) => {
-        const rawFormats: FormatType[] = Array.isArray(item.formats) ? [...item.formats] : ["printed"];
+        const rawFormats: FormatType[] = Array.isArray(item.formats)
+          ? (item.formats.filter((f: string) => f === "printed" || f === "video") as FormatType[])
+          : ["printed"];
         const videoUrl = item.video_url || item.videoUrl || item.digitalAssets?.video || "";
-        const pdfUrl = item.pdf_url || item.pdfUrl || item.digitalAssets?.pdf || "";
 
         if (videoUrl && !rawFormats.includes("video")) rawFormats.push("video");
-        if (pdfUrl && !rawFormats.includes("pdf")) rawFormats.push("pdf");
+        if (rawFormats.length === 0) rawFormats.push("printed");
 
         return {
           id: item.id || generateValidUUID(),
@@ -132,7 +133,6 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
           gallery: item.gallery || [item.image],
           formats: rawFormats,
           videoUrl,
-          pdfUrl,
           featured: Boolean(item.featured),
           newArrival: Boolean(item.new_arrival),
           tags: item.tags || [],

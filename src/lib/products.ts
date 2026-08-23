@@ -53,7 +53,6 @@ export function getNewArrivals(limit?: number): Product[] {
 export interface FilterOptions {
   categorySlug?: string;
   format?: "all" | "printed" | "digital";
-  digitalType?: "all" | "pdf" | "video";
   featured?: boolean;
   newArrival?: boolean;
 }
@@ -75,16 +74,7 @@ export function filterProducts(options: FilterOptions): Product[] {
       if (options.format === "printed") {
         if (!product.formats.includes("printed")) return false;
       } else if (options.format === "digital") {
-        const hasPdf = product.formats.includes("pdf");
-        const hasVideo = product.formats.includes("video");
-
-        if (!hasPdf && !hasVideo) return false;
-
-        // Sub-filter for digital type
-        if (options.digitalType && options.digitalType !== "all") {
-          if (options.digitalType === "pdf" && !hasPdf) return false;
-          if (options.digitalType === "video" && !hasVideo) return false;
-        }
+        if (!product.formats.includes("video")) return false;
       }
     }
 
