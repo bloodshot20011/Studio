@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { Product, FormatType } from "@/types";
 import { products as initialProducts } from "@/data/products";
 import { createClient } from "@/lib/supabase/client";
 
@@ -112,23 +112,32 @@ export async function syncProductsFromSupabase(): Promise<Product[]> {
         return syncProductsFromSupabase();
       }
 
-      const dbProducts: Product[] = data.map((item: any) => ({
-        id: item.id || generateValidUUID(),
-        slug: item.slug || `design-${item.code}`,
-        name: item.name,
-        code: item.code,
-        category: item.category || "Wedding",
-        categorySlug: item.category_slug || "wedding",
-        description: item.description || "",
-        image: item.image,
-        gallery: item.gallery || [item.image],
-        formats: item.formats || ["printed"],
-        videoUrl: item.video_url || item.videoUrl || item.digitalAssets?.video || "",
-        pdfUrl: item.pdf_url || item.pdfUrl || item.digitalAssets?.pdf || "",
-        featured: Boolean(item.featured),
-        newArrival: Boolean(item.new_arrival),
-        tags: item.tags || [],
-      }));
+      const dbProducts: Product[] = data.map((item: any) => {
+        const rawFormats: FormatType[] = Array.isArray(item.formats) ? [...item.formats] : ["printed"];
+        const videoUrl = item.video_url || item.videoUrl || item.digitalAssets?.video || "";
+        const pdfUrl = item.pdf_url || item.pdfUrl || item.digitalAssets?.pdf || "";
+
+        if (videoUrl && !rawFormats.includes("video")) rawFormats.push("video");
+        if (pdfUrl && !rawFormats.includes("pdf")) rawFormats.push("pdf");
+
+        return {
+          id: item.id || generateValidUUID(),
+          slug: item.slug || `design-${item.code}`,
+          name: item.name,
+          code: item.code,
+          category: item.category || "Wedding",
+          categorySlug: item.category_slug || "wedding",
+          description: item.description || "",
+          image: item.image,
+          gallery: item.gallery || [item.image],
+          formats: rawFormats,
+          videoUrl,
+          pdfUrl,
+          featured: Boolean(item.featured),
+          newArrival: Boolean(item.new_arrival),
+          tags: item.tags || [],
+        };
+      });
 
       notifySubscribers(dbProducts);
       return dbProducts;

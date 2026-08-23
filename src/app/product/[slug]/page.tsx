@@ -12,9 +12,10 @@ import ProductGallery from "@/components/ui/ProductGallery";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import CallButton from "@/components/ui/CallButton";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { getProductBySlug, getSimilarProducts } from "@/lib/products";
+import { getSimilarProducts } from "@/lib/products";
 import { getProductWhatsAppMessage } from "@/data/site";
 import { FormatType, Product } from "@/types";
+import { useProducts } from "@/lib/useProducts";
 
 function extractYouTubeId(url: string): string | null {
   if (!url) return null;
@@ -59,6 +60,7 @@ export default function ProductDetailPage() {
   const params = useParams();
   const productSlug = params.slug as string;
 
+  const allProducts = useProducts();
   const [product, setProduct] = useState<Product | undefined>(undefined);
   const [isMounted, setIsMounted] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<FormatType>("printed");
@@ -66,12 +68,28 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     setIsMounted(true);
-    const foundProduct = getProductBySlug(productSlug);
-    setProduct(foundProduct);
-    if (foundProduct?.formats?.length) {
-      setSelectedFormat(foundProduct.formats[0]);
+  }, []);
+
+  useEffect(() => {
+    if (allProducts.length > 0 && productSlug) {
+      const foundProduct = allProducts.find(
+        (p) => p.slug === productSlug || p.code.toLowerCase() === productSlug.toLowerCase()
+      );
+
+      if (foundProduct) {
+        setProduct(foundProduct);
+
+        // Auto-select video or pdf format if present
+        if (foundProduct.videoUrl) {
+          setSelectedFormat("video");
+        } else if (foundProduct.pdfUrl) {
+          setSelectedFormat("pdf");
+        } else if (foundProduct.formats?.length) {
+          setSelectedFormat(foundProduct.formats[0]);
+        }
+      }
     }
-  }, [productSlug]);
+  }, [allProducts, productSlug]);
 
   if (!isMounted) {
     return (
@@ -247,9 +265,34 @@ export default function ProductDetailPage() {
                 <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-1">
                   {product.name}
                 </h1>
-                <span className="font-body-md text-body-md text-on-surface-variant block">
+                <span className="font-body-md text-body-md text-on-surface-variant block mb-3">
                   Design Code: <strong className="text-primary font-mono font-semibold">#{product.code}</strong>
                 </span>
+
+                {/* Instant Digital Asset Direct Quick Action Buttons */}
+                <div className="flex flex-wrap gap-2.5 pt-1">
+                  {product.pdfUrl && (
+                    <button
+                      type="button"
+                      onClick={() => handlePdfOpen(product.pdfUrl!)}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base">picture_as_pdf</span>
+                      View Sample PDF Proof
+                    </button>
+                  )}
+
+                  {product.videoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFormat("video")}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-secondary/10 hover:bg-secondary text-primary hover:text-white border border-secondary/30 font-label-sm text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base">videocam</span>
+                      Watch Video Motion Preview
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Format Selection Segmented Control */}
