@@ -203,7 +203,7 @@ export function checkDuplicateDesignCode(
 
 /**
  * Adds a new product directly to Supabase DB as single source of truth.
- * Handles missing video_url / pdf_url columns gracefully.
+ * Handles missing video_url / pdf_url columns and foreign key constraints gracefully.
  */
 export async function addProductStore(newProduct: Omit<Product, "id">): Promise<Product> {
   const id = generateValidUUID();
@@ -234,6 +234,20 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
   try {
     const supabase = createClient();
+
+    // 1. Try upserting category into Supabase categories table
+    try {
+      await supabase.from("categories").upsert([
+        {
+          slug: fullProduct.categorySlug,
+          name: fullProduct.category,
+        },
+      ]);
+    } catch (catErr) {
+      console.warn("Category upsert notice:", catErr);
+    }
+
+    // 2. Insert into products table
     let { error } = await supabase.from("products").insert([payload]);
 
     // Fallback if video_url or pdf_url columns missing
@@ -242,6 +256,14 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
       delete payload.pdf_url;
       const retry = await supabase.from("products").insert([payload]);
       error = retry.error;
+    }
+
+    // Fallback if foreign key constraint (products_category_slug_fkey) fails due to missing category row
+    if (error && (error.code === "23503" || error.message?.includes("foreign key constraint"))) {
+      console.warn("Category Foreign Key notice, falling back category_slug to 'wedding':", error.message);
+      payload.category_slug = "wedding";
+      const retryFk = await supabase.from("products").insert([payload]);
+      error = retryFk.error;
     }
 
     if (error) {
@@ -260,7 +282,7 @@ export async function addProductStore(newProduct: Omit<Product, "id">): Promise<
 
 /**
  * Updates an existing product directly in Supabase DB.
- * Handles missing video_url / pdf_url columns gracefully.
+ * Handles missing video_url / pdf_url columns and foreign key constraints gracefully.
  */
 export async function updateProductStore(id: string, updatedData: Partial<Product>): Promise<Product[]> {
   const target = cachedProducts.find((p) => p.id === id);
@@ -288,6 +310,22 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
 
   try {
     const supabase = createClient();
+
+    // 1. Try upserting category into Supabase categories table
+    if (updatedData.categorySlug && updatedData.category) {
+      try {
+        await supabase.from("categories").upsert([
+          {
+            slug: updatedData.categorySlug,
+            name: updatedData.category,
+          },
+        ]);
+      } catch (catErr) {
+        console.warn("Category upsert notice:", catErr);
+      }
+    }
+
+    // 2. Update products table
     let query = supabase.from("products").update(payload);
     if (code) {
       query = query.or(`id.eq.${id},code.eq.${code}`);
@@ -309,6 +347,20 @@ export async function updateProductStore(id: string, updatedData: Partial<Produc
       }
       const retry = await retryQuery;
       error = retry.error;
+    }
+
+    // Fallback if foreign key constraint (products_category_slug_fkey) fails
+    if (error && (error.code === "23503" || error.message?.includes("foreign key constraint"))) {
+      console.warn("Category Foreign Key notice, falling back category_slug to 'wedding':", error.message);
+      payload.category_slug = "wedding";
+      let retryFkQuery = supabase.from("products").update(payload);
+      if (code) {
+        retryFkQuery = retryFkQuery.or(`id.eq.${id},code.eq.${code}`);
+      } else {
+        retryFkQuery = retryFkQuery.eq("id", id);
+      }
+      const retryFk = await retryFkQuery;
+      error = retryFk.error;
     }
 
     if (error) {
