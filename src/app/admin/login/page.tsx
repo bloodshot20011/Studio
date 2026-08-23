@@ -125,7 +125,7 @@ export default function AdminLoginPage() {
             Protected Admin Portal
           </span>
           <span className="text-[11px] text-outline block mt-1">
-            Email Whitelist Protected • kashvicardkota@gmail.com
+            Email Whitelist Protected • example@gmail.com
           </span>
         </div>
 
@@ -183,7 +183,7 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="kashvicardkota@gmail.com"
+              placeholder="example@gmail.com"
               className="w-full bg-surface border border-outline/20 px-4 py-3 font-body-md text-on-surface focus:border-secondary outline-none rounded-xl text-sm"
             />
           </div>
