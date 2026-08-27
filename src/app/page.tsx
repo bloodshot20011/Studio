@@ -202,10 +202,24 @@ export default function Home() {
               {categories.map((category, i) => (
                 <motion.div key={category.slug} variants={itemVariants}>
                   <Link href={`/category/${category.slug}`} className="group block">
-                    <div className={`bg-surface border border-outline/10 p-6 flex flex-col items-center justify-center aspect-square hover:border-secondary hover:shadow-md transition-all duration-300 ${i % 2 === 0 ? "" : "md:mt-4"}`}>
-                      <span className="font-headline-md text-headline-md text-primary group-hover:text-secondary transition-colors text-center leading-tight">
-                        {category.name}
-                      </span>
+                    <div className={`relative overflow-hidden bg-surface-container-low border border-outline/10 aspect-square rounded-2xl shadow-sm group-hover:border-secondary/50 group-hover:shadow-lg transition-all duration-500 ${i % 2 === 0 ? "" : "md:mt-4"}`}>
+                      {category.image && (
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent transition-opacity duration-300 group-hover:from-primary/90 group-hover:via-primary/40" />
+                      
+                      <div className="absolute inset-0 p-4 flex flex-col justify-end items-center text-center">
+                        <span className="font-headline-md text-headline-md text-white font-bold group-hover:text-[#F3E5AB] transition-colors duration-300 drop-shadow-md">
+                          {category.name}
+                        </span>
+                        <span className="font-label-sm text-[10px] uppercase tracking-widest text-white/80 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Explore Collection →
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 </motion.div>
