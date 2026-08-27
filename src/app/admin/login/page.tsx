@@ -63,7 +63,11 @@ export default function AdminLoginPage() {
       });
 
       if (error) {
-        setErrorMsg(error.message || "Failed to initialize Google Sign-In. Make sure Google Provider is enabled in Supabase.");
+        if (error.message?.includes("provider is not enabled") || error.message?.includes("validation_failed")) {
+          setErrorMsg("Google Sign-In is not enabled yet in your Supabase Dashboard. Please enable the Google Provider in Supabase -> Authentication -> Providers.");
+        } else {
+          setErrorMsg(error.message || "Failed to initialize Google Sign-In.");
+        }
       }
     } catch (err: any) {
       setErrorMsg(err?.message || "Google OAuth initialization error.");

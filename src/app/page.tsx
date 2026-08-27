@@ -95,21 +95,29 @@ export default function Home() {
             <motion.div variants={itemVariants} className="flex flex-wrap gap-3 justify-center items-center mt-6">
               <Link
                 href="/collections?format=digital"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
+                className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
               >
-                <span className="material-symbols-outlined text-sm text-secondary group-hover:scale-110 transition-transform">
-                  devices
-                </span>
+                <div className="w-6 h-6 rounded-full overflow-hidden border border-secondary/40 flex-shrink-0 group-hover:scale-110 transition-transform shadow-xs">
+                  <img
+                    src="/images/digital-cards-icon.jpg"
+                    alt="Digital Cards Icon"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 Digital Cards
               </Link>
 
               <Link
                 href="/collections?format=printed"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
+                className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-secondary text-primary font-label-md text-xs uppercase tracking-widest hover:bg-secondary/10 transition-all shadow-sm group"
               >
-                <span className="material-symbols-outlined text-sm text-secondary group-hover:scale-110 transition-transform">
-                  print
-                </span>
+                <div className="w-6 h-6 rounded-full overflow-hidden border border-secondary/40 flex-shrink-0 group-hover:scale-110 transition-transform shadow-xs">
+                  <img
+                    src="/images/printed-cards-icon.jpg"
+                    alt="Printed Cards Icon"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 Printed Cards
               </Link>
             </motion.div>
