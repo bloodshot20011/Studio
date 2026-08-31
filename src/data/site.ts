@@ -1,9 +1,31 @@
 export const siteConfig = {
   brand: "Kashvi Cards",
+  url: "https://kashvicards.in",
   tagline: "Cards That Make Every Occasion Memorable",
   description:
-    "Bespoke wedding and occasion invitation cards atelier — Rampura, Kota, Rajasthan.",
-
+    "Bespoke wedding and occasion invitation cards atelier — Rampura, Kota, Rajasthan. Premium printed invitation cards, digital video invitations, baby shower, birthday, and custom stationery.",
+  googleSiteVerification: "", // Paste your Google Search Console verification code here (e.g., "google-site-verification=...")
+  keywords: [
+    "Kashvi Cards",
+    "Kashvi Cards Kota",
+    "Wedding Cards Kota",
+    "Wedding Cards in Kota Rajasthan",
+    "Invitation Cards Shop Rampura Kota",
+    "Digital Wedding Invitations",
+    "Video Wedding Invitations",
+    "Marriage Cards Kota",
+    "Custom Wedding Cards Rajasthan",
+    "Baby Shower Invitations Kota",
+    "Griha Pravesh Cards Kota",
+    "Gift Envelopes Kota",
+    "Visiting Cards Kota",
+  ],
+  geo: {
+    latitude: 25.1800,
+    longitude: 75.8300,
+    region: "IN-RJ",
+    placename: "Kota, Rajasthan",
+  },
   contact: {
     phone: "+91 81075 11164 / +91 99284 85110",
     phoneHref: "tel:+918107511164",
